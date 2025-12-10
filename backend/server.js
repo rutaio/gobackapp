@@ -1,3 +1,9 @@
+/**
+ * This backend folder is NOT used in Phase 1.
+ * The app currently runs frontend-only and will use Supabase as backend-as-a-service.
+ * A custom Node/Express backend MAY be added in Phase 2 or later.
+ */
+
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
