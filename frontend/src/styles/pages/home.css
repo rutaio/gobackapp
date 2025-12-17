@@ -1,0 +1,16 @@
+.page {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dashboard {
+  display: flex;
+  gap: 20px;
+}
+
+.panel {
+  border: 1px solid grey;
+  padding: 20px;
+  flex: 1;
+}
