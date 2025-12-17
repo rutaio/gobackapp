@@ -1,0 +1,6 @@
+/* “What should be true everywhere in the app, no matter which page or component?” */
+
+@import './reset.css';
+@import './variables.css';
+@import './typography.css';
+@import './layout.css';
