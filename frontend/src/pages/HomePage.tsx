@@ -1,4 +1,5 @@
 import '../styles/pages/home.css';
+import { threads } from '../data/threads';
 
 export const HomePage = () => {
   return (
@@ -7,7 +8,13 @@ export const HomePage = () => {
         <div className="panel">
           <h2>Threads</h2>
           <p>Your project work areas</p>
-          <div>Threads list goes here</div>
+          <div>
+            <ul>
+              {threads.map((thread) => (
+                <li key={thread.id}>{thread.name}</li>
+              ))}
+            </ul>
+          </div>
         </div>
         <div className="panel">
           <h2>Go Back</h2>
