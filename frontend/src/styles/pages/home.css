@@ -14,3 +14,9 @@
   padding: 20px;
   flex: 1;
 }
+
+@media (max-width: 768px) {
+  .dashboard {
+    flex-direction: column;
+  }
+}
