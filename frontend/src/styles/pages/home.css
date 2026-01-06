@@ -30,6 +30,26 @@ ul li:hover {
   cursor: pointer;
 }
 
+li {
+  cursor: pointer;
+}
+
+li.selected {
+  background-color: #e0f2f1;
+}
+
+.card {
+  padding: 16px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.selected-thread {
+  font-weight: 600;
+  color: #00796b;
+  margin-bottom: 8px;
+}
+
 @media (max-width: 768px) {
   .dashboard {
     flex-direction: column;
