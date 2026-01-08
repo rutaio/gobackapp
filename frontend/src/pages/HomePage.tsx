@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 export const HomePage = () => {
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null);
+  const [checkin, setCheckin] = useState('');
 
   const handleThreadClick = (threadId: string) => {
     console.log('Selected thread id:', threadId);
@@ -13,6 +14,15 @@ export const HomePage = () => {
   const selectedThreadData = threads.find(
     (thread) => thread.id === selectedThreadId
   );
+
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    console.log({
+      threadId: selectedThreadId,
+      text: checkin,
+    });
+    setCheckin('');
+  };
 
   return (
     <div className="page">
@@ -43,8 +53,18 @@ export const HomePage = () => {
               <>
                 <p className="selected-thread">{selectedThreadData.name}</p>
 
-                <div className="reflection-placeholder">
-                  Reflection content goes here
+                <div className="checkin-card">
+                  <form onSubmit={handleSubmit} className="form">
+                    <textarea
+                      id="checkin"
+                      rows={4}
+                      value={checkin}
+                      required
+                      placeholder="Now, I will take a small step in..."
+                      onChange={(event) => setCheckin(event.target.value)}
+                    />
+                    <button>Save and continue</button>
+                  </form>
                 </div>
               </>
             ) : (
