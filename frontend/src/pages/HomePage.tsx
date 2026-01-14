@@ -1,6 +1,7 @@
 import '../styles/pages/home.css';
 import { threads } from '../data/threads';
 import { useState } from 'react';
+import { ThreadsList } from '../components/ThreadsList';
 
 export const HomePage = () => {
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null);
@@ -28,21 +29,12 @@ export const HomePage = () => {
     <div className="page">
       <div className="dashboard">
         <div className="panel">
-          <h2>Threads</h2>
-          <p>Your project work areas</p>
-          <div>
-            <ul>
-              {threads.map((thread) => (
-                <li
-                  key={thread.id}
-                  onClick={() => handleThreadClick(thread.id)}
-                  className={thread.id === selectedThreadId ? 'selected' : ''}
-                >
-                  {thread.name}
-                </li>
-              ))}
-            </ul>
-          </div>
+          {' '}
+          <ThreadsList
+            threads={threads}
+            selectedThreadId={selectedThreadId}
+            onSelectThread={handleThreadClick}
+          />
         </div>
 
         <div className="panel">
