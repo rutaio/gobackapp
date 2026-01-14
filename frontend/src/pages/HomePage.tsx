@@ -2,6 +2,7 @@ import '../styles/pages/home.css';
 import { threads } from '../data/threads';
 import { useState } from 'react';
 import { ThreadsList } from '../components/ThreadsList';
+import { GoBackCard } from '../components/GoBackCard';
 
 export const HomePage = () => {
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null);
@@ -12,9 +13,8 @@ export const HomePage = () => {
     setSelectedThreadId(threadId);
   };
 
-  const selectedThreadData = threads.find(
-    (thread) => thread.id === selectedThreadId
-  );
+  const selectedThreadData =
+    threads.find((thread) => thread.id === selectedThreadId) ?? null;
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -29,7 +29,6 @@ export const HomePage = () => {
     <div className="page">
       <div className="dashboard">
         <div className="panel">
-          {' '}
           <ThreadsList
             threads={threads}
             selectedThreadId={selectedThreadId}
@@ -38,31 +37,12 @@ export const HomePage = () => {
         </div>
 
         <div className="panel">
-          <h2>Go Back</h2>
-          <p>Continue from where you left off</p>
-          <div className="card">
-            {selectedThreadData ? (
-              <>
-                <p className="selected-thread">{selectedThreadData.name}</p>
-
-                <div className="checkin-card">
-                  <form onSubmit={handleSubmit} className="form">
-                    <textarea
-                      id="checkin"
-                      rows={4}
-                      value={checkin}
-                      required
-                      placeholder="Now, I will take a small step in..."
-                      onChange={(event) => setCheckin(event.target.value)}
-                    />
-                    <button>Save and continue</button>
-                  </form>
-                </div>
-              </>
-            ) : (
-              <p>Select a thread to continue</p>
-            )}
-          </div>
+          <GoBackCard
+            selectedThread={selectedThreadData}
+            checkin={checkin}
+            onCheckinChange={setCheckin}
+            onSubmit={handleSubmit}
+          />
         </div>
       </div>
     </div>
