@@ -3,3 +3,10 @@ export type Thread = {
   name: string;
   description: string;
 };
+
+export type Checkin = {
+  id: string;
+  threadId: string;
+  text: string;
+  createdAt: number;
+};
