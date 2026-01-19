@@ -23,14 +23,16 @@ export const GoBackCard = ({
         {selectedThread ? (
           <>
             <p className="selected-thread">{selectedThread.name}</p>
-            
-            <div className="checkins-history">
+
+            <div className="history">
               {checkinsForSelectedThread.length === 0 ? (
                 <p>No check-ins yet</p>
               ) : (
                 <ul>
                   {checkinsForSelectedThread.map((checkin) => (
-                    <li key={checkin.id}>{checkin.text}</li>
+                    <li key={checkin.id} className="history-item">
+                      {checkin.text}
+                    </li>
                   ))}
                 </ul>
               )}
