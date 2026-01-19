@@ -38,6 +38,10 @@ export const HomePage = () => {
     setCheckin('');
   };
 
+  const selectedThreadCheckins = checkinsHistory.filter(
+    (checkin) => checkin.threadId === selectedThreadId
+  );
+
   // to load
   useEffect(() => {
     const savedCheckins = localStorage.getItem(CHECKINS_STORAGE_KEY);
@@ -75,6 +79,7 @@ export const HomePage = () => {
 
         <div className="panel">
           <GoBackCard
+            checkinsForSelectedThread={selectedThreadCheckins}
             selectedThread={selectedThreadData}
             checkin={checkin}
             onCheckinChange={setCheckin}

@@ -1,10 +1,11 @@
-import type { Thread } from '../types/types';
+import type { Thread, Checkin } from '../types/types';
 
 interface GoBackCardProps {
   selectedThread: Thread | null;
   checkin: string;
   onCheckinChange: (value: string) => void;
   onSubmit: (event: React.FormEvent) => void;
+  checkinsForSelectedThread: Checkin[];
 }
 
 export const GoBackCard = ({
@@ -12,6 +13,7 @@ export const GoBackCard = ({
   checkin,
   onCheckinChange,
   onSubmit,
+  checkinsForSelectedThread,
 }: GoBackCardProps) => {
   return (
     <>
@@ -21,6 +23,18 @@ export const GoBackCard = ({
         {selectedThread ? (
           <>
             <p className="selected-thread">{selectedThread.name}</p>
+            
+            <div className="checkins-history">
+              {checkinsForSelectedThread.length === 0 ? (
+                <p>No check-ins yet</p>
+              ) : (
+                <ul>
+                  {checkinsForSelectedThread.map((checkin) => (
+                    <li key={checkin.id}>{checkin.text}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
 
             <div className="checkin-card">
               <form onSubmit={onSubmit} className="form">
