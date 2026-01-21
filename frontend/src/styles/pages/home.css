@@ -50,6 +50,12 @@ li.selected {
   margin-bottom: 8px;
 }
 
+.checkins-label {
+  font-size: 0.85rem;
+  color: #7a7a7a;
+  margin-bottom: 6px;
+}
+
 .checkin-card textarea {
   width: 100%;
   padding: 0.5rem;
