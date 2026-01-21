@@ -10,9 +10,10 @@
 }
 
 .panel {
-  border: 1px solid grey;
+  border: 1px solid var(--pico-muted-border-color);
   padding: 20px;
   flex: 1;
+  border-radius: 8px;
 }
 
 @media (max-width: 768px) {

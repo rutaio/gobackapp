@@ -1,21 +1,51 @@
 .card {
-  margin: 10px;
   padding: 16px;
   border: 1px solid #ddd;
   border-radius: 6px;
 }
 
+.selected-thread {
+  font-weight: 600;
+  color: #00796b;
+  margin-bottom: 0.25rem;
+}
+
+.checkins-history {
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--pico-muted-border-color);
+  font-size: 0.9rem;
+}
+
+.checkins-label {
+  margin: 0 0 0.5rem;
+  font-size: 0.85rem;
+  color: var(--pico-muted-color);
+}
+
 .checkins-history ul {
-  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .checkins-history li {
   list-style: none;
-  text-decoration: line-through;
+  padding-left: 0.75rem;
+  margin-bottom: 0.25rem;
+  border-left: 2px solid var(--pico-muted-border-color);
+  color: var(--pico-muted-color);
+  opacity: 0.9;
 }
 
-.selected-thread {
-  font-weight: 600;
-  color: #00796b;
-  margin-bottom: 8px;
+.card textarea {
+  font-size: 1rem;
+}
+
+.card textarea:focus {
+  border: 2px solid #00796b;
+  box-shadow: 0 0 0 2px rgba(0, 121, 107, 0.2);
+}
+
+.card button {
+  background-color: #00796b;
 }
