@@ -14,7 +14,7 @@ export const ThreadsList = ({
   return (
     <>
       <h2>Threads</h2>
-      <p>Your project work areas</p>
+      <p>Your project work areas that needs periodic return.</p>
       <div>
         <ul>
           {threads.map((thread) => (
