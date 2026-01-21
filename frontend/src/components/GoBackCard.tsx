@@ -31,7 +31,9 @@ export const GoBackCard = ({
                 <ul>
                   <p className="checkins-label">Last time you did:</p>
                   {checkinsForSelectedThread.map((checkin) => (
-                    <li key={checkin.id}>{checkin.text}</li>
+                    <li key={checkin.id} className="history-item">
+                      {checkin.text}
+                    </li>
                   ))}
                 </ul>
               )}

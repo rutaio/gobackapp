@@ -1,53 +1,128 @@
+/* 0) Spacing */
+:root {
+  --space-xs: 6px;
+  --space-sm: 10px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+
+  --border: #e6e6e6;
+  --border-strong: #d8d8d8;
+
+  --bg: #ffffff;
+  --bg-soft: #fafafa;
+  --bg-softer: #f6f6f6;
+
+  --text: #1f2937;
+  --text-muted: #6b7280;
+  --text-faint: #9ca3af;
+
+  --accent: #0f766e; /* calm teal */
+  --accent-soft: #e6f4f1;
+}
+
+/* 1) Layout foundation */
 .page {
-  padding: 2rem;
-  max-width: 1200px;
+  padding: var(--space-xl);
+  max-width: 1100px;
   margin: 0 auto;
+  color: var(--text);
 }
 
 .dashboard {
   display: flex;
-  gap: 20px;
+  gap: var(--space-lg);
+  align-items: flex-start;
 }
 
+/* 2) Panels (containers) */
 .panel {
-  border: 1px solid grey;
-  padding: 20px;
   flex: 1;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
 }
 
+/* 3) Threads list */
 ul {
   list-style: none;
+  padding: 0;
+  margin: var(--space-md) 0 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
 }
 
 ul li {
-  margin: 4px 0 4px 0;
-  padding: 4px;
-  background-color: #f5f5f5;
+  padding: var(--space-sm) var(--space-md);
+  background-color: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color 120ms ease, border-color 120ms ease;
 }
 
 ul li:hover {
-  background-color: #eaeaea;
-  cursor: pointer;
-}
-
-li {
-  cursor: pointer;
+  background-color: var(--bg-softer);
+  border-color: var(--border-strong);
 }
 
 li.selected {
-  background-color: #e0f2f1;
+  background-color: var(--accent-soft);
+  border-color: rgba(15, 118, 110, 0.25);
 }
 
+/* 4) GoBack card */
 .card {
-  padding: 16px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
+  margin-top: var(--space-md);
+  padding: var(--space-lg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--bg-soft);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
 }
 
+/* Selected thread */
 .selected-thread {
-  font-weight: 600;
-  color: #00796b;
-  margin-bottom: 8px;
+  font-weight: 650;
+  color: var(--accent);
+  margin: 0;
+}
+
+/* 5) Past check-ins */
+.history {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.history-item {
+  padding: var(--space-sm) var(--space-md);
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.history-empty {
+  color: var(--text-faint);
+  font-style: italic;
+}
+
+/* 6) Form */
+.checkin-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
 }
 
 .checkins-label {
@@ -58,15 +133,75 @@ li.selected {
 
 .checkin-card textarea {
   width: 100%;
-  padding: 0.5rem;
+  min-height: 110px;
+  padding: var(--space-md);
+
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: #fff;
+
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--text);
+
+  resize: vertical;
+}
+
+.checkin-card textarea:focus {
+  outline: none;
+  border-color: rgba(15, 118, 110, 0.45);
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
 }
 
 .checkin-card button {
-  margin-top: 0.5rem;
+  align-self: flex-start;
+  padding: 10px 14px;
+
+  border: 1px solid rgba(15, 118, 110, 0.35);
+  border-radius: var(--radius-sm);
+
+  background: #ffffff;
+  color: var(--accent);
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: background-color 120ms ease, transform 80ms ease;
 }
 
+.checkin-card button:hover {
+  background: var(--accent-soft);
+}
+
+.checkin-card button:active {
+  transform: translateY(1px);
+}
+
+/* 7) Small typography tweaks */
+h2 {
+  margin: 0 0 var(--space-xs) 0;
+}
+
+p {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+/* 8) Mobile */
 @media (max-width: 768px) {
+  .page {
+    padding: var(--space-lg);
+  }
+
   .dashboard {
     flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .panel {
+    padding: var(--space-md);
+  }
+
+  .card {
+    padding: var(--space-md);
   }
 }
