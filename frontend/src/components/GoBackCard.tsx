@@ -19,7 +19,7 @@ export const GoBackCard = ({
   return (
     <>
       <h2>Go Back</h2>
-      <p>Continue from where you left off</p>
+      <p>Continue from where you left off.</p>
       <div className="card">
         {selectedThread ? (
           <>
@@ -30,6 +30,7 @@ export const GoBackCard = ({
                 <p>No check-ins yet</p>
               ) : (
                 <ul>
+                  <p className="checkins-label">Last time you did:</p>
                   {checkinsForSelectedThread.map((checkin) => (
                     <li key={checkin.id}>{checkin.text}</li>
                   ))}
@@ -44,7 +45,7 @@ export const GoBackCard = ({
                   rows={4}
                   value={checkin}
                   required
-                  placeholder="Now, I will take a small step in..."
+                  placeholder="What small step will keep this alive now?"
                   onChange={(event) => onCheckinChange(event.target.value)}
                 />
                 <button>Save and continue</button>

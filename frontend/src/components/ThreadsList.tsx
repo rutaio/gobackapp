@@ -1,5 +1,4 @@
 import type { Thread } from '../types/types';
-import '../styles/components/threads-list.css';
 
 interface ThreadsListProps {
   threads: Thread[];
@@ -15,8 +14,8 @@ export const ThreadsList = ({
   return (
     <>
       <h2>Threads</h2>
-      <p>Your project work areas</p>
-      <div className='threads-list'>
+      <p>Your project work areas that needs periodic return.</p>
+      <div>
         <ul>
           {threads.map((thread) => (
             <li
