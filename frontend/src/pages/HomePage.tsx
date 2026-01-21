@@ -39,7 +39,7 @@ export const HomePage = () => {
   };
 
   const selectedThreadCheckins = checkinsHistory.filter(
-    (checkin) => checkin.threadId === selectedThreadId
+    (checkin) => checkin.threadId === selectedThreadId,
   );
 
   // to load
@@ -67,17 +67,17 @@ export const HomePage = () => {
   }, [checkinsHistory, hasLoaded]);
 
   return (
-    <div className="page">
+    <main className="page">
       <div className="dashboard">
-        <div className="panel">
+        <article className="panel">
           <ThreadsList
             threads={threads}
             selectedThreadId={selectedThreadId}
             onSelectThread={handleThreadClick}
           />
-        </div>
+        </article>
 
-        <div className="panel">
+        <article className="panel">
           <GoBackCard
             checkinsForSelectedThread={selectedThreadCheckins}
             selectedThread={selectedThreadData}
@@ -85,8 +85,8 @@ export const HomePage = () => {
             onCheckinChange={setCheckin}
             onSubmit={handleSubmit}
           />
-        </div>
+        </article>
       </div>
-    </div>
+    </main>
   );
 };

@@ -15,50 +15,6 @@
   flex: 1;
 }
 
-ul {
-  list-style: none;
-}
-
-ul li {
-  margin: 4px 0 4px 0;
-  padding: 4px;
-  background-color: #f5f5f5;
-}
-
-ul li:hover {
-  background-color: #eaeaea;
-  cursor: pointer;
-}
-
-li {
-  cursor: pointer;
-}
-
-li.selected {
-  background-color: #e0f2f1;
-}
-
-.card {
-  padding: 16px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-}
-
-.selected-thread {
-  font-weight: 600;
-  color: #00796b;
-  margin-bottom: 8px;
-}
-
-.checkin-card textarea {
-  width: 100%;
-  padding: 0.5rem;
-}
-
-.checkin-card button {
-  margin-top: 0.5rem;
-}
-
 @media (max-width: 768px) {
   .dashboard {
     flex-direction: column;

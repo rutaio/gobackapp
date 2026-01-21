@@ -1,0 +1,21 @@
+.card {
+  margin: 10px;
+  padding: 16px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.checkins-history ul {
+  list-style: none;
+}
+
+.checkins-history li {
+  list-style: none;
+  text-decoration: line-through;
+}
+
+.selected-thread {
+  font-weight: 600;
+  color: #00796b;
+  margin-bottom: 8px;
+}

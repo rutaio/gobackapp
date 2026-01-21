@@ -1,4 +1,5 @@
 import type { Thread, Checkin } from '../types/types';
+import '../styles/components/go-back-card.css';
 
 interface GoBackCardProps {
   selectedThread: Thread | null;
@@ -23,7 +24,7 @@ export const GoBackCard = ({
         {selectedThread ? (
           <>
             <p className="selected-thread">{selectedThread.name}</p>
-            
+
             <div className="checkins-history">
               {checkinsForSelectedThread.length === 0 ? (
                 <p>No check-ins yet</p>
