@@ -12,6 +12,8 @@ export const HomePage = () => {
   const [checkin, setCheckin] = useState('');
   const [checkinsHistory, setCheckinsHistory] = useState<Checkin[]>([]);
   const [hasLoaded, setHasLoaded] = useState(false);
+  const [editingThreadId, setEditingThreadId] = useState<string | null>(null);
+  const [threadsState, setThreadsState] = useState(threads);
 
   const handleThreadClick = (threadId: string) => {
     console.log('Selected thread id:', threadId);
@@ -19,7 +21,7 @@ export const HomePage = () => {
   };
 
   const selectedThreadData =
-    threads.find((thread) => thread.id === selectedThreadId) ?? null;
+    threadsState.find((thread) => thread.id === selectedThreadId) ?? null;
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -39,8 +41,17 @@ export const HomePage = () => {
   };
 
   const selectedThreadCheckins = checkinsHistory.filter(
-    (checkin) => checkin.threadId === selectedThreadId
+    (checkin) => checkin.threadId === selectedThreadId,
   );
+
+  const handleRenameConfirm = (threadId: string, newName: string) => {
+    setThreadsState((prev) =>
+      prev.map((thread) =>
+        thread.id === threadId ? { ...thread, name: newName } : thread,
+      ),
+    );
+    setEditingThreadId(null);
+  };
 
   // to load
   useEffect(() => {
@@ -71,9 +82,12 @@ export const HomePage = () => {
       <div className="dashboard">
         <div className="panel">
           <ThreadsList
-            threads={threads}
+            threads={threadsState}
             selectedThreadId={selectedThreadId}
             onSelectThread={handleThreadClick}
+            onStartEditing={setEditingThreadId}
+            editingThreadId={editingThreadId}
+            onRenameConfirm={handleRenameConfirm}
           />
         </div>
 

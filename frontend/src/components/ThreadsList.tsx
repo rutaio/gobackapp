@@ -1,30 +1,39 @@
 import type { Thread } from '../types/types';
+import { ThreadItem } from './ThreadItem';
 
 interface ThreadsListProps {
   threads: Thread[];
   selectedThreadId: string | null;
+  editingThreadId: string | null;
   onSelectThread: (threadId: string) => void;
+  onStartEditing: (threadId: string) => void;
+  onRenameConfirm: (threadId: string, newName: string) => void;
 }
 
 export const ThreadsList = ({
   threads,
   selectedThreadId,
+  editingThreadId,
   onSelectThread,
+  onStartEditing,
+  onRenameConfirm,
 }: ThreadsListProps) => {
   return (
     <>
       <h2>Threads</h2>
-      <p>Your project work areas that needs periodic return.</p>
+      <p>Your focus areas that need periodic return.</p>
       <div>
         <ul>
           {threads.map((thread) => (
-            <li
+            <ThreadItem
               key={thread.id}
-              onClick={() => onSelectThread(thread.id)}
-              className={thread.id === selectedThreadId ? 'selected' : ''}
-            >
-              {thread.name}
-            </li>
+              thread={thread}
+              isSelected={thread.id === selectedThreadId}
+              isEditing={thread.id === editingThreadId}
+              onSelectThread={onSelectThread}
+              onStartEditing={onStartEditing}
+              onRenameConfirm={onRenameConfirm}
+            />
           ))}
         </ul>
       </div>
