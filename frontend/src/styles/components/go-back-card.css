@@ -49,3 +49,9 @@
 .card button {
   background-color: #00796b;
 }
+
+.card button:focus,
+.card button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 121, 107, 0.35);
+}
