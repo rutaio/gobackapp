@@ -1,4 +1,7 @@
 /* “What should be true everywhere in the app, no matter which page or component?” */
+:root {
+  color-scheme: light;
+}
 
 @import './reset.css';
 @import './variables.css';
