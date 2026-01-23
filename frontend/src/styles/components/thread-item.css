@@ -1,0 +1,36 @@
+.thread-name {
+  flex: 1;
+}
+
+input {
+  flex: 1;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.95rem;
+}
+
+input:focus {
+  border-color: #00796b;
+  box-shadow: 0 0 0 2px rgba(0, 121, 107, 0.15);
+  outline: none;
+}
+
+.thread-edit {
+  all: unset;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0.25rem;
+  opacity: 0;
+  pointer-events: none;
+}
+
+li.selected .thread-edit {
+  opacity: 0.6;
+  pointer-events: auto;
+  transition: opacity 120ms ease-out;
+}
+
+li.selected .thread-edit:hover {
+  opacity: 1;
+}

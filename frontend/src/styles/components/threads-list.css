@@ -5,6 +5,10 @@
 }
 
 .threads-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
   list-style: none;
   padding: 0.5rem 0.75rem;
   margin-bottom: 0.25rem;

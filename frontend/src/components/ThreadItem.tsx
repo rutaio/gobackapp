@@ -1,3 +1,4 @@
+import '../styles/components/thread-item.css';
 import type { Thread } from '../types/types';
 
 interface ThreadsItemProps {
