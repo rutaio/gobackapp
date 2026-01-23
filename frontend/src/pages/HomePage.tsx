@@ -1,4 +1,5 @@
 const CHECKINS_STORAGE_KEY = 'goback_checkins_v1';
+const THREADS_STORAGE_KEY = 'goback_threads_v1';
 
 import '../styles/pages/home.css';
 import { threads } from '../data/threads';
@@ -12,6 +13,9 @@ export const HomePage = () => {
   const [checkin, setCheckin] = useState('');
   const [checkinsHistory, setCheckinsHistory] = useState<Checkin[]>([]);
   const [hasLoaded, setHasLoaded] = useState(false);
+  const [editingThreadId, setEditingThreadId] = useState<string | null>(null);
+  const [threadsState, setThreadsState] = useState(threads);
+  const [hasLoadedThreads, setHasLoadedThreads] = useState(false);
 
   const handleThreadClick = (threadId: string) => {
     console.log('Selected thread id:', threadId);
@@ -19,7 +23,7 @@ export const HomePage = () => {
   };
 
   const selectedThreadData =
-    threads.find((thread) => thread.id === selectedThreadId) ?? null;
+    threadsState.find((thread) => thread.id === selectedThreadId) ?? null;
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -42,7 +46,47 @@ export const HomePage = () => {
     (checkin) => checkin.threadId === selectedThreadId,
   );
 
-  // to load
+  const handleRenameConfirm = (threadId: string, newName: string) => {
+    const cleanedName = newName.trim();
+    if (cleanedName === '') {
+      // Do nothing and revert to old name
+      setEditingThreadId(null);
+      return;
+    }
+
+    setThreadsState((prev) =>
+      prev.map((thread) =>
+        thread.id === threadId ? { ...thread, name: newName } : thread,
+      ),
+    );
+    setEditingThreadId(null);
+  };
+
+  // load threads from localStorage
+  useEffect(() => {
+    const savedThreads = localStorage.getItem(THREADS_STORAGE_KEY);
+
+    if (savedThreads) {
+      try {
+        const parsedThreads = JSON.parse(savedThreads);
+        setThreadsState(parsedThreads);
+      } catch (error) {
+        console.warn('Failed to parse saved threads from localStorage', error);
+        setThreadsState(threads);
+      }
+    }
+
+    setHasLoadedThreads(true);
+  }, []);
+
+  // save edited threads to localStorage
+  useEffect(() => {
+    if (!hasLoadedThreads) return;
+
+    localStorage.setItem(THREADS_STORAGE_KEY, JSON.stringify(threadsState));
+  }, [threadsState, hasLoadedThreads]);
+
+  // to load checkins
   useEffect(() => {
     const savedCheckins = localStorage.getItem(CHECKINS_STORAGE_KEY);
 
@@ -59,7 +103,7 @@ export const HomePage = () => {
     setHasLoaded(true);
   }, []);
 
-  // to save
+  // to save checkins
   useEffect(() => {
     if (!hasLoaded) return;
 
@@ -71,9 +115,12 @@ export const HomePage = () => {
       <div className="dashboard">
         <article className="panel">
           <ThreadsList
-            threads={threads}
+            threads={threadsState}
             selectedThreadId={selectedThreadId}
             onSelectThread={handleThreadClick}
+            onStartEditing={setEditingThreadId}
+            editingThreadId={editingThreadId}
+            onRenameConfirm={handleRenameConfirm}
           />
         </article>
 
