@@ -38,18 +38,18 @@ export const HomePage = () => {
 
   const handleThreadClick = (threadId: string) => {
     setSelectedThreadId(threadId);
-    localStorage.setItem(LAST_THREAD_STORAGE_KEY, threadId);
   };
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (!selectedThreadId || !checkin) return;
+    const cleanedCheckin = checkin.trim();
+    if (!selectedThreadId || !cleanedCheckin) return;
 
     const newCheckin: Checkin = {
       id: crypto.randomUUID(),
       threadId: selectedThreadId,
-      text: checkin,
+      text: cleanedCheckin,
       createdAt: Date.now(),
     };
 
@@ -78,7 +78,7 @@ export const HomePage = () => {
 
     setThreadsState((prev) =>
       prev.map((thread) =>
-        thread.id === threadId ? { ...thread, name: newName } : thread,
+        thread.id === threadId ? { ...thread, name: cleanedName } : thread,
       ),
     );
     setEditingThreadId(null);

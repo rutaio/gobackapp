@@ -23,10 +23,17 @@ export const ThreadItem = ({
         <input
           defaultValue={thread.name}
           autoFocus
+          onClick={(event) => event.stopPropagation()}
           onBlur={(event) => onRenameConfirm(thread.id, event.target.value)}
           onKeyDown={(event) => {
             if (event.key === 'Enter') {
+              event.preventDefault();
               onRenameConfirm(thread.id, event.currentTarget.value);
+            }
+            if (event.key === 'Escape') {
+              event.preventDefault();
+              // simplest MVP cancel: just exit edit mode by "reverting" to old name
+              onRenameConfirm(thread.id, thread.name);
             }
           }}
         />
