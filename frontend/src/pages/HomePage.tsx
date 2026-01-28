@@ -88,6 +88,16 @@ export const HomePage = () => {
     <div className="page">
       <div className="dashboard">
         <div className="panel">
+          <GoBackCard
+            checkinsForSelectedThread={selectedThreadCheckins}
+            selectedThread={selectedThreadData}
+            checkin={checkin}
+            onCheckinChange={setCheckin}
+            onSubmit={handleSubmit}
+          />
+        </div>
+        
+        <div className="panel">
           <ThreadsList
             threads={threadsState}
             selectedThreadId={selectedThreadId}
@@ -95,16 +105,6 @@ export const HomePage = () => {
             onStartEditing={setEditingThreadId}
             editingThreadId={editingThreadId}
             onRenameConfirm={handleRenameConfirm}
-          />
-        </div>
-
-        <div className="panel">
-          <GoBackCard
-            checkinsForSelectedThread={selectedThreadCheckins}
-            selectedThread={selectedThreadData}
-            checkin={checkin}
-            onCheckinChange={setCheckin}
-            onSubmit={handleSubmit}
           />
         </div>
       </div>
