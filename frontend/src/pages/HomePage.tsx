@@ -1,5 +1,6 @@
 const CHECKINS_STORAGE_KEY = 'goback_checkins_v1';
 const THREADS_STORAGE_KEY = 'goback_threads_v1';
+const LAST_THREAD_STORAGE_KEY = 'goback_last_thread_v1';
 
 import '../styles/pages/home.css';
 import { threads } from '../data/threads';
@@ -18,8 +19,8 @@ export const HomePage = () => {
   const [hasLoadedThreads, setHasLoadedThreads] = useState(false);
 
   const handleThreadClick = (threadId: string) => {
-    console.log('Selected thread id:', threadId);
     setSelectedThreadId(threadId);
+    localStorage.setItem(LAST_THREAD_STORAGE_KEY, threadId);
   };
 
   const selectedThreadData =
@@ -36,6 +37,9 @@ export const HomePage = () => {
       text: checkin,
       createdAt: Date.now(),
     };
+
+    // remember where user worked last
+    localStorage.setItem(LAST_THREAD_STORAGE_KEY, selectedThreadId);
 
     // take previous array and create new array with new checkin
     setCheckinsHistory((prev) => [...prev, newCheckin]);
@@ -109,6 +113,40 @@ export const HomePage = () => {
 
     localStorage.setItem(CHECKINS_STORAGE_KEY, JSON.stringify(checkinsHistory));
   }, [checkinsHistory, hasLoaded]);
+
+  // set default selected thread
+  useEffect(() => {
+    if (!hasLoaded || !hasLoadedThreads) return;
+    if (selectedThreadId) return;
+
+    const lastThreadId = localStorage.getItem(LAST_THREAD_STORAGE_KEY);
+
+    // find the most recent checkin
+    const mostRecentCheckin = checkinsHistory.reduce<Checkin | null>(
+      (latestCheckin, currentCheckin) =>
+        !latestCheckin || currentCheckin.createdAt > latestCheckin.createdAt
+          ? currentCheckin
+          : latestCheckin,
+      null,
+    );
+
+    const defaultThreadId =
+      // 	if the user has checkins,	take the thread of the most recent checkin
+      mostRecentCheckin?.threadId ??
+      // 	if no check-ins exist yet, fall back to the last thread the user clicked
+      lastThreadId ??
+      // 	if this is a brand-new user, just show the first thread
+      threadsState[0]?.id ??
+      null;
+
+    setSelectedThreadId(defaultThreadId);
+  }, [
+    hasLoaded,
+    hasLoadedThreads,
+    selectedThreadId,
+    checkinsHistory,
+    threadsState,
+  ]);
 
   return (
     <div className="page">
