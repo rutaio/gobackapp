@@ -83,31 +83,34 @@ export const HomePage = () => {
     );
     setEditingThreadId(null);
   };
-
   return (
-    <div className="page">
-      <div className="dashboard">
-        <div className="panel">
-          <GoBackCard
-            checkinsForSelectedThread={selectedThreadCheckins}
-            selectedThread={selectedThreadData}
-            checkin={checkin}
-            onCheckinChange={setCheckin}
-            onSubmit={handleSubmit}
-          />
-        </div>
+    <main className="min-h-screen bg-slate-50">
+      <div className="mx-auto max-w-6xl px-6 py-10">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+          {/* Left panel: Go Back */}
+          <section className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+            <GoBackCard
+              checkinsForSelectedThread={selectedThreadCheckins}
+              selectedThread={selectedThreadData}
+              checkin={checkin}
+              onCheckinChange={setCheckin}
+              onSubmit={handleSubmit}
+            />
+          </section>
 
-        <div className="panel">
-          <ThreadsList
-            threads={threadsState}
-            selectedThreadId={selectedThreadId}
-            onSelectThread={handleThreadClick}
-            onStartEditing={setEditingThreadId}
-            editingThreadId={editingThreadId}
-            onRenameConfirm={handleRenameConfirm}
-          />
+          {/* Right panel: Threads */}
+          <section className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+            <ThreadsList
+              threads={threadsState}
+              selectedThreadId={selectedThreadId}
+              onSelectThread={handleThreadClick}
+              onStartEditing={setEditingThreadId}
+              editingThreadId={editingThreadId}
+              onRenameConfirm={handleRenameConfirm}
+            />
+          </section>
         </div>
       </div>
-    </div>
+    </main>
   );
 };
