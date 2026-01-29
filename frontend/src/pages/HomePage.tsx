@@ -96,7 +96,7 @@ export const HomePage = () => {
             onSubmit={handleSubmit}
           />
         </div>
-        
+
         <div className="panel">
           <ThreadsList
             threads={threadsState}
