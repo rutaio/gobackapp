@@ -1,7 +1,3 @@
-const CHECKINS_STORAGE_KEY = 'goback_checkins_v1';
-const THREADS_STORAGE_KEY = 'goback_threads_v1';
-const LAST_THREAD_STORAGE_KEY = 'goback_last_thread_v1';
-
 import '../styles/pages/home.css';
 import { threads } from '../data/threads';
 import { useState } from 'react';
@@ -12,6 +8,10 @@ import type { Checkin } from '../types/types';
 import { useCheckinsStorage } from '../hooks/useCheckinsStorage';
 import { useThreadsStorage } from '../hooks/useThreadsStorage';
 import { useDefaultSelectedThread } from '../hooks/useDefaultSelectedThread';
+
+const CHECKINS_STORAGE_KEY = 'goback_checkins_v1';
+const THREADS_STORAGE_KEY = 'goback_threads_v1';
+const LAST_THREAD_STORAGE_KEY = 'goback_last_thread_v1';
 
 export const HomePage = () => {
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null);
@@ -96,7 +96,7 @@ export const HomePage = () => {
             onSubmit={handleSubmit}
           />
         </div>
-        
+
         <div className="panel">
           <ThreadsList
             threads={threadsState}
