@@ -1,7 +1,3 @@
-const CHECKINS_STORAGE_KEY = 'goback_checkins_v1';
-const THREADS_STORAGE_KEY = 'goback_threads_v1';
-const LAST_THREAD_STORAGE_KEY = 'goback_last_thread_v1';
-
 import '../styles/pages/home.css';
 import { threads } from '../data/threads';
 import { useState } from 'react';
@@ -12,6 +8,10 @@ import type { Checkin } from '../types/types';
 import { useCheckinsStorage } from '../hooks/useCheckinsStorage';
 import { useThreadsStorage } from '../hooks/useThreadsStorage';
 import { useDefaultSelectedThread } from '../hooks/useDefaultSelectedThread';
+
+const CHECKINS_STORAGE_KEY = 'goback_checkins_v1';
+const THREADS_STORAGE_KEY = 'goback_threads_v1';
+const LAST_THREAD_STORAGE_KEY = 'goback_last_thread_v1';
 
 export const HomePage = () => {
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null);
@@ -64,9 +64,11 @@ export const HomePage = () => {
   const selectedThreadData =
     threadsState.find((thread) => thread.id === selectedThreadId) ?? null;
 
-  const selectedThreadCheckins = checkinsHistory.filter(
-    (checkin) => checkin.threadId === selectedThreadId,
-  );
+  const selectedThreadCheckins = checkinsHistory
+    .filter((checkin) => checkin.threadId === selectedThreadId)
+    .sort((a, b) => b.createdAt - a.createdAt) // newest first;
+    .slice(0, 3) // show only last 3;
+    .reverse();
 
   const handleRenameConfirm = (threadId: string, newName: string) => {
     const cleanedName = newName.trim();

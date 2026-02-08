@@ -19,7 +19,7 @@ export const ThreadItem = ({
   onRenameConfirm,
 }: ThreadsItemProps) => {
   return (
-    <li className={isSelected ? 'selected' : ''}>
+    <li data-testid="thread-item" className={isSelected ? 'selected' : ''}>
       {isEditing ? (
         <input
           defaultValue={thread.name}
@@ -39,12 +39,17 @@ export const ThreadItem = ({
           }}
         />
       ) : (
-        <span className="thread-name" onClick={() => onSelectThread(thread.id)}>
+        <span
+          data-testid="thread-name"
+          className="thread-name"
+          onClick={() => onSelectThread(thread.id)}
+        >
           {thread.name}
         </span>
       )}
 
       <button
+        data-testid="thread-edit-button"
         className="thread-edit"
         aria-label="Rename thread"
         onClick={(event) => {
