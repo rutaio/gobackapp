@@ -64,9 +64,11 @@ export const HomePage = () => {
   const selectedThreadData =
     threadsState.find((thread) => thread.id === selectedThreadId) ?? null;
 
-  const selectedThreadCheckins = checkinsHistory.filter(
-    (checkin) => checkin.threadId === selectedThreadId,
-  );
+  const selectedThreadCheckins = checkinsHistory
+    .filter((checkin) => checkin.threadId === selectedThreadId)
+    .sort((a, b) => b.createdAt - a.createdAt) // newest first;
+    .slice(0, 3) // show only last 3;
+    .reverse();
 
   const handleRenameConfirm = (threadId: string, newName: string) => {
     const cleanedName = newName.trim();
