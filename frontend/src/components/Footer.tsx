@@ -1,15 +1,21 @@
+import '../styles/components/footer.css';
+
 export const Footer = () => {
   return (
-    <footer>
-      <div>
-        <h2>Go Back App</h2>
-        <p>Return. Reflect. Continue.</p>
-      </div>
-      <div>
-        <p>
-          A quiet space for solo creators who juggle many projects. Remember
-          where you left off and take one small step forward.
-        </p>
+    <footer className="container footer">
+      <div className="grid">
+        <div>
+          <strong>Go Back</strong>
+          <br />
+          <small>Return. Reflect. Continue.</small>
+        </div>
+
+        <div>
+          <small>
+            A quiet space for solo creators who juggle many projects. Remember
+            where you left off and take one small step forward.
+          </small>
+        </div>
       </div>
     </footer>
   );

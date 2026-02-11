@@ -111,10 +111,10 @@ export const HomePage = () => {
           />
         </article>
       </div>
+      
       <div className="page-spacer" />
-      <div className="footer">
-        <Footer></Footer>
-      </div>
+
+      <Footer></Footer>
     </main>
   );
 };

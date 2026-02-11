@@ -24,21 +24,8 @@
   border-radius: 8px;
 }
 
-footer {
-  display: flex;
-  justify-content: space-between;
-  gap: 2rem;
-  margin-top: 3rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid #ddd;
-}
-
 @media (max-width: 768px) {
   .dashboard {
-    flex-direction: column;
-  }
-
-  footer {
     flex-direction: column;
   }
 }
