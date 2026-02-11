@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { ThreadsList } from '../components/ThreadsList';
 import { GoBackCard } from '../components/GoBackCard';
 import type { Checkin } from '../types/types';
+import { Footer } from '../components/Footer';
 
 import { useCheckinsStorage } from '../hooks/useCheckinsStorage';
 import { useThreadsStorage } from '../hooks/useThreadsStorage';
@@ -109,6 +110,10 @@ export const HomePage = () => {
             onRenameConfirm={handleRenameConfirm}
           />
         </article>
+      </div>
+      <div className="page-spacer" />
+      <div className="footer">
+        <Footer></Footer>
       </div>
     </main>
   );

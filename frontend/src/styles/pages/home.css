@@ -1,4 +1,7 @@
 .page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
@@ -9,6 +12,11 @@
   gap: 20px;
 }
 
+/* grows to fill remaining vertical space */
+.page-spacer {
+  flex: 1;
+}
+
 .panel {
   border: 1px solid var(--pico-muted-border-color);
   padding: 20px;
@@ -16,8 +24,21 @@
   border-radius: 8px;
 }
 
+footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #ddd;
+}
+
 @media (max-width: 768px) {
   .dashboard {
+    flex-direction: column;
+  }
+
+  footer {
     flex-direction: column;
   }
 }
