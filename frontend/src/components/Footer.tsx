@@ -5,7 +5,7 @@ export const Footer = () => {
     <footer className="container footer">
       <div className="grid">
         <div>
-          <strong>Go Back</strong>
+          <strong>Go Back App</strong>
           <br />
           <small>Return. Reflect. Continue.</small>
         </div>

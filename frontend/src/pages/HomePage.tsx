@@ -91,16 +91,6 @@ export const HomePage = () => {
     <main className="page">
       <div className="dashboard">
         <article className="panel">
-          <GoBackCard
-            checkinsForSelectedThread={selectedThreadCheckins}
-            selectedThread={selectedThreadData}
-            checkin={checkin}
-            onCheckinChange={setCheckin}
-            onSubmit={handleSubmit}
-          />
-        </article>
-
-        <article className="panel">
           <ThreadsList
             threads={threadsState}
             selectedThreadId={selectedThreadId}
@@ -110,8 +100,18 @@ export const HomePage = () => {
             onRenameConfirm={handleRenameConfirm}
           />
         </article>
+        
+        <article className="panel">
+          <GoBackCard
+            checkinsForSelectedThread={selectedThreadCheckins}
+            selectedThread={selectedThreadData}
+            checkin={checkin}
+            onCheckinChange={setCheckin}
+            onSubmit={handleSubmit}
+          />
+        </article>
       </div>
-      
+
       <div className="page-spacer" />
 
       <Footer></Footer>

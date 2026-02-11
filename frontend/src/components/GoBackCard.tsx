@@ -18,8 +18,8 @@ export const GoBackCard = ({
 }: GoBackCardProps) => {
   return (
     <>
-      <h2>Go Back</h2>
-      <p>Continue from where you left off.</p>
+      <h2>Up Next</h2>
+      <p>Your next small step</p>
       <div className="card" data-testid="go-back-card">
         {selectedThread ? (
           <>
