@@ -58,7 +58,6 @@ export const HomePage = () => {
     // remember where user worked last
     localStorage.setItem(LAST_THREAD_STORAGE_KEY, selectedThreadId);
 
-    // take previous array and create new array with new checkin
     setCheckinsHistory((prev) => [...prev, newCheckin]);
     setCheckin('');
   };
@@ -75,7 +74,6 @@ export const HomePage = () => {
   const handleRenameConfirm = (threadId: string, newName: string) => {
     const cleanedName = newName.trim();
     if (cleanedName === '') {
-      // Do nothing and revert to old name
       setEditingThreadId(null);
       return;
     }

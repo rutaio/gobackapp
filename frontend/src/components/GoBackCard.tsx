@@ -19,7 +19,7 @@ export const GoBackCard = ({
   return (
     <>
       <h2>Up Next</h2>
-      {/* <p>Your next small step</p> */}
+      {/* TO REVISIT <p>Your next small step</p> */}
       <div className="card" data-testid="go-back-card">
         {selectedThread ? (
           <>
