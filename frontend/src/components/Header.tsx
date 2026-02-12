@@ -4,8 +4,8 @@ export const Header = () => {
   return (
     <header>
       <div className="logo">
-        <strong>Go Back</strong>
-        <small>Return. Reflect. Continue.</small>
+        <strong>GoBack</strong>
+        <small>Review. Remember. Continue.</small>
       </div>
 
       <nav>
