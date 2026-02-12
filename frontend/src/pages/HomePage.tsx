@@ -5,6 +5,7 @@ import { ThreadsList } from '../components/ThreadsList';
 import { GoBackCard } from '../components/GoBackCard';
 import type { Checkin } from '../types/types';
 import { Footer } from '../components/Footer';
+import { Header } from '../components/Header';
 
 import { useCheckinsStorage } from '../hooks/useCheckinsStorage';
 import { useThreadsStorage } from '../hooks/useThreadsStorage';
@@ -89,6 +90,7 @@ export const HomePage = () => {
 
   return (
     <div className="page">
+      <Header></Header>
       <div className="dashboard">
         <div className="panel">
           <GoBackCard
