@@ -3,7 +3,7 @@ import '../styles/components/footer.css';
 export const Footer = () => {
   return (
     <footer className="container footer">
-      <div className="grid">
+     
         <div>
           <strong>Go Back App</strong>
           <br />
@@ -16,7 +16,7 @@ export const Footer = () => {
             where you left off and take one small step forward.
           </small>
         </div>
-      </div>
+      
     </footer>
   );
 };
