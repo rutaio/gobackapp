@@ -89,36 +89,37 @@ export const HomePage = () => {
   };
 
   return (
-    <main className="page">
-      
+    <>
       <Header></Header>
 
-      <div className="dashboard">
-        <article className="panel threads-panel">
-          <ThreadsList
-            threads={threadsState}
-            selectedThreadId={selectedThreadId}
-            onSelectThread={handleThreadClick}
-            onStartEditing={setEditingThreadId}
-            editingThreadId={editingThreadId}
-            onRenameConfirm={handleRenameConfirm}
-          />
-        </article>
+      <main className="page">
+        <div className="dashboard">
+          <article className="panel threads-panel">
+            <ThreadsList
+              threads={threadsState}
+              selectedThreadId={selectedThreadId}
+              onSelectThread={handleThreadClick}
+              onStartEditing={setEditingThreadId}
+              editingThreadId={editingThreadId}
+              onRenameConfirm={handleRenameConfirm}
+            />
+          </article>
 
-        <article className="panel goback-panel">
-          <GoBackCard
-            checkinsForSelectedThread={selectedThreadCheckins}
-            selectedThread={selectedThreadData}
-            checkin={checkin}
-            onCheckinChange={setCheckin}
-            onSubmit={handleSubmit}
-          />
-        </article>
-      </div>
+          <article className="panel goback-panel">
+            <GoBackCard
+              checkinsForSelectedThread={selectedThreadCheckins}
+              selectedThread={selectedThreadData}
+              checkin={checkin}
+              onCheckinChange={setCheckin}
+              onSubmit={handleSubmit}
+            />
+          </article>
+        </div>
 
-      <div className="page-spacer" />
+        <div className="page-spacer" />
 
-      <Footer></Footer>
-    </main>
+        <Footer></Footer>
+      </main>
+    </>
   );
 };

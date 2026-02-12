@@ -2,7 +2,7 @@ import '../styles/components/footer.css';
 
 export const Footer = () => {
   return (
-    <footer className="container footer">
+    <footer id="footer" className="container footer">
      
         <div>
           <strong>Go Back App</strong>

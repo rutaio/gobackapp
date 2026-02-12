@@ -2,5 +2,23 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  padding: 0.75rem 2rem;
+  border-bottom: 1px solid var(--pico-muted-border-color);
+}
+
+.logo {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.logo small {
+  font-size: 0.75rem;
+  color: var(--pico-muted-color);
+}
+
+nav a {
+  font-size: 0.8rem;
+  text-decoration: none;
+  color: var(--pico-primary-color);
 }
