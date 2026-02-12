@@ -1,0 +1,60 @@
+.card {
+  padding: 16px;
+  margin-top: 1.1rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.selected-thread {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #00796b;
+  margin-bottom: 0.5rem;
+}
+
+.checkins-history {
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--pico-muted-border-color);
+  font-size: 0.9rem;
+}
+
+/* TO REVISIT
+.checkins-label {
+  margin: 0 0 0.5rem;
+  font-size: 0.8rem;
+  color: var(--pico-muted-color);
+} */
+
+.checkins-history ul {
+  margin: 0;
+  padding: 0;
+}
+
+.checkins-history li {
+  list-style: none;
+  padding-left: 0.75rem;
+  margin-bottom: 0.25rem;
+  border-left: 2px solid #00796b;
+  color: var(--pico-muted-color);
+  opacity: 0.9;
+}
+
+.card textarea {
+  font-size: 1rem;
+}
+
+.card textarea:focus {
+  border: 2px solid #00796b;
+  box-shadow: 0 0 0 2px rgba(0, 121, 107, 0.2);
+}
+
+.card button {
+  background-color: #00796b;
+}
+
+.card button:focus,
+.card button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 121, 107, 0.35);
+}

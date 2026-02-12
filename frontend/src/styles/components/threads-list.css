@@ -1,0 +1,26 @@
+.threads-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.threads-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0.25rem;
+  background-color: #f5f5f5;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.threads-list li:hover {
+  background-color: #eaeaea;
+}
+
+.threads-list li.selected {
+  background-color: #e0f2f1;
+}
