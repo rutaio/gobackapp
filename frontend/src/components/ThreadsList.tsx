@@ -22,7 +22,7 @@ export const ThreadsList = ({
   return (
     <>
       <h2>Threads</h2>
-      {/* TO REVISIT <p>Your work areas</p> */}
+      <p>Group your work areas. Rename anytime.</p>
       <div className="threads-list">
         <ul>
           {threads.map((thread) => (

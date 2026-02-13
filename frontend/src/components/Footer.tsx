@@ -6,7 +6,7 @@ export const Footer = () => {
       <div>
         <strong>GoBack</strong>
         <br />
-        <small>Review. Remember. Continue.</small>
+        <small>Return. Remember. Continue.</small>
       </div>
 
       <div>

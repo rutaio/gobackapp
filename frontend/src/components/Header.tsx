@@ -5,7 +5,7 @@ export const Header = () => {
     <header>
       <div className="logo">
         <strong>GoBack</strong>
-        <small>Review. Remember. Continue.</small>
+        <small>Return. Remember. Continue.</small>
       </div>
 
       <nav>

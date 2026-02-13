@@ -19,7 +19,7 @@ export const GoBackCard = ({
   return (
     <>
       <h2>Up Next</h2>
-      {/* TO REVISIT <p>Your next small step</p> */}
+      <p>Add your next small step.</p>
       <div className="card" data-testid="go-back-card">
         {selectedThread ? (
           <>
@@ -29,7 +29,7 @@ export const GoBackCard = ({
 
             <div className="checkins-history" data-testid="checkins-history">
               {checkinsForSelectedThread.length === 0 ? (
-                <p>No check-ins yet</p>
+                <p>No checkins yet</p>
               ) : (
                 <>
                   <p className="checkins-label">Recent steps:</p>
