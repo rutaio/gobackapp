@@ -18,8 +18,8 @@ export const GoBackCard = ({
 }: GoBackCardProps) => {
   return (
     <>
-      <h2>Up Next</h2>
-      <p>Add your next small step.</p>
+      <h2>Steps</h2>
+      <p>Log small actions to keep this thread alive.</p>
       <div className="card" data-testid="go-back-card">
         {selectedThread ? (
           <>
@@ -28,17 +28,18 @@ export const GoBackCard = ({
             </h4>
 
             <div className="checkins-history" data-testid="checkins-history">
+              <p className="checkins-label">Recent steps:</p>
+
               {checkinsForSelectedThread.length === 0 ? (
-                <p>No checkins yet</p>
+                <p className="empty-state">
+                  No steps yet. Start by adding one small action.
+                </p>
               ) : (
-                <>
-                  <p className="checkins-label">Recent steps:</p>
-                  <ul>
-                    {checkinsForSelectedThread.map((checkin) => (
-                      <li key={checkin.id}>{checkin.text}</li>
-                    ))}
-                  </ul>
-                </>
+                <ul>
+                  {checkinsForSelectedThread.map((checkin) => (
+                    <li key={checkin.id}>{checkin.text}</li>
+                  ))}
+                </ul>
               )}
             </div>
 

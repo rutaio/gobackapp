@@ -11,8 +11,9 @@ export const Footer = () => {
 
       <div>
         <small>
-          A quiet space for solo creators who juggle many projects. Remember
-          where you left off and take one small step forward.
+          A continuity tool for solo creators managing multiple threads of work.
+          See where you left off in every thread and take the next small step,
+          all in one place.
         </small>
       </div>
     </footer>

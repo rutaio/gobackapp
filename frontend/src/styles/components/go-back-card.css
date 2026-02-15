@@ -12,6 +12,11 @@
   margin-bottom: 0.5rem;
 }
 
+.empty-state {
+  color: var(--pico-muted-color);
+  font-size: 0.9rem;
+}
+
 .checkins-history {
   margin-bottom: 1.5rem;
   padding-bottom: 0.75rem;

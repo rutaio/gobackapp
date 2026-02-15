@@ -13,7 +13,7 @@ export const threads = [
   },
   {
     id: '4',
-    name: 'Strategy',
+    name: 'Planning',
   },
   {
     id: '5',
