@@ -19,7 +19,7 @@ export const GoBackCard = ({
   return (
     <>
       <h2>Steps</h2>
-      <p>Log small actions to keep this thread alive.</p>
+      <p>Log small steps you take.</p>
       <div className="card" data-testid="go-back-card">
         {selectedThread ? (
           <>
@@ -32,7 +32,7 @@ export const GoBackCard = ({
 
               {checkinsForSelectedThread.length === 0 ? (
                 <p className="empty-state">
-                  No steps yet. Start by adding one small action.
+                  No steps yet. Start by adding one.
                 </p>
               ) : (
                 <ul>
@@ -50,7 +50,7 @@ export const GoBackCard = ({
                   rows={4}
                   value={checkin}
                   required
-                  placeholder="What small step will keep this alive now?"
+                  placeholder="What small step will keep this alive?"
                   onChange={(event) => onCheckinChange(event.target.value)}
                 />
                 <button data-testid="save-checkin-button">
