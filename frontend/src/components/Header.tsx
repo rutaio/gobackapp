@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import '../styles/components/header.css';
 
 export const Header = () => {
@@ -9,7 +10,7 @@ export const Header = () => {
       </div>
 
       <nav>
-        <a href="#footer">How it works</a>
+        <Link to="/about">How it works</Link>
       </nav>
     </header>
   );
