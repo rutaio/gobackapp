@@ -86,6 +86,21 @@ export const HomePage = () => {
     setEditingThreadId(null);
   };
 
+  const handleAddThread = (name: string) => {
+    const trimmedName = name.trim().slice(0, 40); // enforce max length
+    if (!trimmedName) return;
+
+    const newThread = {
+      id: crypto.randomUUID(),
+      name: trimmedName,
+    };
+
+    setThreadsState((prev) => [...prev, newThread]);
+    // Nice UX: automatically open the new thread
+    setSelectedThreadId(newThread.id);
+    setEditingThreadId(null);
+  };
+
   return (
     <>
       <Header></Header>
@@ -100,6 +115,7 @@ export const HomePage = () => {
               onStartEditing={setEditingThreadId}
               editingThreadId={editingThreadId}
               onRenameConfirm={handleRenameConfirm}
+              onAddThread={handleAddThread}
             />
           </article>
 

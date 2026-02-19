@@ -1,6 +1,7 @@
 import '../styles/components/threads-list.css';
 import type { Thread } from '../types/types';
 import { ThreadItem } from './ThreadItem';
+import { useState } from 'react';
 
 interface ThreadsListProps {
   threads: Thread[];
@@ -9,6 +10,7 @@ interface ThreadsListProps {
   onSelectThread: (threadId: string) => void;
   onStartEditing: (threadId: string) => void;
   onRenameConfirm: (threadId: string, newName: string) => void;
+  onAddThread: (newThreadName: string) => void;
 }
 
 export const ThreadsList = ({
@@ -18,11 +20,71 @@ export const ThreadsList = ({
   onSelectThread,
   onStartEditing,
   onRenameConfirm,
+  onAddThread,
 }: ThreadsListProps) => {
+  const [isAdding, setIsAdding] = useState(false);
+  const [newThreadName, setNewThreadName] = useState('');
+
+  const handleAddThread = () => {
+    const trimmedName = newThreadName.trim();
+    if (!trimmedName) return;
+
+    onAddThread(trimmedName);
+
+    setNewThreadName('');
+    setIsAdding(false);
+  };
+
+  const handleAddCancel = () => {
+    setNewThreadName('');
+    setIsAdding(false);
+  };
+
   return (
     <>
       <h2>Threads</h2>
       <p>Group your work into areas. Rename anytime.</p>
+
+      {/* Add thread UI */}
+      {isAdding ? (
+        <div className="threads-add">
+          <input
+            maxLength={40}
+            value={newThreadName}
+            placeholder="New thread name..."
+            autoFocus
+            onChange={(event) => setNewThreadName(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') {
+                event.preventDefault();
+                handleAddThread();
+              }
+              if (event.key === 'Escape') {
+                event.preventDefault();
+                handleAddCancel();
+              }
+            }}
+          />
+
+          <div className="threads-add-actions">
+            <button type="button" onClick={handleAddThread}>
+              Add
+            </button>
+            <button type="button" onClick={handleAddCancel}>
+              Cancel
+            </button>
+          </div>
+        </div>
+      ) : (
+        <button
+          type="button"
+          className="secondary"
+          onClick={() => setIsAdding(true)}
+        >
+          + Add Thread
+        </button>
+      )}
+
       <div className="threads-list">
         <ul>
           {threads.map((thread) => (
