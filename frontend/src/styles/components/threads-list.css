@@ -24,3 +24,13 @@
 .threads-list li.selected {
   background-color: #e0f2f1;
 }
+
+.threads-add {
+  margin-bottom: 1rem;
+}
+
+.threads-add-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
