@@ -17,8 +17,8 @@ test('Case 1: selecting a thread shows its name in Go Back card', async ({
   const threadName =
     (await firstThread.getByTestId('thread-name').textContent())?.trim() ?? '';
 
-  // click to select the thread
-  await firstThread.click();
+  // click the thread name (more precise than clicking entire <li>)
+  await firstThread.getByTestId('thread-name').click();
 
   // expect the Go Back card to show the selected thread name
   const goBackCard = page.getByTestId('go-back-card');
@@ -73,7 +73,7 @@ test('Case 3: refresh keeps last worked thread selected and shows its checkins',
   page,
 }) => {
   // open the app
-  await page.goto('');
+  await page.goto('/');
 
   // select the first thread
   const firstThread = page.getByTestId('thread-item').first();
@@ -120,4 +120,94 @@ test('Case 3: refresh keeps last worked thread selected and shows its checkins',
   // confirm the checkin is still visible (loaded from localStorage)
   const checkinsHistoryAfter = goBackCardAfter.getByTestId('checkins-history');
   await expect(checkinsHistoryAfter).toContainText(checkinMessage);
+});
+
+// Use Case 4:
+test('Case 4: user can add a new thread and it survives refresh', async ({
+  page,
+}) => {
+  // Open app
+  await page.goto('/');
+
+  // Count threads before adding
+  const beforeCount = await page.getByTestId('thread-item').count();
+
+  // Open add-thread UI
+  await page.getByTestId('add-thread-button').click();
+
+  // Locate input field
+  const newThreadInput = page.getByTestId('new-thread-input');
+
+  // Ensure input is visible
+  await expect(newThreadInput).toBeVisible();
+
+  // Create unique thread name
+  const newThreadName = `New Thread ${Date.now()}`;
+
+  // Fill input
+  await newThreadInput.fill(newThreadName);
+
+  // Confirm add
+  await page.getByTestId('confirm-add-thread').click();
+
+  // Confirm thread count increased
+  await expect(page.getByTestId('thread-item')).toHaveCount(beforeCount + 1);
+
+  // Confirm the new thread appears in the Threads list (scoped)
+  await expect(
+    page.getByTestId('thread-name').filter({ hasText: newThreadName }),
+  ).toHaveCount(1);
+
+  // Confirm the new thread is selected in the Go Back card (scoped)
+  const goBackCard = page.getByTestId('go-back-card');
+  await expect(goBackCard.getByTestId('selected-thread-name')).toHaveText(
+    newThreadName,
+  );
+
+  // Reload page
+  await page.reload();
+
+  // Confirm thread still exists after refresh (scoped)
+  await expect(
+    page.getByTestId('thread-name').filter({ hasText: newThreadName }),
+  ).toHaveCount(1);
+
+  // Confirm it’s still selected after refresh
+  const goBackCardAfter = page.getByTestId('go-back-card');
+  await expect(goBackCardAfter.getByTestId('selected-thread-name')).toHaveText(
+    newThreadName,
+  );
+});
+
+// Use Case 5:
+test('Case 5: user can cancel adding a thread (no thread created)', async ({
+  page,
+}) => {
+  // Open app
+  await page.goto('/');
+
+  // Count threads before
+  const beforeCount = await page.getByTestId('thread-item').count();
+
+  // Open add UI
+  await page.getByTestId('add-thread-button').click();
+
+  // Locate input
+  const newThreadInput = page.getByTestId('new-thread-input');
+  await expect(newThreadInput).toBeVisible();
+
+  // Type draft name
+  const draftName = `Draft ${Date.now()}`;
+  await newThreadInput.fill(draftName);
+
+  // Click cancel
+  await page.getByTestId('cancel-add-thread').click();
+
+  // Confirm thread count unchanged
+  await expect(page.getByTestId('thread-item')).toHaveCount(beforeCount);
+
+  // Confirm draft name does NOT appear in the Threads list
+  await expect(
+    page.getByTestId('thread-name').filter({ hasText: draftName }),
+  ).toHaveCount(0);
 });

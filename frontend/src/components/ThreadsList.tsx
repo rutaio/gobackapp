@@ -49,6 +49,7 @@ export const ThreadsList = ({
       {isAdding ? (
         <div className="threads-add">
           <input
+            data-testid="new-thread-input"
             maxLength={40}
             value={newThreadName}
             placeholder="New thread name..."
@@ -67,16 +68,25 @@ export const ThreadsList = ({
           />
 
           <div className="threads-add-actions">
-            <button type="button" onClick={handleAddThread}>
+            <button
+              data-testid="confirm-add-thread"
+              type="button"
+              onClick={handleAddThread}
+            >
               Add
             </button>
-            <button type="button" onClick={handleAddCancel}>
+            <button
+              data-testid="cancel-add-thread"
+              type="button"
+              onClick={handleAddCancel}
+            >
               Cancel
             </button>
           </div>
         </div>
       ) : (
         <button
+          data-testid="add-thread-button"
           type="button"
           className="secondary"
           onClick={() => setIsAdding(true)}
