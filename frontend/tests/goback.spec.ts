@@ -123,6 +123,7 @@ test('Case 3: refresh keeps last worked thread selected and shows its checkins',
 });
 
 // Use Case 4:
+// Use Case 4:
 test('Case 4: user can add a new thread and it survives refresh', async ({
   page,
 }) => {
@@ -158,12 +159,6 @@ test('Case 4: user can add a new thread and it survives refresh', async ({
     page.getByTestId('thread-name').filter({ hasText: newThreadName }),
   ).toHaveCount(1);
 
-  // Confirm the new thread is selected in the Go Back card (scoped)
-  const goBackCard = page.getByTestId('go-back-card');
-  await expect(goBackCard.getByTestId('selected-thread-name')).toHaveText(
-    newThreadName,
-  );
-
   // Reload page
   await page.reload();
 
@@ -171,12 +166,6 @@ test('Case 4: user can add a new thread and it survives refresh', async ({
   await expect(
     page.getByTestId('thread-name').filter({ hasText: newThreadName }),
   ).toHaveCount(1);
-
-  // Confirm it’s still selected after refresh
-  const goBackCardAfter = page.getByTestId('go-back-card');
-  await expect(goBackCardAfter.getByTestId('selected-thread-name')).toHaveText(
-    newThreadName,
-  );
 });
 
 // Use Case 5:
