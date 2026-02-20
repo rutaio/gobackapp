@@ -50,7 +50,7 @@ export const ThreadItem = ({
 
       <button
         data-testid="thread-edit-button"
-        className="thread-edit"
+        className="thread-edit thread-edit--pencil"
         aria-label="Rename thread"
         onClick={(event) => {
           event.stopPropagation();
