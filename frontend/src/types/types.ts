@@ -1,6 +1,7 @@
 export type Thread = {
   id: string;
   name: string;
+  isArchived?: boolean;
 };
 
 export type Checkin = {

@@ -11,6 +11,7 @@ interface ThreadsListProps {
   onStartEditing: (threadId: string) => void;
   onRenameConfirm: (threadId: string, newName: string) => void;
   onAddThread: (newThreadName: string) => void;
+  onArchiveThread: (threadId: string) => void;
 }
 
 export const ThreadsList = ({
@@ -21,9 +22,11 @@ export const ThreadsList = ({
   onStartEditing,
   onRenameConfirm,
   onAddThread,
+  onArchiveThread,
 }: ThreadsListProps) => {
   const [isAdding, setIsAdding] = useState(false);
   const [newThreadName, setNewThreadName] = useState('');
+  const visibleThreads = threads.filter((t) => !t.isArchived);
 
   const handleAddThread = () => {
     const trimmedName = newThreadName.trim();
@@ -104,7 +107,7 @@ export const ThreadsList = ({
             </li>
           )}
 
-          {threads.map((thread) => (
+          {visibleThreads.map((thread) => (
             <ThreadItem
               key={thread.id}
               thread={thread}
@@ -113,6 +116,7 @@ export const ThreadsList = ({
               onSelectThread={onSelectThread}
               onStartEditing={onStartEditing}
               onRenameConfirm={onRenameConfirm}
+              onArchiveThread={onArchiveThread}
             />
           ))}
         </ul>
