@@ -2,35 +2,32 @@
   flex: 1;
 }
 
-input {
+/* Rename input (only inside a thread row) */
+.thread-item input {
   flex: 1;
   border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.95rem;
+  border-radius: 6px;
+  padding: 0.45rem 0.6rem;
+  font-size: 1rem;
 }
 
-input:focus {
+.thread-item input:focus {
   border-color: #00796b;
   box-shadow: 0 0 0 2px rgba(0, 121, 107, 0.15);
   outline: none;
 }
 
-.thread-edit {
-  all: unset;
-  cursor: pointer;
-  font-size: 0.9rem;
-  padding: 0.25rem;
+/* Pencil should be hidden unless the row is selected */
+.thread-edit--pencil {
   opacity: 0;
   pointer-events: none;
 }
 
-li.selected .thread-edit {
+li.selected .thread-edit--pencil {
   opacity: 0.6;
   pointer-events: auto;
-  transition: opacity 120ms ease-out;
 }
 
-li.selected .thread-edit:hover {
+li.selected .thread-edit--pencil:hover {
   opacity: 1;
 }

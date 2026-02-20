@@ -42,61 +42,68 @@ export const ThreadsList = ({
 
   return (
     <>
-      <h2>Threads</h2>
-      <p>Group your work into areas. Rename anytime.</p>
-
-      {/* Add thread UI */}
-      {isAdding ? (
-        <div className="threads-add">
-          <input
-            data-testid="new-thread-input"
-            maxLength={40}
-            value={newThreadName}
-            placeholder="New thread name..."
-            autoFocus
-            onChange={(event) => setNewThreadName(event.target.value)}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') {
-                event.preventDefault();
-                handleAddThread();
-              }
-              if (event.key === 'Escape') {
-                event.preventDefault();
-                handleAddCancel();
-              }
-            }}
-          />
-
-          <div className="threads-add-actions">
-            <button
-              data-testid="confirm-add-thread"
-              type="button"
-              onClick={handleAddThread}
-            >
-              Add
-            </button>
-            <button
-              data-testid="cancel-add-thread"
-              type="button"
-              onClick={handleAddCancel}
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      ) : (
+      <div className="threads-header">
+        <h2>Threads</h2>
         <button
           data-testid="add-thread-button"
           type="button"
-          className="secondary"
+          className="threads-add-icon"
+          aria-label="Add thread"
+          title="Add thread"
           onClick={() => setIsAdding(true)}
+          disabled={isAdding}
         >
-          + Add Thread
+          +
         </button>
-      )}
+      </div>
+
+      <p className="threads-subtitle">Group work into areas. Rename anytime.</p>
 
       <div className="threads-list">
         <ul>
+          {isAdding && (
+            <li className="thread-item--adding" data-testid="threads-add-form">
+              <input
+                data-testid="new-thread-input"
+                maxLength={40}
+                value={newThreadName}
+                placeholder="New thread name..."
+                autoFocus
+                onChange={(e) => setNewThreadName(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleAddThread();
+                  }
+                  if (e.key === 'Escape') {
+                    e.preventDefault();
+                    handleAddCancel();
+                  }
+                }}
+              />
+              <button
+                data-testid="confirm-add-thread"
+                type="button"
+                className="thread-edit thread-edit--confirm"
+                onClick={handleAddThread}
+                aria-label="Add"
+                title="Add"
+              >
+                ✓
+              </button>
+              <button
+                data-testid="cancel-add-thread"
+                type="button"
+                className="thread-edit thread-edit--cancel"
+                onClick={handleAddCancel}
+                aria-label="Cancel"
+                title="Cancel"
+              >
+                ×
+              </button>
+            </li>
+          )}
+
           {threads.map((thread) => (
             <ThreadItem
               key={thread.id}
