@@ -1,3 +1,6 @@
+/* 	thread-item.css = inputs + icon buttons behavior (visibility/opacity)
+ */
+
 .thread-name {
   flex: 1;
 }
@@ -11,23 +14,71 @@
   font-size: 1rem;
 }
 
-.thread-item input:focus {
+.thread-item input:focus,
+.thread-item--adding input:focus {
   border-color: #00796b;
   box-shadow: 0 0 0 2px rgba(0, 121, 107, 0.15);
   outline: none;
 }
 
-/* Pencil should be hidden unless the row is selected */
-.thread-edit--pencil {
+/* Icon buttons base (✓ × ✏️ 🗑️) */
+.thread-edit {
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 0.25rem 0.4rem;
+  margin: 0;
+  line-height: 1;
+  font-size: 1.05rem;
+  cursor: pointer;
+  color: var(--pico-muted-color);
+  border-radius: 8px;
+}
+
+.thread-edit:focus-visible,
+.threads-add-icon:focus-visible {
+  outline: 2px solid rgba(0, 121, 107, 0.35);
+  outline-offset: 2px;
+}
+
+/* Hide row action icons by default */
+.thread-edit--pencil,
+.thread-edit--archive {
   opacity: 0;
   pointer-events: none;
 }
 
-li.selected .thread-edit--pencil {
+/* Show row actions only when the row is selected */
+.thread-item.selected .thread-edit--pencil,
+.thread-item.selected .thread-edit--archive {
   opacity: 0.6;
   pointer-events: auto;
 }
 
-li.selected .thread-edit--pencil:hover {
+.thread-item.selected .thread-edit--pencil:hover,
+.thread-item.selected .thread-edit--archive:hover {
   opacity: 1;
+}
+
+/* Add-row buttons (✓ ×) should ALWAYS be visible */
+.thread-item--adding .thread-edit {
+  opacity: 0.8;
+  pointer-events: auto;
+}
+
+.thread-item--adding .thread-edit:hover {
+  opacity: 1;
+}
+
+/* Optional spacing for archive icon */
+.thread-edit--archive {
+  margin-left: 0.15rem;
+}
+
+.thread-edit--confirm:hover {
+  color: #00796b;
+}
+
+.thread-edit--cancel:hover {
+  color: var(--pico-muted-color);
 }

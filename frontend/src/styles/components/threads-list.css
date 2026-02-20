@@ -1,3 +1,5 @@
+/* threads-list.css = layout + row backgrounds + add-row layout */
+
 /* =========================
    Threads header
    ========================= */
@@ -101,38 +103,4 @@
   font-size: 1rem;
   border-radius: 6px;
   border: 1px solid #00796b;
-}
-
-.card button:focus,
-.card button:focus-visible {
-  outline: none;
-}
-
-/* =========================
-   Thread action icons (✓ × ✏️)
-   ========================= */
-
-.threads-list .thread-edit {
-  appearance: none;
-  background: none;
-  border: none;
-  padding: 0.25rem 0.4rem;
-  margin: 0;
-  line-height: 1;
-  font-size: 1.05rem;
-  cursor: pointer;
-  color: var(--pico-muted-color);
-  border-radius: 8px;
-}
-
-.threads-list .thread-edit:hover {
-  background: rgba(0, 0, 0, 0.04);
-}
-
-.threads-list .thread-edit--confirm:hover {
-  color: #00796b;
-}
-
-.threads-list .thread-edit--cancel:hover {
-  color: #00796b;
 }

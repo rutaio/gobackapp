@@ -8,6 +8,7 @@ interface ThreadsItemProps {
   onSelectThread: (threadId: string) => void;
   onStartEditing: (threadId: string) => void;
   onRenameConfirm: (threadId: string, newName: string) => void;
+  onArchiveThread: (threadId: string) => void;
 }
 
 export const ThreadItem = ({
@@ -17,9 +18,13 @@ export const ThreadItem = ({
   onSelectThread,
   onStartEditing,
   onRenameConfirm,
+  onArchiveThread,
 }: ThreadsItemProps) => {
   return (
-    <li data-testid="thread-item" className={isSelected ? 'selected' : ''}>
+    <li
+      data-testid="thread-item"
+      className={`thread-item ${isSelected ? 'selected' : ''}`}
+    >
       {isEditing ? (
         <input
           defaultValue={thread.name}
@@ -58,6 +63,19 @@ export const ThreadItem = ({
         }}
       >
         ✏️
+      </button>
+
+      <button
+        data-testid="thread-archive-button"
+        className="thread-edit thread-edit--archive"
+        aria-label="Archive thread"
+        title="Archive"
+        onClick={(event) => {
+          event.stopPropagation();
+          onArchiveThread(thread.id);
+        }}
+      >
+        ×
       </button>
     </li>
   );

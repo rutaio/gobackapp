@@ -101,6 +101,26 @@ export const HomePage = () => {
     setEditingThreadId(null);
   };
 
+  const handleArchiveThread = (threadId: string) => {
+    setThreadsState((prev) => {
+      const updated = prev.map((thread) =>
+        thread.id === threadId ? { ...thread, isArchived: true } : thread,
+      );
+
+      // if the archived thread was selected, choose a new one from the UPDATED list
+      if (selectedThreadId === threadId) {
+        const nextThread = updated.find(
+          (t) => t.id !== threadId && !t.isArchived,
+        );
+        setSelectedThreadId(nextThread?.id ?? null);
+      }
+
+      return updated;
+    });
+    // Clear edit mode to avoid stale UI state
+    setEditingThreadId(null);
+  };
+
   return (
     <>
       <Header></Header>
@@ -116,6 +136,7 @@ export const HomePage = () => {
               editingThreadId={editingThreadId}
               onRenameConfirm={handleRenameConfirm}
               onAddThread={handleAddThread}
+              onArchiveThread={handleArchiveThread}
             />
           </article>
 
