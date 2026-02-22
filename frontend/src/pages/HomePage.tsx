@@ -2,7 +2,7 @@
 
 import '../styles/pages/home.css';
 import { threads } from '../data/threads';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { ThreadsList } from '../components/ThreadsList';
 import { GoBackCard } from '../components/GoBackCard';
 import type { Checkin } from '../types/types';
@@ -33,6 +33,14 @@ export const HomePage = () => {
   const { checkinsHistory, setCheckinsHistory, hasLoadedCheckins } =
     useCheckinsStorage(CHECKINS_STORAGE_KEY);
 
+  //  always-latest snapshot of checkins (doesn't wait for re-render)
+  const checkinsHistoryRef = useRef<Checkin[]>([]);
+
+  // keep ref synced on normal renders
+  useEffect(() => {
+    checkinsHistoryRef.current = checkinsHistory;
+  }, [checkinsHistory]);
+
   useDefaultSelectedThread(
     hasLoadedCheckins,
     hasLoadedThreads,
@@ -44,8 +52,9 @@ export const HomePage = () => {
   );
 
   // HELPERS
+  // helper reads from ref (never stale)
   const getCheckinsCount = (threadId: string) =>
-    checkinsHistory.filter((checkin) => checkin.threadId === threadId).length;
+    checkinsHistoryRef.current.filter((c) => c.threadId === threadId).length;
 
   // HANDLERS
   // thread selection
@@ -84,6 +93,7 @@ export const HomePage = () => {
     // Nice UX: automatically open the new thread
     setSelectedThreadId(newThread.id);
     setEditingThreadId(null);
+    setThreadIdPendingArchive(null);
   };
 
   // archive
@@ -120,17 +130,26 @@ export const HomePage = () => {
   // checkin submit
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
+
     const cleanedCheckin = checkin.trim();
     if (!selectedThreadId || !cleanedCheckin) return;
+
     const newCheckin: Checkin = {
       id: crypto.randomUUID(),
       threadId: selectedThreadId,
       text: cleanedCheckin,
       createdAt: Date.now(),
     };
-    // remember where user worked last
+
     localStorage.setItem(LAST_THREAD_STORAGE_KEY, selectedThreadId);
-    setCheckinsHistory((prev) => [...prev, newCheckin]);
+
+    // update state AND ref inside the same state update
+    setCheckinsHistory((prev) => {
+      const next = [...prev, newCheckin];
+      checkinsHistoryRef.current = next; // <- immediate
+      return next;
+    });
+
     setCheckin('');
   };
 
