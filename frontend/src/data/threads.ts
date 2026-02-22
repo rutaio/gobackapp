@@ -1,22 +1,14 @@
 export const threads = [
   {
     id: '1',
-    name: 'Clients',
+    name: 'Writing',
   },
   {
     id: '2',
-    name: 'Marketing',
+    name: 'Creating',
   },
   {
     id: '3',
-    name: 'Products',
-  },
-  {
-    id: '4',
-    name: 'Planning',
-  },
-  {
-    id: '5',
-    name: 'Finance',
+    name: 'Researching',
   },
 ];
