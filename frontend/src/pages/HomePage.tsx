@@ -1,6 +1,8 @@
+//	If a function mutates global/shared state → it belongs in HomePage
+
 import '../styles/pages/home.css';
 import { threads } from '../data/threads';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { ThreadsList } from '../components/ThreadsList';
 import { GoBackCard } from '../components/GoBackCard';
 import type { Checkin } from '../types/types';
@@ -19,6 +21,9 @@ export const HomePage = () => {
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null);
   const [editingThreadId, setEditingThreadId] = useState<string | null>(null);
   const [checkin, setCheckin] = useState('');
+  const [threadIdPendingArchive, setThreadIdPendingArchive] = useState<
+    string | null
+  >(null);
 
   const { threadsState, setThreadsState, hasLoadedThreads } = useThreadsStorage(
     THREADS_STORAGE_KEY,
@@ -27,6 +32,14 @@ export const HomePage = () => {
 
   const { checkinsHistory, setCheckinsHistory, hasLoadedCheckins } =
     useCheckinsStorage(CHECKINS_STORAGE_KEY);
+
+  //  always-latest snapshot of checkins (doesn't wait for re-render)
+  const checkinsHistoryRef = useRef<Checkin[]>([]);
+
+  // keep ref synced on normal renders
+  useEffect(() => {
+    checkinsHistoryRef.current = checkinsHistory;
+  }, [checkinsHistory]);
 
   useDefaultSelectedThread(
     hasLoadedCheckins,
@@ -38,39 +51,19 @@ export const HomePage = () => {
     LAST_THREAD_STORAGE_KEY,
   );
 
+  // HELPERS
+  // helper reads from ref (never stale)
+  const getCheckinsCount = (threadId: string) =>
+    checkinsHistoryRef.current.filter((c) => c.threadId === threadId).length;
+
+  // HANDLERS
+  // thread selection
   const handleThreadClick = (threadId: string) => {
     setSelectedThreadId(threadId);
+    setThreadIdPendingArchive(null); // close any pending archive confirm UI
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-
-    const cleanedCheckin = checkin.trim();
-    if (!selectedThreadId || !cleanedCheckin) return;
-
-    const newCheckin: Checkin = {
-      id: crypto.randomUUID(),
-      threadId: selectedThreadId,
-      text: cleanedCheckin,
-      createdAt: Date.now(),
-    };
-
-    // remember where user worked last
-    localStorage.setItem(LAST_THREAD_STORAGE_KEY, selectedThreadId);
-
-    setCheckinsHistory((prev) => [...prev, newCheckin]);
-    setCheckin('');
-  };
-
-  const selectedThreadData =
-    threadsState.find((thread) => thread.id === selectedThreadId) ?? null;
-
-  const selectedThreadCheckins = checkinsHistory
-    .filter((checkin) => checkin.threadId === selectedThreadId)
-    .sort((a, b) => b.createdAt - a.createdAt) // newest first;
-    .slice(0, 3) // show only last 3;
-    .reverse();
-
+  // rename
   const handleRenameConfirm = (threadId: string, newName: string) => {
     const cleanedName = newName.trim();
     if (cleanedName === '') {
@@ -86,6 +79,7 @@ export const HomePage = () => {
     setEditingThreadId(null);
   };
 
+  // add
   const handleAddThread = (name: string) => {
     const trimmedName = name.trim().slice(0, 40); // enforce max length
     if (!trimmedName) return;
@@ -99,7 +93,75 @@ export const HomePage = () => {
     // Nice UX: automatically open the new thread
     setSelectedThreadId(newThread.id);
     setEditingThreadId(null);
+    setThreadIdPendingArchive(null);
   };
+
+  // archive
+  const handleArchiveThread = (threadId: string) => {
+    setThreadsState((prev) => {
+      const updated = prev.map((thread) =>
+        thread.id === threadId ? { ...thread, isArchived: true } : thread,
+      );
+
+      // if the archived thread was selected, choose a new one from the UPDATED list
+      if (selectedThreadId === threadId) {
+        const nextThread = updated.find((t) => !t.isArchived);
+
+        setSelectedThreadId(nextThread?.id ?? null);
+      }
+
+      return updated;
+    });
+    // Clear edit mode to avoid stale UI state
+    setEditingThreadId(null);
+    setThreadIdPendingArchive(null);
+  };
+
+  // request/confirm/cancel
+  const requestArchiveThread = (threadId: string) => {
+    const count = getCheckinsCount(threadId);
+    if (count === 0) {
+      handleArchiveThread(threadId);
+      return;
+    }
+    setThreadIdPendingArchive(threadId);
+  };
+
+  // checkin submit
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+
+    const cleanedCheckin = checkin.trim();
+    if (!selectedThreadId || !cleanedCheckin) return;
+
+    const newCheckin: Checkin = {
+      id: crypto.randomUUID(),
+      threadId: selectedThreadId,
+      text: cleanedCheckin,
+      createdAt: Date.now(),
+    };
+
+    localStorage.setItem(LAST_THREAD_STORAGE_KEY, selectedThreadId);
+
+    // update state AND ref inside the same state update
+    setCheckinsHistory((prev) => {
+      const next = [...prev, newCheckin];
+      checkinsHistoryRef.current = next; // <- immediate
+      return next;
+    });
+
+    setCheckin('');
+  };
+
+  // UI DATA
+  const selectedThreadData =
+    threadsState.find((thread) => thread.id === selectedThreadId) ?? null;
+
+  const selectedThreadCheckins = checkinsHistory
+    .filter((checkin) => checkin.threadId === selectedThreadId)
+    .sort((a, b) => b.createdAt - a.createdAt) // newest first;
+    .slice(0, 3) // show only last 3;
+    .reverse();
 
   return (
     <>
@@ -116,6 +178,11 @@ export const HomePage = () => {
               editingThreadId={editingThreadId}
               onRenameConfirm={handleRenameConfirm}
               onAddThread={handleAddThread}
+              onRequestArchiveThread={requestArchiveThread}
+              onConfirmArchiveThread={handleArchiveThread}
+              onCancelArchiveThread={() => setThreadIdPendingArchive(null)}
+              threadIdPendingArchive={threadIdPendingArchive}
+              getCheckinsCount={getCheckinsCount}
             />
           </article>
 

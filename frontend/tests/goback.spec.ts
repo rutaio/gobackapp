@@ -123,7 +123,6 @@ test('Case 3: refresh keeps last worked thread selected and shows its checkins',
 });
 
 // Use Case 4:
-// Use Case 4:
 test('Case 4: user can add a new thread and it survives refresh', async ({
   page,
 }) => {
@@ -199,4 +198,224 @@ test('Case 5: user can cancel adding a thread (no thread created)', async ({
   await expect(
     page.getByTestId('thread-name').filter({ hasText: draftName }),
   ).toHaveCount(0);
+});
+
+// Use Case 6 (0 checkins → archive immediately)
+test('Case 6: archiving a thread with NO checkins archives immediately (no confirmation UI)', async ({
+  page,
+}) => {
+  // open the app
+  await page.goto('/');
+
+  // create a brand-new thread so we know it has 0 checkins
+  await page.getByTestId('add-thread-button').click();
+
+  // fill a unique thread name
+  const threadName = `Empty Thread ${Date.now()}`;
+  await page.getByTestId('new-thread-input').fill(threadName);
+
+  // confirm add
+  await page.getByTestId('confirm-add-thread').click();
+
+  // ensure the new thread appears in the list
+  const threadNameEl = page
+    .getByTestId('thread-name')
+    .filter({ hasText: threadName });
+  await expect(threadNameEl).toHaveCount(1);
+
+  // select the new thread (so archive icon becomes visible)
+  await threadNameEl.click();
+
+  // locate the row for this thread
+  const threadRow = page.getByTestId('thread-item').filter({
+    has: page.getByTestId('thread-name').filter({ hasText: threadName }),
+  });
+  await expect(threadRow).toHaveCount(1);
+
+  // click the archive (bin) button
+  await threadRow.getByTestId('thread-archive-button').click();
+
+  // confirm the inline confirmation UI did NOT appear (archive should be immediate)
+  await expect(threadRow.getByTestId('thread-archive-confirm')).toHaveCount(0);
+
+  // confirm the thread is removed from the list
+  await expect(
+    page.getByTestId('thread-name').filter({ hasText: threadName }),
+  ).toHaveCount(0);
+});
+
+// Use Case 7 (has checkins → show confirm UI, don’t archive yet)
+test('Case 7: archiving a thread WITH checkins shows inline confirmation (does not archive yet)', async ({
+  page,
+}) => {
+  // open the app
+  await page.goto('/');
+
+  // create a brand-new thread so the test is isolated
+  await page.getByTestId('add-thread-button').click();
+
+  const threadName = `Has Checkins Thread ${Date.now()}`;
+  await page.getByTestId('new-thread-input').fill(threadName);
+
+  // confirm add
+  await page.getByTestId('confirm-add-thread').click();
+
+  // ensure it appears
+  const threadNameEl = page
+    .getByTestId('thread-name')
+    .filter({ hasText: threadName });
+  await expect(threadNameEl).toHaveCount(1);
+
+  // select it (so GoBack card targets this thread)
+  await threadNameEl.click();
+
+  // add a checkin so this thread has history
+  const goBackCard = page.getByTestId('go-back-card');
+  const checkinTextarea = goBackCard.locator('textarea#checkin');
+  await expect(checkinTextarea).toBeVisible();
+
+  const checkinMessage = `Checkin for archive confirm ${Date.now()}`;
+  await checkinTextarea.fill(checkinMessage);
+
+  const saveButton = goBackCard.getByTestId('save-checkin-button');
+  await expect(saveButton).toBeEnabled();
+  await saveButton.click();
+
+  // confirm the checkin was saved (so we know thread has >= 1 checkin)
+  await expect(goBackCard.getByTestId('checkins-history')).toContainText(
+    checkinMessage,
+  );
+
+  // locate the row again (stable + explicit)
+  const threadRow = page.getByTestId('thread-item').filter({
+    has: page.getByTestId('thread-name').filter({ hasText: threadName }),
+  });
+  await expect(threadRow).toHaveCount(1);
+
+  // click the archive button (should open inline confirmation, not archive yet)
+  await threadRow.getByTestId('thread-archive-button').click();
+
+  // confirm inline confirmation UI appears
+  await expect(threadRow.getByTestId('thread-archive-confirm')).toBeVisible();
+
+  // confirm the thread is NOT archived yet (still visible)
+  await expect(
+    page.getByTestId('thread-name').filter({ hasText: threadName }),
+  ).toHaveCount(1);
+});
+
+// Use Case 8 (cancel + confirm flow)
+test('Case 8: user can cancel and confirm inline archive for a thread with checkins', async ({
+  page,
+}) => {
+  // open the app
+  await page.goto('/');
+
+  // create a brand-new thread so the test is isolated
+  await page.getByTestId('add-thread-button').click();
+  const threadName = `Archive Thread ${Date.now()}`;
+  await page.getByTestId('new-thread-input').fill(threadName);
+  await page.getByTestId('confirm-add-thread').click();
+
+  // select the new thread (so archive icon is visible)
+  const threadNameEl = page
+    .getByTestId('thread-name')
+    .filter({ hasText: threadName });
+  await expect(threadNameEl).toHaveCount(1);
+  await threadNameEl.click();
+
+  // add a checkin to force confirmation flow
+  const goBackCard = page.getByTestId('go-back-card');
+  const checkinTextarea = goBackCard.locator('textarea#checkin');
+  await expect(checkinTextarea).toBeVisible();
+
+  const checkinMessage = `Archive confirm ${Date.now()}`;
+  await checkinTextarea.fill(checkinMessage);
+
+  const saveButton = goBackCard.getByTestId('save-checkin-button');
+  await expect(saveButton).toBeEnabled();
+  await saveButton.click();
+
+  // confirm checkin saved
+  await expect(goBackCard.getByTestId('checkins-history')).toContainText(
+    checkinMessage,
+  );
+
+  // locate the correct thread row
+  const threadRow = page.getByTestId('thread-item').filter({
+    has: page.getByTestId('thread-name').filter({ hasText: threadName }),
+  });
+  await expect(threadRow).toHaveCount(1);
+
+  // click archive button to open inline confirmation
+  await threadRow.getByTestId('thread-archive-button').click();
+
+  // confirm confirmation UI is visible
+  await expect(threadRow.getByTestId('thread-archive-confirm')).toBeVisible();
+
+  // click cancel (×)
+  await threadRow.getByTestId('cancel-archive-thread').click();
+
+  // confirm confirmation UI disappears
+  await expect(threadRow.getByTestId('thread-archive-confirm')).toHaveCount(0);
+
+  // confirm thread still exists
+  await expect(
+    page.getByTestId('thread-name').filter({ hasText: threadName }),
+  ).toHaveCount(1);
+
+  // open confirmation again
+  await threadRow.getByTestId('thread-archive-button').click();
+  await expect(threadRow.getByTestId('thread-archive-confirm')).toBeVisible();
+
+  // click confirm (✓)
+  await threadRow.getByTestId('confirm-archive-thread').click();
+
+  // confirm thread is removed from list
+  await expect(
+    page.getByTestId('thread-name').filter({ hasText: threadName }),
+  ).toHaveCount(0);
+});
+
+// Use Case 9:
+test('Case 9: archiving immediately after adding a checkin requires confirmation (no refresh)', async ({
+  page,
+}) => {
+  // open app
+  await page.goto('/');
+
+  // create a brand-new thread (clean isolation)
+  await page.getByTestId('add-thread-button').click();
+  const threadName = `Instant Archive ${Date.now()}`;
+  await page.getByTestId('new-thread-input').fill(threadName);
+  await page.getByTestId('confirm-add-thread').click();
+
+  // select the thread
+  const threadNameEl = page
+    .getByTestId('thread-name')
+    .filter({ hasText: threadName });
+  await expect(threadNameEl).toHaveCount(1);
+  await threadNameEl.click();
+
+  // add a checkin
+  const goBackCard = page.getByTestId('go-back-card');
+  const checkinTextarea = goBackCard.locator('textarea#checkin');
+
+  const checkinMessage = `Immediate ${Date.now()}`;
+  await checkinTextarea.fill(checkinMessage);
+
+  const saveButton = goBackCard.getByTestId('save-checkin-button');
+  await saveButton.click();
+
+  // DO NOT wait for history verification here
+  // We immediately try to archive
+
+  const threadRow = page.getByTestId('thread-item').filter({
+    has: page.getByTestId('thread-name').filter({ hasText: threadName }),
+  });
+
+  await threadRow.getByTestId('thread-archive-button').click();
+
+  // Confirmation UI MUST appear
+  await expect(threadRow.getByTestId('thread-archive-confirm')).toBeVisible();
 });
