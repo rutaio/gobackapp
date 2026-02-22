@@ -97,7 +97,7 @@ export const ThreadItem = ({
           <button
             data-testid="thread-edit-button"
             className="thread-edit thread-edit--pencil"
-            aria-label="Rename thread"
+            aria-label="Rename activity"
             onClick={(event) => {
               event.stopPropagation();
               onStartEditing(thread.id);
