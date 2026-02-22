@@ -63,6 +63,7 @@ export const ThreadItem = ({
       {!isEditing && isSelected && isPendingArchive ? (
         <div
           className="thread-archive-confirm"
+          data-testid="thread-archive-confirm"
           onClick={(e) => e.stopPropagation()}
         >
           <span className="thread-archive-text">
@@ -70,6 +71,7 @@ export const ThreadItem = ({
           </span>
 
           <button
+            data-testid="confirm-archive-thread"
             type="button"
             className="thread-edit thread-edit--confirm"
             aria-label="Confirm archive"
@@ -80,6 +82,7 @@ export const ThreadItem = ({
           </button>
 
           <button
+            data-testid="cancel-archive-thread"
             type="button"
             className="thread-edit thread-edit--cancel"
             aria-label="Cancel archive"
