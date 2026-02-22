@@ -60,7 +60,7 @@ export const GoBackCard = ({
             </div>
           </>
         ) : (
-          <p>Select a thread to continue</p>
+          <p>Select an activity to continue</p>
         )}
       </div>
     </>

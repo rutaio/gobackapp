@@ -48,15 +48,15 @@ export const AboutPage = () => {
               <h2>Step 1: Map</h2>
               <p>
                 It's easier to focus when ideas are grouped into "buckets" -
-                areas of work. We call them threads.
+                areas of work. We call them activities.
               </p>
-              <p>On GoBack, name a set of threads you want to keep alive.</p>
+              <p>On GoBack, name a set of activities you want to keep alive.</p>
               <a href="#step-2" role="button" className="btn-primary">
                 Next
               </a>
             </div>
             <div className="about-image">
-              <img src={buckets} alt="Buckets of threads" />
+              <img src={buckets} alt="Buckets of activities" />
             </div>
           </div>
         </section>
@@ -69,7 +69,7 @@ export const AboutPage = () => {
                 It's more enjoyable to move forward when to-dos are broken down
                 into small "chunks". We call them steps.
               </p>
-              <p>On GoBack, pick one thread and log the next small step.</p>
+              <p>On GoBack, pick one activity and log the next small step.</p>
               <a href="#step-3" role="button" className="btn-primary">
                 Next
               </a>
@@ -98,14 +98,14 @@ export const AboutPage = () => {
             <div className="about-image">
               <img
                 src={arrowCycle}
-                alt="Arrow cycling back to the beginning of a thread"
+                alt="Arrow cycling back to the beginning of an activity"
               />
             </div>
           </div>
         </section>
 
         <section className="about-cta">
-          <h2>Let's continue our creative projects.</h2>
+          <h2>Let's continue our activities.</h2>
           <a href="/" role="button" className="btn-primary">
             Go Back
           </a>

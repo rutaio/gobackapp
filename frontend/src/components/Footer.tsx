@@ -11,10 +11,8 @@ export const Footer = () => {
         </div>
 
         <div className="footer-pitch">
-          <small>
-            GoBack helps creators navigate uncertainty. See where you left off.
-            Take the next step.
-          </small>
+          <small>GoBack helps creators continue their work. See where you left off.
+            Take the next step.</small>
         </div>
       </div>
     </footer>

@@ -56,7 +56,7 @@ export const ThreadsList = ({
   return (
     <>
       <div className="threads-header">
-        <h2>Threads</h2>
+        <h2>Activities</h2>
         <button
           data-testid="add-thread-button"
           type="button"
@@ -70,7 +70,7 @@ export const ThreadsList = ({
         </button>
       </div>
 
-      <p className="threads-subtitle">Group work into areas. Rename anytime.</p>
+      <p className="threads-subtitle">Name areas you want to continue.</p>
 
       <div className="threads-list">
         <ul>
