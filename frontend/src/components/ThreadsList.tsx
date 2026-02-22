@@ -1,3 +1,5 @@
+// If a function only affects rendering of one component → it can live in that component
+
 import '../styles/components/threads-list.css';
 import type { Thread } from '../types/types';
 import { ThreadItem } from './ThreadItem';
@@ -11,7 +13,11 @@ interface ThreadsListProps {
   onStartEditing: (threadId: string) => void;
   onRenameConfirm: (threadId: string, newName: string) => void;
   onAddThread: (newThreadName: string) => void;
-  onArchiveThread: (threadId: string) => void;
+  onRequestArchiveThread: (threadId: string) => void; // click bin
+  onConfirmArchiveThread: (threadId: string) => void; // click ✓
+  onCancelArchiveThread: () => void; // click ×
+  threadIdPendingArchive: string | null;
+  getCheckinsCount: (threadId: string) => number;
 }
 
 export const ThreadsList = ({
@@ -22,7 +28,11 @@ export const ThreadsList = ({
   onStartEditing,
   onRenameConfirm,
   onAddThread,
-  onArchiveThread,
+  onRequestArchiveThread,
+  onConfirmArchiveThread,
+  onCancelArchiveThread,
+  threadIdPendingArchive,
+  getCheckinsCount,
 }: ThreadsListProps) => {
   const [isAdding, setIsAdding] = useState(false);
   const [newThreadName, setNewThreadName] = useState('');
@@ -107,18 +117,27 @@ export const ThreadsList = ({
             </li>
           )}
 
-          {visibleThreads.map((thread) => (
-            <ThreadItem
-              key={thread.id}
-              thread={thread}
-              isSelected={thread.id === selectedThreadId}
-              isEditing={thread.id === editingThreadId}
-              onSelectThread={onSelectThread}
-              onStartEditing={onStartEditing}
-              onRenameConfirm={onRenameConfirm}
-              onArchiveThread={onArchiveThread}
-            />
-          ))}
+          {visibleThreads.map((thread) => {
+            const checkinsCount = getCheckinsCount(thread.id);
+            const isPendingArchive = threadIdPendingArchive === thread.id;
+
+            return (
+              <ThreadItem
+                key={thread.id}
+                thread={thread}
+                isSelected={thread.id === selectedThreadId}
+                isEditing={thread.id === editingThreadId}
+                onSelectThread={onSelectThread}
+                onStartEditing={onStartEditing}
+                onRenameConfirm={onRenameConfirm}
+                checkinsCount={checkinsCount}
+                isPendingArchive={isPendingArchive}
+                onRequestArchiveThread={onRequestArchiveThread}
+                onConfirmArchiveThread={onConfirmArchiveThread}
+                onCancelArchiveThread={onCancelArchiveThread}
+              />
+            );
+          })}
         </ul>
       </div>
     </>
