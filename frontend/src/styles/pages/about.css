@@ -31,24 +31,22 @@
 
 .about-section {
   border: 1px solid var(--pico-muted-border-color);
-  padding: 20px;
+  padding: 28px;
   flex: 1;
   border-radius: 8px;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
 }
 
 .about-grid {
   align-items: center;
+  gap: 2.25rem;
 }
 
-/* placeholder “image” block */
 .about-image {
-  min-height: 180px;
-  border: 1px dashed var(--pico-muted-border-color);
+  min-height: 220px; /* a bit taller, looks intentional */
+  border: 1px solid var(--pico-muted-border-color); /* not dashed */
+  background: rgba(0, 0, 0, 0.02); /* subtle fill */
   border-radius: 8px;
-  display: grid;
-  place-items: center;
-  color: var(--pico-muted-color);
 }
 
 .btn-primary {
@@ -60,4 +58,24 @@
 .btn-primary:hover {
   background-color: #00796b;
   border-color: #00796b;
+}
+
+.about-problem {
+  padding: 2rem;
+}
+
+.about-problem .about-lead {
+  margin: 0.5rem 0 1rem;
+  color: var(--pico-muted-color);
+  max-width: 68ch;
+}
+
+.about-problem-list {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--pico-muted-color);
+}
+
+.about-problem-list li {
+  margin: 0.35rem 0;
 }
