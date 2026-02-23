@@ -1,3 +1,9 @@
+:root {
+  --checkin-indent: 0.75rem;
+  --checkin-rail: 3px;
+  --checkin-rail-color: #00796b;
+}
+
 .card {
   padding: 16px;
   margin-top: 1.1rem;
@@ -24,6 +30,27 @@
   font-size: 0.9rem;
 }
 
+.card textarea {
+  font-size: 1rem;
+}
+
+.card input:focus,
+.card textarea:focus {
+  border: 2px solid #00796b;
+  box-shadow: 0 0 0 2px rgba(0, 121, 107, 0.2);
+}
+
+.checkin-card button[type='submit'],
+.checkin-card [data-testid='save-checkin-button'] {
+  background-color: #00796b;
+}
+
+.checkin-card button:focus,
+.checkin-card button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 121, 107, 0.35);
+}
+
 /* TO REVISIT
 .checkins-label {
   margin: 0 0 0.5rem;
@@ -32,34 +59,90 @@
 } */
 
 .checkins-history ul {
-  margin: 0;
-  padding: 0;
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 0.35rem 0 0 0 !important;
 }
 
 .checkins-history li {
-  list-style: none;
-  padding-left: 0.75rem;
-  margin-bottom: 0.25rem;
-  border-left: 2px solid #00796b;
+  list-style: none !important;
+  margin: 0.45rem 0;
+  padding: 0;
+}
+
+.checkins-history li::marker {
+  content: '' !important;
+}
+
+.checkins-history li {
+  border-left: var(--checkin-rail) solid var(--checkin-rail-color);
+  padding: 0.35rem 0 0.35rem var(--checkin-indent);
+  background: transparent !important;
+  border-radius: 0 !important;
+}
+
+.checkin-title {
+  all: unset;
+  display: block;
+  width: 100%;
+  line-height: 1.35;
   color: var(--pico-muted-color);
-  opacity: 0.9;
 }
 
-.card textarea {
-  font-size: 1rem;
+.checkin-title--clickable {
+  cursor: pointer;
 }
 
-.card textarea:focus {
-  border: 2px solid #00796b;
-  box-shadow: 0 0 0 2px rgba(0, 121, 107, 0.2);
+.checkin-title--clickable:hover {
+  background: rgba(0, 0, 0, 0.02);
 }
 
-.card button {
-  background-color: #00796b;
-}
-
-.card button:focus,
-.card button:focus-visible {
+.checkin-title:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(0, 121, 107, 0.35);
+  box-shadow: none;
+}
+
+.checkin-title--clickable:focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: none;
+}
+
+.checkin-title--clickable:focus-visible {
+  outline: 2px solid rgba(0, 121, 107, 0.35);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.checkin-note {
+  margin-top: 0.25rem;
+  font-size: 0.95rem;
+  color: var(--pico-muted-color);
+  line-height: 1.4;
+  white-space: pre-wrap;
+}
+
+/* Make title layout horizontal */
+.checkin-title--clickable {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Wrap text so arrow stays right aligned */
+.checkin-title-text {
+  flex: 1;
+}
+
+.checkin-chevron {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  font-weight: 600;
+  margin-left: 0.5rem;
+  color: var(--pico-muted-color);
+  transition: transform 0.15s ease;
+}
+
+/* Rotate when open */
+.checkin-title--clickable.is-open .checkin-chevron {
+  transform: rotate(180deg);
 }
