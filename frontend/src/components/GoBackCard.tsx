@@ -39,7 +39,11 @@ const CheckinListItem = ({ checkin }: { checkin: Checkin }) => {
         <div className="checkin-title">{checkin.text}</div>
       )}
 
-      {hasNote && isOpen && <div className="checkin-note">{checkin.note}</div>}
+      {hasNote && isOpen && (
+        <div className="checkin-note" data-testid="checkin-note">
+          {checkin.note}
+        </div>
+      )}
     </li>
   );
 };
