@@ -20,7 +20,9 @@ const LAST_THREAD_STORAGE_KEY = 'goback_last_thread_v1';
 export const HomePage = () => {
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null);
   const [editingThreadId, setEditingThreadId] = useState<string | null>(null);
-  const [checkin, setCheckin] = useState('');
+  // split state: title + optional note
+  const [checkinTitle, setCheckinTitle] = useState('');
+  const [checkinNote, setCheckinNote] = useState('');
   const [threadIdPendingArchive, setThreadIdPendingArchive] = useState<
     string | null
   >(null);
@@ -131,26 +133,29 @@ export const HomePage = () => {
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
-    const cleanedCheckin = checkin.trim();
-    if (!selectedThreadId || !cleanedCheckin) return;
+    const cleanedTitle = checkinTitle.trim();
+    const cleanedNote = checkinNote.trim();
+
+    if (!selectedThreadId || !cleanedTitle) return;
 
     const newCheckin: Checkin = {
       id: crypto.randomUUID(),
       threadId: selectedThreadId,
-      text: cleanedCheckin,
+      text: cleanedTitle,
+      note: cleanedNote || undefined,
       createdAt: Date.now(),
     };
 
     localStorage.setItem(LAST_THREAD_STORAGE_KEY, selectedThreadId);
 
-    // update state AND ref inside the same state update
     setCheckinsHistory((prev) => {
       const next = [...prev, newCheckin];
-      checkinsHistoryRef.current = next; // <- immediate
+      checkinsHistoryRef.current = next;
       return next;
     });
 
-    setCheckin('');
+    setCheckinTitle('');
+    setCheckinNote('');
   };
 
   // UI DATA
@@ -190,8 +195,10 @@ export const HomePage = () => {
             <GoBackCard
               checkinsForSelectedThread={selectedThreadCheckins}
               selectedThread={selectedThreadData}
-              checkin={checkin}
-              onCheckinChange={setCheckin}
+              checkinTitle={checkinTitle}
+              checkinNote={checkinNote}
+              onCheckinTitleChange={setCheckinTitle}
+              onCheckinNoteChange={setCheckinNote}
               onSubmit={handleSubmit}
             />
           </article>
