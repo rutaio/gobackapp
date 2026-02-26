@@ -5,10 +5,10 @@ export const threads = [
   },
   {
     id: '2',
-    name: 'Creating',
+    name: 'Business',
   },
   {
     id: '3',
-    name: 'Researching',
+    name: 'Research',
   },
 ];

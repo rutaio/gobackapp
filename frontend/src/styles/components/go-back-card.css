@@ -7,13 +7,12 @@
 .card {
   padding: 16px;
   margin-top: 1.1rem;
-  border: 1px solid #ddd;
   border-radius: 6px;
 }
 
 .selected-thread {
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 1.7rem;
   color: #00796b;
   margin-bottom: 0.5rem;
 }
@@ -83,7 +82,10 @@
 
 .checkin-title {
   all: unset;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   width: 100%;
   line-height: 1.35;
   color: var(--pico-muted-color);
@@ -113,6 +115,11 @@
   border-radius: 6px;
 }
 
+.checkin-title-text {
+  min-width: 0;
+  flex: 1;
+}
+
 .checkin-note {
   margin-top: 0.25rem;
   font-size: 0.95rem;
@@ -128,11 +135,6 @@
   justify-content: space-between;
 }
 
-/* Wrap text so arrow stays right aligned */
-.checkin-title-text {
-  flex: 1;
-}
-
 .checkin-chevron {
   font-size: 0.9rem;
   opacity: 0.9;
@@ -145,4 +147,83 @@
 /* Rotate when open */
 .checkin-title--clickable.is-open .checkin-chevron {
   transform: rotate(180deg);
+}
+
+.selected-thread-row {
+  display: flex;
+  align-items: flex-start; /* better than center on wrap */
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap; /* KEY */
+}
+
+.thread-action {
+  appearance: none;
+  background: none;
+  border: none;
+  padding: 0.2rem 0.35rem;
+  margin: 0;
+  line-height: 1;
+  font-size: 1.05rem;
+  cursor: pointer;
+  color: var(--pico-muted-color);
+  border-radius: 8px;
+}
+
+.thread-action:hover {
+  background: rgba(0, 0, 0, 0.04);
+  color: #00796b;
+}
+
+.selected-thread-rename {
+  flex: 1;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 0.45rem 0.6rem;
+  font-size: 1rem;
+}
+
+.selected-thread {
+  margin: 0;
+  flex: 1 1 auto;
+  min-width: 0; /* KEY: allows text to shrink instead of pushing layout */
+  word-break: break-word;
+}
+
+.selected-thread-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+}
+
+/* Right-side meta (time + chevron) */
+.checkin-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.checkin-time {
+  font-size: 0.85rem;
+  color: var(--pico-muted-color);
+  white-space: nowrap;
+  opacity: 0.9;
+}
+
+@media (max-width: 480px) {
+  .selected-thread {
+    font-size: 1.4rem;
+  }
+
+  .checkin-card button[type='submit'],
+  .checkin-card [data-testid='save-checkin-button'] {
+    width: 100%;
+  }
+
+  .card {
+    padding: 14px;
+  }
 }

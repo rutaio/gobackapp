@@ -3,19 +3,22 @@
 import '../styles/pages/home.css';
 import { threads } from '../data/threads';
 import { useState, useRef, useEffect } from 'react';
-import { ThreadsList } from '../components/ThreadsList';
+import { ThreadsTabs } from '../components/ThreadsTabs';
 import { GoBackCard } from '../components/GoBackCard';
 import type { Checkin } from '../types/types';
 import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
+import { Hero } from '../components/Hero';
 
 import { useCheckinsStorage } from '../hooks/useCheckinsStorage';
 import { useThreadsStorage } from '../hooks/useThreadsStorage';
 import { useDefaultSelectedThread } from '../hooks/useDefaultSelectedThread';
+import { createSeedCheckins } from '../data/seed';
 
 const CHECKINS_STORAGE_KEY = 'goback_checkins_v1';
 const THREADS_STORAGE_KEY = 'goback_threads_v1';
 const LAST_THREAD_STORAGE_KEY = 'goback_last_thread_v1';
+const HERO_DISMISSED_KEY = 'goback_hero_dismissed_v1';
 
 export const HomePage = () => {
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null);
@@ -63,6 +66,7 @@ export const HomePage = () => {
   const handleThreadClick = (threadId: string) => {
     setSelectedThreadId(threadId);
     setThreadIdPendingArchive(null); // close any pending archive confirm UI
+    setEditingThreadId(null); // NEW: prevents rename UI sticking
   };
 
   // rename
@@ -168,41 +172,95 @@ export const HomePage = () => {
     .slice(0, 3) // show only last 3;
     .reverse();
 
+  const checkinsCountForSelectedThread = selectedThreadId
+    ? getCheckinsCount(selectedThreadId)
+    : 0;
+
+  useEffect(() => {
+    if (!hasLoadedCheckins || !hasLoadedThreads) return;
+
+    // already have steps → don't seed
+    if (checkinsHistory.length > 0) return;
+
+    const seedCheckins = createSeedCheckins(threadsState);
+    if (seedCheckins.length === 0) return;
+
+    setCheckinsHistory(() => {
+      checkinsHistoryRef.current = seedCheckins;
+      return seedCheckins;
+    });
+  }, [
+    hasLoadedCheckins,
+    hasLoadedThreads,
+    checkinsHistory.length, // only re-run when it goes 0 -> >0 (or back)
+    threadsState,
+    setCheckinsHistory,
+  ]);
+
+  // Feature "Hero" start
+  const gobackSectionRef = useRef<HTMLElement | null>(null);
+
+  const [heroDismissed, setHeroDismissed] = useState(() => {
+    return localStorage.getItem(HERO_DISMISSED_KEY) === 'true';
+  });
+
+  const handleShowIntro = () => {
+    localStorage.removeItem(HERO_DISMISSED_KEY);
+    setHeroDismissed(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const showHero = !heroDismissed;
+
+  const handleHeroDismiss = () => {
+    localStorage.setItem(HERO_DISMISSED_KEY, 'true');
+    setHeroDismissed(true);
+  };
+
+  const handleHeroCta = () => {
+    gobackSectionRef.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start', // aligns top of section with viewport top
+    });
+  };
+  // Feature "Hero" end
+
   return (
     <>
-      <Header></Header>
+      <Header heroDismissed={heroDismissed} onShowIntro={handleShowIntro} />
 
       <main className="page">
-        <div className="dashboard">
-          <article className="panel threads-panel">
-            <ThreadsList
-              threads={threadsState}
-              selectedThreadId={selectedThreadId}
-              onSelectThread={handleThreadClick}
-              onStartEditing={setEditingThreadId}
-              editingThreadId={editingThreadId}
-              onRenameConfirm={handleRenameConfirm}
-              onAddThread={handleAddThread}
-              onRequestArchiveThread={requestArchiveThread}
-              onConfirmArchiveThread={handleArchiveThread}
-              onCancelArchiveThread={() => setThreadIdPendingArchive(null)}
-              threadIdPendingArchive={threadIdPendingArchive}
-              getCheckinsCount={getCheckinsCount}
-            />
-          </article>
+        {showHero && (
+          <Hero onCtaClick={handleHeroCta} onDismiss={handleHeroDismiss} />
+        )}
 
-          <article className="panel goback-panel">
-            <GoBackCard
-              checkinsForSelectedThread={selectedThreadCheckins}
-              selectedThread={selectedThreadData}
-              checkinTitle={checkinTitle}
-              checkinNote={checkinNote}
-              onCheckinTitleChange={setCheckinTitle}
-              onCheckinNoteChange={setCheckinNote}
-              onSubmit={handleSubmit}
-            />
-          </article>
-        </div>
+        <ThreadsTabs
+          threads={threadsState}
+          selectedThreadId={selectedThreadId}
+          onSelectThread={handleThreadClick}
+          onAddThread={handleAddThread}
+        />
+
+        <article className="panel goback-panel" ref={gobackSectionRef}>
+          <GoBackCard
+            checkinsForSelectedThread={selectedThreadCheckins}
+            selectedThread={selectedThreadData}
+            checkinTitle={checkinTitle}
+            checkinNote={checkinNote}
+            onCheckinTitleChange={setCheckinTitle}
+            onCheckinNoteChange={setCheckinNote}
+            onSubmit={handleSubmit}
+            editingThreadId={editingThreadId}
+            onStartEditing={setEditingThreadId}
+            onCancelEditing={() => setEditingThreadId(null)}
+            onRenameConfirm={handleRenameConfirm}
+            threadIdPendingArchive={threadIdPendingArchive}
+            onRequestArchiveThread={requestArchiveThread}
+            onConfirmArchiveThread={handleArchiveThread}
+            onCancelArchiveThread={() => setThreadIdPendingArchive(null)}
+            checkinsCountForSelectedThread={checkinsCountForSelectedThread}
+          />
+        </article>
 
         <div className="page-spacer" />
 

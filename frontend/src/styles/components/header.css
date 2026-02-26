@@ -10,6 +10,8 @@ header {
   display: flex;
   flex-direction: column;
   line-height: 1.2;
+  text-decoration: none;
+  color: inherit;
 }
 
 .logo small {
@@ -17,8 +19,37 @@ header {
   color: var(--pico-muted-color);
 }
 
-nav a {
+.header-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.header-nav__link {
   font-size: 0.8rem;
-  text-decoration: none;
   color: var(--pico-primary-color);
+  text-decoration: none;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  font: inherit;
+}
+
+.header-nav__link:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  opacity: 0.9;
+}
+
+.header-nav__link:focus-visible {
+  outline: 2px solid rgba(0, 121, 107, 0.35);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.header-nav__link.is-active {
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }

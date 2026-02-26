@@ -1,3 +1,9 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 .page {
   min-height: 100vh;
   display: flex;
@@ -5,11 +11,7 @@
   padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
-}
-
-.dashboard {
-  display: flex;
-  gap: 20px;
+  box-sizing: border-box;
 }
 
 /* grows to fill remaining vertical space */
@@ -20,18 +22,12 @@
 .panel {
   border: 1px solid var(--pico-muted-border-color);
   padding: 20px;
-  flex: 1;
   border-radius: 8px;
   margin-bottom: 2rem;
-}
-
-.threads-panel {
-  flex: 4;
-  opacity: 0.95;
-}
-
-.goback-panel {
-  flex: 6;
+  width: 100%;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .panel h2 {
@@ -45,14 +41,13 @@
   color: var(--pico-muted-color);
 }
 
-@media (max-width: 768px) {
-  .dashboard {
-    flex-direction: column;
+@media (max-width: 640px) {
+  .page {
+    padding: 1rem; /* ✅ smaller side padding */
   }
 
-  .threads-panel,
-  .goback-panel {
-    flex: none;
-    width: 100%;
+  .panel {
+    padding: 16px;
+    margin-bottom: 1.25rem;
   }
 }
