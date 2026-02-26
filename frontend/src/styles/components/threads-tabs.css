@@ -1,0 +1,221 @@
+/* threads-tabs.css */
+
+.threads-tabs {
+  margin: 1.25rem 0 1.5rem;
+}
+
+/* ROW: label + scrollable list */
+.threads-tabs__row {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+/* LABEL */
+.threads-tabs__label {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  line-height: 1;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--pico-muted-color);
+  white-space: nowrap;
+  margin: 0;
+  padding: 0;
+}
+
+/* LIST CONTAINER: takes remaining space and enables horizontal scroll */
+.threads-tabs__list {
+  flex: 1 1 auto;
+  min-width: 0; /* IMPORTANT for overflow-x inside flex */
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 0;
+}
+
+/* UL: horizontal, no markers */
+.threads-tabs__ul {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  flex-wrap: nowrap;
+}
+
+.threads-tabs__ul > li {
+  list-style: none;
+}
+
+.threads-tabs__ul > li::marker {
+  content: '' !important;
+}
+
+.threads-tabs__ul > li::before {
+  content: none !important;
+}
+
+/* TAB BUTTONS (ThreadTab likely renders button inside li) */
+.threads-tabs .thread-item > button,
+.threads-tabs .thread-item > div,
+.threads-tabs .thread-tab > button,
+.threads-tabs .thread-tab > div,
+.threads-tabs__ul > li > button {
+  appearance: none;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  line-height: 1;
+  color: var(--pico-muted-color);
+  cursor: pointer;
+}
+
+/* Selected tab */
+.threads-tabs .thread-item.selected > button,
+.threads-tabs .thread-item.selected > div,
+.threads-tabs .thread-tab.selected > button,
+.threads-tabs .thread-tab.selected > div,
+.threads-tabs__ul > li.is-selected > button {
+  color: #00796b;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 8px;
+}
+
+.threads-tabs .thread-item > button:hover,
+.threads-tabs .thread-item > div:hover,
+.threads-tabs .thread-tab > button:hover,
+.threads-tabs .thread-tab > div:hover,
+.threads-tabs__ul > li > button:hover {
+  color: #00796b;
+}
+
+/* ADD AREA */
+.threads-tabs__add {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+}
+
+/* Add button */
+.threads-tabs__addBtn {
+  border: 1px solid var(--pico-muted-border-color);
+  background: transparent;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 0.95rem;
+  color: var(--pico-muted-color);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.threads-tabs__addBtn:hover {
+  border-color: #00796b;
+  color: #00796b;
+}
+
+/* ---------- Add Activity inline form ---------- */
+.threads-tabs__addForm {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px;
+  border: 1px solid var(--pico-muted-border-color);
+  border-radius: 8px;
+  background: #fff;
+}
+
+/* Input inside */
+.threads-tabs__addForm input {
+  border: none !important;
+  outline: none !important;
+  background: transparent !important;
+  margin: 0 !important;
+  padding: 0 4px !important;
+  height: 44px; /* 👈 match icon height */
+  line-height: 44px; /* 👈 vertically center text */
+  width: 220px;
+  background: #ffffff;
+  max-width: min(52vw, 260px);
+  font-size: 1rem;
+}
+
+.threads-tabs__addForm input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Icon buttons ✓ × */
+.threads-tabs__icon {
+  border: none;
+  appearance: none;
+  background: #ffffff;
+  color: #1f2937;
+  width: 44px;
+  height: 44px;
+  display: inline-flex; /* 👈 important */
+  align-items: center; /* 👈 vertical */
+  justify-content: center; /* 👈 horizontal */
+  padding: 0; /* important: no weird offsets */
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.threads-tabs__icon:hover {
+  border-color: #00796b;
+  background: rgba(0, 121, 107, 0.08);
+  color: #00796b;
+}
+
+.threads-tabs__icon:focus-visible {
+  outline: 2px solid rgba(0, 121, 107, 0.35);
+  outline-offset: 2px;
+}
+
+/* Mobile: put add on next line, keep add form usable */
+@media (max-width: 640px) {
+  .threads-tabs__row {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .threads-tabs__list {
+    flex-basis: 100%;
+  }
+
+  .threads-tabs__add {
+    flex-basis: 100%;
+    justify-content: flex-end;
+  }
+
+  .threads-tabs__addForm {
+    width: 100%;
+  }
+
+  .threads-tabs__addForm input {
+    flex: 1;
+    width: auto;
+    max-width: none;
+    min-width: 0;
+  }
+}
+
+/* Small phones: slightly smaller controls */
+@media (max-width: 480px) {
+  .threads-tabs__addForm {
+    padding: 8px 10px;
+    gap: 8px;
+  }
+
+  .threads-tabs__icon {
+    width: 40px;
+    height: 40px;
+  }
+}

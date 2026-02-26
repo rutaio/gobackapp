@@ -3,6 +3,7 @@
 
 .thread-name {
   flex: 1;
+  font-size: 1.5rem;
 }
 
 /* Rename input (only inside a thread row) */

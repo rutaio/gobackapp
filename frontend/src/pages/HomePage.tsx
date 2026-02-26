@@ -3,7 +3,7 @@
 import '../styles/pages/home.css';
 import { threads } from '../data/threads';
 import { useState, useRef, useEffect } from 'react';
-import { ThreadsList } from '../components/ThreadsList';
+import { ThreadsTabs } from '../components/ThreadsTabs';
 import { GoBackCard } from '../components/GoBackCard';
 import type { Checkin } from '../types/types';
 import { Footer } from '../components/Footer';
@@ -63,6 +63,7 @@ export const HomePage = () => {
   const handleThreadClick = (threadId: string) => {
     setSelectedThreadId(threadId);
     setThreadIdPendingArchive(null); // close any pending archive confirm UI
+    setEditingThreadId(null); // NEW: prevents rename UI sticking
   };
 
   // rename
@@ -168,41 +169,42 @@ export const HomePage = () => {
     .slice(0, 3) // show only last 3;
     .reverse();
 
+  const checkinsCountForSelectedThread = selectedThreadId
+    ? getCheckinsCount(selectedThreadId)
+    : 0;
+
   return (
     <>
       <Header></Header>
 
       <main className="page">
-        <div className="dashboard">
-          <article className="panel threads-panel">
-            <ThreadsList
-              threads={threadsState}
-              selectedThreadId={selectedThreadId}
-              onSelectThread={handleThreadClick}
-              onStartEditing={setEditingThreadId}
-              editingThreadId={editingThreadId}
-              onRenameConfirm={handleRenameConfirm}
-              onAddThread={handleAddThread}
-              onRequestArchiveThread={requestArchiveThread}
-              onConfirmArchiveThread={handleArchiveThread}
-              onCancelArchiveThread={() => setThreadIdPendingArchive(null)}
-              threadIdPendingArchive={threadIdPendingArchive}
-              getCheckinsCount={getCheckinsCount}
-            />
-          </article>
+        <ThreadsTabs
+          threads={threadsState}
+          selectedThreadId={selectedThreadId}
+          onSelectThread={handleThreadClick}
+          onAddThread={handleAddThread}
+        />
 
-          <article className="panel goback-panel">
-            <GoBackCard
-              checkinsForSelectedThread={selectedThreadCheckins}
-              selectedThread={selectedThreadData}
-              checkinTitle={checkinTitle}
-              checkinNote={checkinNote}
-              onCheckinTitleChange={setCheckinTitle}
-              onCheckinNoteChange={setCheckinNote}
-              onSubmit={handleSubmit}
-            />
-          </article>
-        </div>
+        <article className="panel goback-panel">
+          <GoBackCard
+            checkinsForSelectedThread={selectedThreadCheckins}
+            selectedThread={selectedThreadData}
+            checkinTitle={checkinTitle}
+            checkinNote={checkinNote}
+            onCheckinTitleChange={setCheckinTitle}
+            onCheckinNoteChange={setCheckinNote}
+            onSubmit={handleSubmit}
+            editingThreadId={editingThreadId}
+            onStartEditing={setEditingThreadId}
+            onCancelEditing={() => setEditingThreadId(null)}
+            onRenameConfirm={handleRenameConfirm}
+            threadIdPendingArchive={threadIdPendingArchive}
+            onRequestArchiveThread={requestArchiveThread}
+            onConfirmArchiveThread={handleArchiveThread}
+            onCancelArchiveThread={() => setThreadIdPendingArchive(null)}
+            checkinsCountForSelectedThread={checkinsCountForSelectedThread}
+          />
+        </article>
 
         <div className="page-spacer" />
 
