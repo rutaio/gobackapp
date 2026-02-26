@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import '../styles/components/header.css';
 
 type HeaderProps = {
@@ -9,20 +9,24 @@ type HeaderProps = {
 export const Header = ({ heroDismissed = false, onShowIntro }: HeaderProps) => {
   const location = useLocation();
   const isHome = location.pathname === '/';
-
   const shouldShowIntro = isHome && heroDismissed;
 
   return (
     <header>
-      <div className="logo">
+      <Link to="/" className="logo">
         <strong>GoBack</strong>
-        <small>Return. Remember. Continue.</small>
-      </div>
+        <small>Return · Remember · Continue</small>
+      </Link>
 
       <nav className="header-nav">
-        <Link className="header-nav__link" to="/about">
+        <NavLink
+          to="/about"
+          className={({ isActive }) =>
+            `header-nav__link ${isActive ? 'is-active' : ''}`
+          }
+        >
           How it works
-        </Link>
+        </NavLink>
 
         {shouldShowIntro && (
           <button

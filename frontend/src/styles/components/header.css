@@ -10,6 +10,8 @@ header {
   display: flex;
   flex-direction: column;
   line-height: 1.2;
+  text-decoration: none;
+  color: inherit;
 }
 
 .logo small {
@@ -45,4 +47,9 @@ header {
   outline: 2px solid rgba(0, 121, 107, 0.35);
   outline-offset: 3px;
   border-radius: 6px;
+}
+
+.header-nav__link.is-active {
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }

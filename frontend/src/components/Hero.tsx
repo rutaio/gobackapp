@@ -8,10 +8,10 @@ type HeroProps = {
 export const Hero = ({ onCtaClick, onDismiss }: HeroProps) => {
   return (
     <section className="hero" data-testid="home-hero">
-      <h1>Go Back is your place to do deep work.</h1>
+      <h1>Show up for what matters to you.</h1>
       <p className="hero-lead">
-        Show up for yourself. Log steps you take in your self-directed projects.
-        See where you left off and continue.
+        Log small steps in your self-directed projects. Pick up where you left
+        off and continue.
       </p>
 
       <div className="hero-actions">
