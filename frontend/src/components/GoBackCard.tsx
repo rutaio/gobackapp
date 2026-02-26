@@ -1,42 +1,52 @@
 import '../styles/components/go-back-card.css';
 import { useState } from 'react';
 import type { Thread, Checkin } from '../types/types';
+import { formatRelativeTime } from '../utils/formatRelativeTime';
 
-/* HELPER - controls UI expand/collapse for ONE list item. */
-const CheckinListItem = ({ checkin }: { checkin: Checkin }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const hasNote = Boolean(checkin.note?.trim());
+/* HELPER - controls UI expand/collapse for ONE list item. */ const CheckinListItem =
+  ({ checkin }: { checkin: Checkin }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const hasNote = Boolean(checkin.note?.trim());
 
-  const toggle = () => setIsOpen((v) => !v);
+    const relative = formatRelativeTime(checkin.createdAt);
 
-  return (
-    <li>
-      {hasNote ? (
-        <button
-          type="button"
-          className={`checkin-title checkin-title--clickable ${
-            isOpen ? 'is-open' : ''
-          }`}
-          onClick={toggle}
-          aria-expanded={isOpen}
-        >
-          <span className="checkin-title-text">{checkin.text}</span>
-          <span className="checkin-chevron" aria-hidden="true">
-            ▾
-          </span>
-        </button>
-      ) : (
-        <div className="checkin-title">{checkin.text}</div>
-      )}
+    const toggle = () => setIsOpen((v) => !v);
 
-      {hasNote && isOpen && (
-        <div className="checkin-note" data-testid="checkin-note">
-          {checkin.note}
-        </div>
-      )}
-    </li>
-  );
-};
+    return (
+      <li>
+        {hasNote ? (
+          <button
+            type="button"
+            className={`checkin-title checkin-title--clickable ${
+              isOpen ? 'is-open' : ''
+            }`}
+            onClick={toggle}
+            aria-expanded={isOpen}
+          >
+            <span className="checkin-title-text">{checkin.text}</span>
+
+            <span className="checkin-meta">
+              <span className="checkin-time">{relative}</span>
+              <span className="checkin-chevron" aria-hidden="true">
+                ▾
+              </span>
+            </span>
+          </button>
+        ) : (
+          <div className="checkin-title">
+            <span className="checkin-title-text">{checkin.text}</span>
+            <span className="checkin-time">{relative}</span>
+          </div>
+        )}
+
+        {hasNote && isOpen && (
+          <div className="checkin-note" data-testid="checkin-note">
+            {checkin.note}
+          </div>
+        )}
+      </li>
+    );
+  };
 
 interface GoBackCardProps {
   selectedThread: Thread | null;

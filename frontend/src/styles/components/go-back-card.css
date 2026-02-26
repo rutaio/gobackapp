@@ -82,7 +82,10 @@
 
 .checkin-title {
   all: unset;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   width: 100%;
   line-height: 1.35;
   color: var(--pico-muted-color);
@@ -112,6 +115,11 @@
   border-radius: 6px;
 }
 
+.checkin-title-text {
+  min-width: 0;
+  flex: 1;
+}
+
 .checkin-note {
   margin-top: 0.25rem;
   font-size: 0.95rem;
@@ -125,11 +133,6 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-}
-
-/* Wrap text so arrow stays right aligned */
-.checkin-title-text {
-  flex: 1;
 }
 
 .checkin-chevron {
@@ -148,16 +151,11 @@
 
 .selected-thread-row {
   display: flex;
-  align-items: center;
+  align-items: flex-start; /* better than center on wrap */
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 0.5rem;
-}
-
-.selected-thread-actions {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap; /* KEY */
 }
 
 .thread-action {
@@ -186,15 +184,6 @@
   font-size: 1rem;
 }
 
-.selected-thread-row {
-  display: flex;
-  align-items: flex-start; /* better than center on wrap */
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 0.75rem;
-  flex-wrap: wrap; /* KEY */
-}
-
 .selected-thread {
   margin: 0;
   flex: 1 1 auto;
@@ -203,7 +192,25 @@
 }
 
 .selected-thread-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   flex: 0 0 auto;
+}
+
+/* Right-side meta (time + chevron) */
+.checkin-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.checkin-time {
+  font-size: 0.85rem;
+  color: var(--pico-muted-color);
+  white-space: nowrap;
+  opacity: 0.9;
 }
 
 @media (max-width: 480px) {
