@@ -136,6 +136,7 @@ export const GoBackCard = ({
                     <button
                       type="button"
                       className="thread-action"
+                      data-testid="thread-archive-button"
                       aria-label="Archive activity"
                       title={
                         checkinsCountForSelectedThread > 0
@@ -147,12 +148,16 @@ export const GoBackCard = ({
                       🗑️
                     </button>
                   ) : (
-                    <span className="thread-archive-confirm">
+                    <span
+                      className="thread-archive-confirm"
+                      data-testid="thread-archive-confirm"
+                    >
                       <span className="thread-archive-text">Archive?</span>
 
                       <button
                         type="button"
                         className="thread-action"
+                        data-testid="confirm-archive-thread"
                         aria-label="Confirm archive"
                         title="Confirm"
                         onClick={() =>
@@ -165,6 +170,7 @@ export const GoBackCard = ({
                       <button
                         type="button"
                         className="thread-action"
+                        data-testid="cancel-archive-thread"
                         aria-label="Cancel archive"
                         title="Cancel"
                         onClick={onCancelArchiveThread}

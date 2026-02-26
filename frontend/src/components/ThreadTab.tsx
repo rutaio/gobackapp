@@ -13,9 +13,12 @@ export const ThreadTab = ({
   onSelectThread,
 }: ThreadTabProps) => {
   return (
-    <li className={`thread-tab ${isSelected ? 'is-selected' : ''}`}>
+    <li
+      className={`thread-tab ${isSelected ? 'is-selected' : ''}`}
+      data-testid="thread-item"
+    >
       <button type="button" onClick={() => onSelectThread(thread.id)}>
-        {thread.name}
+        <span data-testid="thread-name">{thread.name}</span>
       </button>
     </li>
   );
