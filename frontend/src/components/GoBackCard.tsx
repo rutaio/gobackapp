@@ -2,6 +2,7 @@ import '../styles/components/go-back-card.css';
 import { useState } from 'react';
 import type { Thread, Checkin } from '../types/types';
 import { formatRelativeTime } from '../utils/formatRelativeTime';
+import { EditIcon } from './icons/EditIcon';
 
 /* HELPER - controls UI expand/collapse for ONE list item. */ const CheckinListItem =
   ({ checkin }: { checkin: Checkin }) => {
@@ -139,7 +140,7 @@ export const GoBackCard = ({
                       onStartEditing(selectedThread.id);
                     }}
                   >
-                    ✏️
+                    <EditIcon size={18} />
                   </button>
 
                   {!isPendingArchiveSelected ? (
@@ -155,7 +156,7 @@ export const GoBackCard = ({
                       }
                       onClick={() => onRequestArchiveThread(selectedThread.id)}
                     >
-                      🗑️
+                      ×
                     </button>
                   ) : (
                     <span

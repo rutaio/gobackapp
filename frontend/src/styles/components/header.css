@@ -14,9 +14,26 @@ header {
   color: inherit;
 }
 
+/* LOGO should behave like normal text, not a link */
+.logo,
+.logo:link,
+.logo:visited {
+  color: #00796b;
+  text-decoration: none;
+}
+
 .logo small {
   font-size: 0.75rem;
   color: var(--pico-muted-color);
+}
+
+.logo:visited {
+  color: inherit;
+}
+
+.logo:hover {
+  color: inherit;
+  text-decoration: none;
 }
 
 .header-nav {
@@ -25,22 +42,30 @@ header {
   gap: 1rem;
 }
 
+/* NAV links should be green */
+.header-nav__link,
+.header-nav__link:link,
+.header-nav__link:visited {
+  color: #00796b !important;
+  text-decoration: none;
+}
+
 .header-nav__link {
   font-size: 0.8rem;
-  color: var(--pico-primary-color);
+  color: #00796b;
   text-decoration: none;
   background: transparent;
   border: 0;
   padding: 0;
   margin: 0;
   cursor: pointer;
-  font: inherit;
 }
 
 .header-nav__link:hover {
   text-decoration: underline;
   text-underline-offset: 3px;
   opacity: 0.9;
+  color: #25695c !important;
 }
 
 .header-nav__link:focus-visible {
@@ -52,4 +77,55 @@ header {
 .header-nav__link.is-active {
   text-decoration: underline;
   text-underline-offset: 3px;
+}
+
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.6rem;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  color:  #25695c;
+}
+
+.hamburger:focus,
+.hamburger:active {
+  outline: none;
+  box-shadow: none;
+    color:  #25695c;
+
+}
+
+.hamburger:hover {
+  opacity: 0.8;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .hamburger {
+    display: block;
+  }
+
+  .header-nav {
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background: white;
+    border: 1px solid var(--pico-muted-border-color);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    display: none;
+    flex-direction: column;
+    gap: 0.75rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .header-nav.open {
+    display: flex;
+  }
+
+  .logo small {
+    display: none;
+  }
 }

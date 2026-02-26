@@ -2,15 +2,38 @@
   background: none;
   border: none;
   padding: 0;
+  margin: 0;
   font: inherit;
   color: inherit;
   cursor: pointer;
-  font-size: 1.2rem;
+  text-decoration: none;
 }
 
-.thread-tab.is-selected button {
+/* label text (single-line + ellipsis, all screen sizes) */
+.thread-tab [data-testid='thread-name'] {
+  display: inline-block;
+  max-width: 11ch; /* tweak 9–14ch */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-bottom: 6px; /* space for underline */
+}
+
+/* selected state */
+.thread-tab.is-selected [data-testid='thread-name'] {
   color: #00796b;
   font-weight: 600;
-  text-decoration: underline;
-  text-underline-offset: 6px;
+  border-bottom: 2px solid #00796b;
+}
+
+/* Keep accessible focus, but make it match your brand (no blue flash) */
+.thread-tab button:focus-visible {
+  outline: 2px solid rgba(47, 125, 109, 0.35); /* your green, soft */
+  outline-offset: 4px;
+  border-radius: 8px;
+}
+
+/* Optional: avoid Safari's inner focus ring quirks */
+.thread-tab button:focus {
+  outline: none;
 }
