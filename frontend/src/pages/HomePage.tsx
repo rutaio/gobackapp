@@ -8,6 +8,7 @@ import { GoBackCard } from '../components/GoBackCard';
 import type { Checkin } from '../types/types';
 import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
+import { Hero } from '../components/Hero';
 
 import { useCheckinsStorage } from '../hooks/useCheckinsStorage';
 import { useThreadsStorage } from '../hooks/useThreadsStorage';
@@ -16,6 +17,7 @@ import { useDefaultSelectedThread } from '../hooks/useDefaultSelectedThread';
 const CHECKINS_STORAGE_KEY = 'goback_checkins_v1';
 const THREADS_STORAGE_KEY = 'goback_threads_v1';
 const LAST_THREAD_STORAGE_KEY = 'goback_last_thread_v1';
+const HERO_DISMISSED_KEY = 'goback_hero_dismissed_v1';
 
 export const HomePage = () => {
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null);
@@ -34,6 +36,34 @@ export const HomePage = () => {
 
   const { checkinsHistory, setCheckinsHistory, hasLoadedCheckins } =
     useCheckinsStorage(CHECKINS_STORAGE_KEY);
+
+  // Feature "Hero" start
+  const handleShowIntro = () => {
+    localStorage.removeItem(HERO_DISMISSED_KEY);
+    setHeroDismissed(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const gobackSectionRef = useRef<HTMLElement | null>(null);
+
+  const [heroDismissed, setHeroDismissed] = useState(() => {
+    return localStorage.getItem(HERO_DISMISSED_KEY) === 'true';
+  });
+
+  const showHero = !heroDismissed;
+
+  const handleHeroDismiss = () => {
+    localStorage.setItem(HERO_DISMISSED_KEY, 'true');
+    setHeroDismissed(true);
+  };
+
+  const handleHeroCta = () => {
+    gobackSectionRef.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start', // aligns top of section with viewport top
+    });
+  };
+  // Feature "Hero" end
 
   //  always-latest snapshot of checkins (doesn't wait for re-render)
   const checkinsHistoryRef = useRef<Checkin[]>([]);
@@ -175,9 +205,13 @@ export const HomePage = () => {
 
   return (
     <>
-      <Header></Header>
+      <Header heroDismissed={heroDismissed} onShowIntro={handleShowIntro} />
 
       <main className="page">
+        {showHero && (
+          <Hero onCtaClick={handleHeroCta} onDismiss={handleHeroDismiss} />
+        )}
+
         <ThreadsTabs
           threads={threadsState}
           selectedThreadId={selectedThreadId}
@@ -185,7 +219,7 @@ export const HomePage = () => {
           onAddThread={handleAddThread}
         />
 
-        <article className="panel goback-panel">
+        <article className="panel goback-panel" ref={gobackSectionRef}>
           <GoBackCard
             checkinsForSelectedThread={selectedThreadCheckins}
             selectedThread={selectedThreadData}
