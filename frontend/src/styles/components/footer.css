@@ -20,6 +20,13 @@
   order: 2;
 }
 
+.footer a {
+  color: var(--pico-primary-color) !important;
+}
+.footer a:hover {
+  color: var(--pico-primary-hover-color) !important;
+}
+
 @media (max-width: 768px) {
   .footer-main {
     grid-template-columns: 1fr;

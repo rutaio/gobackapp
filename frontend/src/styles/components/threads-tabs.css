@@ -1,5 +1,3 @@
-/* threads-tabs.css */
-
 .threads-tabs {
   margin: 1.25rem 0 1.5rem;
 }
@@ -60,8 +58,6 @@
 /* TAB BUTTONS (ThreadTab likely renders button inside li) */
 .threads-tabs .thread-item > button,
 .threads-tabs .thread-item > div,
-.threads-tabs .thread-tab > button,
-.threads-tabs .thread-tab > div,
 .threads-tabs__ul > li > button {
   appearance: none;
   background: transparent;
@@ -74,23 +70,8 @@
   cursor: pointer;
 }
 
-/* Selected tab */
-.threads-tabs .thread-item.selected > button,
-.threads-tabs .thread-item.selected > div,
-.threads-tabs .thread-tab.selected > button,
-.threads-tabs .thread-tab.selected > div,
-.threads-tabs__ul > li.is-selected > button {
-  color: #00796b;
-  font-weight: 600;
-  text-decoration: underline;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 8px;
-}
-
 .threads-tabs .thread-item > button:hover,
 .threads-tabs .thread-item > div:hover,
-.threads-tabs .thread-tab > button:hover,
-.threads-tabs .thread-tab > div:hover,
 .threads-tabs__ul > li > button:hover {
   color: #00796b;
 }

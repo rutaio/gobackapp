@@ -1,5 +1,6 @@
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import '../styles/components/header.css';
+import { useState } from 'react';
 
 type HeaderProps = {
   heroDismissed?: boolean;
@@ -10,6 +11,7 @@ export const Header = ({ heroDismissed = false, onShowIntro }: HeaderProps) => {
   const location = useLocation();
   const isHome = location.pathname === '/';
   const shouldShowIntro = isHome && heroDismissed;
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
     <header>
@@ -18,12 +20,21 @@ export const Header = ({ heroDismissed = false, onShowIntro }: HeaderProps) => {
         <small>Return · Remember · Continue</small>
       </Link>
 
-      <nav className="header-nav">
+      <button
+        className="hamburger"
+        onClick={() => setIsMenuOpen((prev) => !prev)}
+        aria-label="Menu"
+      >
+        ☰
+      </button>
+
+      <nav className={`header-nav ${isMenuOpen ? 'open' : ''}`}>
         <NavLink
           to="/about"
           className={({ isActive }) =>
             `header-nav__link ${isActive ? 'is-active' : ''}`
           }
+          onClick={() => setIsMenuOpen(false)}
         >
           How it works
         </NavLink>
@@ -32,7 +43,10 @@ export const Header = ({ heroDismissed = false, onShowIntro }: HeaderProps) => {
           <button
             type="button"
             className="header-nav__link"
-            onClick={onShowIntro}
+            onClick={() => {
+              onShowIntro?.();
+              setIsMenuOpen(false);
+            }}
           >
             Show intro
           </button>

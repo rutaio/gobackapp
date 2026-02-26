@@ -1,6 +1,38 @@
 /* “What should be true everywhere in the app, no matter which page or component?” */
+@import './reset.css';
+
 :root {
   color-scheme: light;
+
+  /* Pico theme variables */
+  --pico-primary: #00796b;
+  --pico-primary-hover: #25695c;
+  --pico-primary-focus: rgba(47, 125, 109, 0.25);
+
+  /* IMPORTANT: Pico uses this for link color */
+  --pico-primary-color: #00796b;
+  --pico-primary-hover-color: #25695c;
+  --pico-primary-inverse: #ffffff; /* <-- important */
 }
 
-@import './reset.css';
+a,
+a:visited {
+  color: #00796b;
+}
+
+a:hover {
+  color: #25695c;
+}
+
+/* normal links */
+a:not([role='button']):not(.btn):not(.btn-primary) {
+  color: #00796b;
+}
+
+a:not([role='button']):not(.btn):not(.btn-primary):hover {
+  color: #25695c;
+}
+
+a[role='button'] {
+  color: white;
+}

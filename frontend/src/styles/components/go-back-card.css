@@ -50,13 +50,6 @@
   box-shadow: 0 0 0 3px rgba(0, 121, 107, 0.35);
 }
 
-/* TO REVISIT
-.checkins-label {
-  margin: 0 0 0.5rem;
-  font-size: 0.8rem;
-  color: var(--pico-muted-color);
-} */
-
 .checkins-history ul {
   list-style: none !important;
   padding: 0 !important;
@@ -120,6 +113,10 @@
   flex: 1;
 }
 
+.checkin-title-input {
+  border: 2px solid var(--pico-primary-color);
+}
+
 .checkin-note {
   margin-top: 0.25rem;
   font-size: 0.95rem;
@@ -176,12 +173,25 @@
   color: #00796b;
 }
 
+/* Rename input should NOT use green "checkin" focus style */
 .selected-thread-rename {
-  flex: 1;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  padding: 0.45rem 0.6rem;
+  flex: 0 0 auto; /* ✅ stop filling the whole row */
+  width: 220px; /* or whatever matches your add input */
+  max-width: min(52vw, 260px);
+  border: 1px solid var(--pico-muted-border-color);
+  border-radius: 8px;
+  padding: 0 10px;
+  height: 44px;
+  line-height: 44px;
   font-size: 1rem;
+  background: #fff;
+}
+
+.selected-thread-rename:focus,
+.selected-thread-rename:focus-visible {
+  border: 1px solid var(--pico-muted-border-color) !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
 
 .selected-thread {
