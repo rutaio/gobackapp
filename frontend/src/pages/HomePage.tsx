@@ -13,6 +13,7 @@ import { Hero } from '../components/Hero';
 import { useCheckinsStorage } from '../hooks/useCheckinsStorage';
 import { useThreadsStorage } from '../hooks/useThreadsStorage';
 import { useDefaultSelectedThread } from '../hooks/useDefaultSelectedThread';
+import { createSeedCheckins } from '../data/seed';
 
 const CHECKINS_STORAGE_KEY = 'goback_checkins_v1';
 const THREADS_STORAGE_KEY = 'goback_threads_v1';
@@ -36,34 +37,6 @@ export const HomePage = () => {
 
   const { checkinsHistory, setCheckinsHistory, hasLoadedCheckins } =
     useCheckinsStorage(CHECKINS_STORAGE_KEY);
-
-  // Feature "Hero" start
-  const handleShowIntro = () => {
-    localStorage.removeItem(HERO_DISMISSED_KEY);
-    setHeroDismissed(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const gobackSectionRef = useRef<HTMLElement | null>(null);
-
-  const [heroDismissed, setHeroDismissed] = useState(() => {
-    return localStorage.getItem(HERO_DISMISSED_KEY) === 'true';
-  });
-
-  const showHero = !heroDismissed;
-
-  const handleHeroDismiss = () => {
-    localStorage.setItem(HERO_DISMISSED_KEY, 'true');
-    setHeroDismissed(true);
-  };
-
-  const handleHeroCta = () => {
-    gobackSectionRef.current?.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start', // aligns top of section with viewport top
-    });
-  };
-  // Feature "Hero" end
 
   //  always-latest snapshot of checkins (doesn't wait for re-render)
   const checkinsHistoryRef = useRef<Checkin[]>([]);
@@ -202,6 +175,55 @@ export const HomePage = () => {
   const checkinsCountForSelectedThread = selectedThreadId
     ? getCheckinsCount(selectedThreadId)
     : 0;
+
+  useEffect(() => {
+    if (!hasLoadedCheckins || !hasLoadedThreads) return;
+
+    // already have steps → don't seed
+    if (checkinsHistory.length > 0) return;
+
+    const seedCheckins = createSeedCheckins(threadsState);
+    if (seedCheckins.length === 0) return;
+
+    setCheckinsHistory(() => {
+      checkinsHistoryRef.current = seedCheckins;
+      return seedCheckins;
+    });
+  }, [
+    hasLoadedCheckins,
+    hasLoadedThreads,
+    checkinsHistory.length, // only re-run when it goes 0 -> >0 (or back)
+    threadsState,
+    setCheckinsHistory,
+  ]);
+
+  // Feature "Hero" start
+  const gobackSectionRef = useRef<HTMLElement | null>(null);
+
+  const [heroDismissed, setHeroDismissed] = useState(() => {
+    return localStorage.getItem(HERO_DISMISSED_KEY) === 'true';
+  });
+
+  const handleShowIntro = () => {
+    localStorage.removeItem(HERO_DISMISSED_KEY);
+    setHeroDismissed(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const showHero = !heroDismissed;
+
+  const handleHeroDismiss = () => {
+    localStorage.setItem(HERO_DISMISSED_KEY, 'true');
+    setHeroDismissed(true);
+  };
+
+  const handleHeroCta = () => {
+    gobackSectionRef.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start', // aligns top of section with viewport top
+    });
+  };
+  // Feature "Hero" end
 
   return (
     <>
