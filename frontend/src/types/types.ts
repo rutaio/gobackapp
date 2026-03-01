@@ -10,4 +10,5 @@ export type Checkin = {
   text: string; // treat as Title (required)
   note?: string;
   createdAt: number;
+  isSample?: boolean;
 };

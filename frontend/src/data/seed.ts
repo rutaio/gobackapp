@@ -18,18 +18,21 @@ export function createSeedCheckins(threads: Thread[]): Checkin[] {
       threadId: writing.id,
       text: 'Got a notebook just for writing',
       createdAt: now - 3 * oneDay,
+      isSample: true,
     },
     {
       id: crypto.randomUUID(),
       threadId: writing.id,
       text: 'Blocked 30 minutes for writing this week',
       createdAt: now - 2 * oneDay,
+      isSample: true,
     },
     {
       id: crypto.randomUUID(),
       threadId: writing.id,
       text: 'Wrote the first imperfect paragraph',
       createdAt: now,
+      isSample: true,
     },
 
     // Business
@@ -38,18 +41,21 @@ export function createSeedCheckins(threads: Thread[]): Checkin[] {
       threadId: business.id,
       text: 'Wrote down why this idea matters to me',
       createdAt: now - 3 * oneDay,
+      isSample: true,
     },
     {
       id: crypto.randomUUID(),
       threadId: business.id,
       text: 'Listed 3 traits of my ideal customer',
       createdAt: now - 2 * oneDay,
+      isSample: true,
     },
     {
       id: crypto.randomUUID(),
       threadId: business.id,
       text: 'Found an online community where they already gather',
       createdAt: now,
+      isSample: true,
     },
 
     // Research
@@ -58,18 +64,21 @@ export function createSeedCheckins(threads: Thread[]): Checkin[] {
       threadId: research.id,
       text: 'Brainstormed questions I am genuinely curious about',
       createdAt: now - 3 * oneDay,
+      isSample: true,
     },
     {
       id: crypto.randomUUID(),
       threadId: research.id,
       text: 'Grouped them into 5 themes',
       createdAt: now - 2 * oneDay,
+      isSample: true,
     },
     {
       id: crypto.randomUUID(),
       threadId: research.id,
       text: 'Saved 2 resources for one theme',
       createdAt: now,
+      isSample: true,
     },
   ];
 }
