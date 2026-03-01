@@ -12,9 +12,13 @@ export const AboutPage = () => {
 
       <main className="page about">
         <section className="about-hero">
-          <h1>GoBack is your accountability buddy.</h1>
+          <h1>
+            GoBack helps you continue<br></br> what you started.
+          </h1>
 
-          <p className="about-lead">Use this space to do deep work.</p>
+          <p className="about-lead">
+            All the projects that matter to you, in one calm space.
+          </p>
 
           <div className="about-actions">
             <a href="#how" role="button" className="btn-primary">
@@ -91,7 +95,7 @@ export const AboutPage = () => {
         </section>
 
         <section className="about-cta">
-          <h2>Make space for what matters.</h2>
+          <h2>Continue what you started.</h2>
           <a href="/" role="button" className="btn-primary">
             Go Back
           </a>
