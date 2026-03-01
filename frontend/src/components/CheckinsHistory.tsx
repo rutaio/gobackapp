@@ -24,6 +24,7 @@ const CheckinListItem = ({ checkin }: { checkin: Checkin }) => {
           <span className="checkin-title-text">{checkin.text}</span>
 
           <span className="checkin-meta">
+            {checkin.isSample && <span className="checkin-badge">Sample</span>}
             <span className="checkin-time">{relative}</span>
             <span className="checkin-chevron" aria-hidden="true">
               ▾
@@ -33,7 +34,11 @@ const CheckinListItem = ({ checkin }: { checkin: Checkin }) => {
       ) : (
         <div className="checkin-title">
           <span className="checkin-title-text">{checkin.text}</span>
-          <span className="checkin-time">{relative}</span>
+
+          <span className="checkin-meta">
+            {checkin.isSample && <span className="checkin-badge">Sample</span>}
+            <span className="checkin-time">{relative}</span>
+          </span>
         </div>
       )}
 
