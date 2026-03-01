@@ -253,25 +253,27 @@ export const GoBackCard = ({
 
           <div className="checkin-card">
             <form onSubmit={onSubmit} className="form">
-              <input
-                data-testid="checkin-title-input"
-                className="checkin-title-input"
-                id="checkin-title"
-                value={checkinTitle}
-                required
-                placeholder="What small step will keep this alive?"
-                onChange={(e) => onCheckinTitleChange(e.target.value)}
-              />
+              <div className="checkin-fields">
+                <input
+                  data-testid="checkin-title-input"
+                  className="checkin-title-input"
+                  id="checkin-title"
+                  value={checkinTitle}
+                  required
+                  placeholder="What small step will keep this alive?"
+                  onChange={(e) => onCheckinTitleChange(e.target.value)}
+                />
 
-              <textarea
-                data-testid="checkin-note-input"
-                className="checkin-note-input"
-                id="checkin-note"
-                rows={3}
-                value={checkinNote}
-                placeholder="Notes (optional)"
-                onChange={(e) => onCheckinNoteChange(e.target.value)}
-              />
+                <textarea
+                  data-testid="checkin-note-input"
+                  className="checkin-note-input"
+                  id="checkin-note"
+                  rows={3}
+                  value={checkinNote}
+                  placeholder="Notes (optional)"
+                  onChange={(e) => onCheckinNoteChange(e.target.value)}
+                />
+              </div>
 
               <button data-testid="save-checkin-button">
                 Save and continue

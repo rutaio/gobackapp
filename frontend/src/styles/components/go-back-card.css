@@ -10,149 +10,43 @@
   border-radius: 6px;
 }
 
-.selected-thread {
-  font-weight: 700;
-  font-size: 1.7rem;
-  color: #00796b;
-  margin-bottom: 0.5rem;
-}
-
-.empty-state {
-  color: var(--pico-muted-color);
-  font-size: 0.9rem;
-}
-
-.checkins-history {
-  margin-bottom: 1.5rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid var(--pico-muted-border-color);
-  font-size: 0.9rem;
-}
-
-.card textarea {
-  font-size: 1rem;
-}
-
-.card input:focus,
-.card textarea:focus {
-  border: 2px solid #00796b;
-  box-shadow: 0 0 0 2px rgba(0, 121, 107, 0.2);
-}
-
-.checkin-card button[type='submit'],
-.checkin-card [data-testid='save-checkin-button'] {
-  background-color: #00796b;
-}
-
-.checkin-card button:focus,
-.checkin-card button:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(0, 121, 107, 0.35);
-}
-
-.checkins-history ul {
-  list-style: none !important;
-  padding: 0 !important;
-  margin: 0.35rem 0 0 0 !important;
-}
-
-.checkins-history li {
-  list-style: none !important;
-  margin: 0.45rem 0;
-  padding: 0;
-}
-
-.checkins-history li::marker {
-  content: '' !important;
-}
-
-.checkins-history li {
-  border-left: var(--checkin-rail) solid var(--checkin-rail-color);
-  padding: 0.35rem 0 0.35rem var(--checkin-indent);
-  background: transparent !important;
-  border-radius: 0 !important;
-}
-
-.checkin-title {
-  all: unset;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  width: 100%;
-  line-height: 1.35;
-  color: var(--pico-muted-color);
-}
-
-.checkin-title--clickable {
-  cursor: pointer;
-}
-
-.checkin-title--clickable:hover {
-  background: rgba(0, 0, 0, 0.02);
-}
-
-.checkin-title:focus {
-  outline: none;
-  box-shadow: none;
-}
-
-.checkin-title--clickable:focus:not(:focus-visible) {
-  outline: none;
-  box-shadow: none;
-}
-
-.checkin-title--clickable:focus-visible {
-  outline: 2px solid rgba(0, 121, 107, 0.35);
-  outline-offset: 3px;
-  border-radius: 6px;
-}
-
-.checkin-title-text {
-  min-width: 0;
-  flex: 1;
-}
-
-.checkin-title-input {
-  border: 2px solid var(--pico-primary-color);
-}
-
-.checkin-note {
-  margin-top: 0.25rem;
-  font-size: 0.95rem;
-  color: var(--pico-muted-color);
-  line-height: 1.4;
-  white-space: pre-wrap;
-}
-
-/* Make title layout horizontal */
-.checkin-title--clickable {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.checkin-chevron {
-  font-size: 0.9rem;
-  opacity: 0.9;
-  font-weight: 600;
-  margin-left: 0.5rem;
-  color: var(--pico-muted-color);
-  transition: transform 0.15s ease;
-}
-
-/* Rotate when open */
-.checkin-title--clickable.is-open .checkin-chevron {
-  transform: rotate(180deg);
+@media (max-width: 480px) {
+  .card {
+    padding: 14px;
+  }
 }
 
 .selected-thread-row {
   display: flex;
-  align-items: flex-start; /* better than center on wrap */
+  align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
   margin-bottom: 0.75rem;
-  flex-wrap: wrap; /* KEY */
+  flex-wrap: wrap;
+}
+
+.selected-thread {
+  margin: 0;
+  flex: 1 1 auto;
+  min-width: 0;
+  word-break: break-word;
+
+  font-weight: 700;
+  font-size: 1.7rem;
+  color: #00796b;
+}
+
+@media (max-width: 480px) {
+  .selected-thread {
+    font-size: 1.4rem;
+  }
+}
+
+.selected-thread-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
 }
 
 .thread-action {
@@ -173,10 +67,9 @@
   color: #00796b;
 }
 
-/* Rename input should NOT use green "checkin" focus style */
 .selected-thread-rename {
-  flex: 0 0 auto; /* ✅ stop filling the whole row */
-  width: 220px; /* or whatever matches your add input */
+  flex: 0 0 auto;
+  width: 220px;
   max-width: min(52vw, 260px);
   border: 1px solid var(--pico-muted-border-color);
   border-radius: 8px;
@@ -194,21 +87,52 @@
   outline: none !important;
 }
 
-.selected-thread {
-  margin: 0;
-  flex: 1 1 auto;
-  min-width: 0; /* KEY: allows text to shrink instead of pushing layout */
-  word-break: break-word;
+.checkins-history {
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--pico-muted-border-color);
+  font-size: 0.9rem;
 }
 
-.selected-thread-actions {
-  display: inline-flex;
+.empty-state {
+  color: var(--pico-muted-color);
+  font-size: 0.9rem;
+}
+
+.checkins-history ul {
+  list-style: none;
+  padding: 0;
+  margin: 0.35rem 0 0 0;
+}
+
+.checkins-history li {
+  list-style: none;
+  margin: 0.45rem 0;
+  padding: 0;
+
+  border-left: var(--checkin-rail) solid var(--checkin-rail-color);
+  padding-left: var(--checkin-indent);
+  padding-top: 0.35rem;
+  padding-bottom: 0.35rem;
+}
+
+/* Title row */
+.checkin-title {
+  all: unset;
+  display: flex;
   align-items: center;
-  gap: 6px;
-  flex: 0 0 auto;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  line-height: 1.35;
+  color: var(--pico-muted-color);
 }
 
-/* Right-side meta (time + chevron) */
+.checkin-title-text {
+  min-width: 0;
+  flex: 1;
+}
+
 .checkin-meta {
   display: inline-flex;
   align-items: center;
@@ -223,17 +147,127 @@
   opacity: 0.9;
 }
 
-@media (max-width: 480px) {
-  .selected-thread {
-    font-size: 1.4rem;
-  }
+.checkin-title--clickable {
+  cursor: pointer;
+}
 
+.checkin-title--clickable:hover {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.checkin-title--clickable:focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: none;
+}
+
+.checkin-title--clickable:focus-visible {
+  outline: 2px solid rgba(0, 121, 107, 0.35);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.checkin-chevron {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  font-weight: 600;
+  margin-left: 0.5rem;
+  color: var(--pico-muted-color);
+  transition: transform 0.15s ease;
+}
+
+.checkin-title--clickable.is-open .checkin-chevron {
+  transform: rotate(180deg);
+}
+
+/* One shared “form box” for input + textarea */
+.checkin-fields {
+  border: 2px solid var(--pico-primary-color);
+  border-radius: 10px;
+  background: #fff;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+/* Make both fields feel like one component */
+.checkin-fields .checkin-title-input,
+.checkin-fields .checkin-note-input {
+  border: 0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+  margin: 0 !important;
+  width: 100%;
+}
+
+.checkin-fields .checkin-title-input {
+  padding: 1rem;
+  font-weight: 500;
+  font-size: 1.05rem;
+}
+
+/* shared “note text” feel */
+.checkin-note,
+.checkin-fields .checkin-note-input {
+  font-size: 0.95rem;
+  color: var(--pico-muted-color);
+}
+
+/* form-only */
+.checkin-fields .checkin-note-input {
+  border-top: 1px solid var(--pico-muted-border-color);
+  padding: 0.9rem 1rem 1rem;
+}
+
+/* history-only */
+.checkin-note {
+  margin-top: 0.25rem;
+  line-height: 1.4;
+  white-space: pre-wrap;
+}
+
+.checkin-fields {
+  border: 2px solid var(--pico-primary-color);
+}
+
+.checkin-fields .checkin-note-input {
+  border-top: 1px solid #e6e6e6 !important;
+  border-radius: 0 !important;
+}
+
+.checkin-fields:focus-within {
+  box-shadow: 0 0 0 3px rgba(0, 121, 107, 0.15);
+}
+
+.checkin-note-input::placeholder {
+  color: var(--pico-muted-color);
+  opacity: 0.7;
+}
+
+.checkin-fields:focus-within {
+  box-shadow: 0 0 0 3px rgba(0, 121, 107, 0.18);
+}
+
+/* Global focus style for other inputs in this card (NOT the checkin form fields) */
+.card input:focus:not(.checkin-title-input),
+.card textarea:focus:not(.checkin-note-input) {
+  border: 2px solid #00796b;
+  box-shadow: 0 0 0 2px rgba(0, 121, 107, 0.2);
+}
+
+/* Submit button */
+.checkin-card button[type='submit'],
+.checkin-card [data-testid='save-checkin-button'] {
+  background-color: #00796b;
+}
+
+.checkin-card button:focus,
+.checkin-card button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 121, 107, 0.35);
+}
+
+@media (max-width: 480px) {
   .checkin-card button[type='submit'],
   .checkin-card [data-testid='save-checkin-button'] {
     width: 100%;
-  }
-
-  .card {
-    padding: 14px;
   }
 }
