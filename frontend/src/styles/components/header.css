@@ -6,10 +6,6 @@ header {
   border-bottom: 1px solid var(--pico-muted-border-color);
 }
 
-.logo--static {
-  cursor: default;
-}
-
 .logo {
   display: flex;
   flex-direction: column;
@@ -20,8 +16,7 @@ header {
 
 /* LOGO should behave like normal text, not a link */
 .logo,
-.logo:link,
-.logo:visited {
+.logo:link {
   color: #00796b;
   text-decoration: none;
 }
@@ -35,9 +30,22 @@ header {
   color: inherit;
 }
 
-.logo:hover {
+a.logo:hover {
   color: inherit;
   text-decoration: none;
+}
+
+.logo--static {
+  cursor: default;
+  color: var(--pico-color);
+}
+
+.logo--static strong {
+  color: var(--pico-color);
+}
+
+.logo--static small {
+  color: rgba(0, 0, 0, 0.6);
 }
 
 .header-nav {
