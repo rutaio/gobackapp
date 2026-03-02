@@ -6,6 +6,10 @@ header {
   border-bottom: 1px solid var(--pico-muted-border-color);
 }
 
+.logo--static {
+  cursor: default;
+}
+
 .logo {
   display: flex;
   flex-direction: column;
@@ -86,15 +90,14 @@ header {
   font-size: 1.6rem;
   cursor: pointer;
   padding: 0.25rem 0.5rem;
-  color:  #25695c;
+  color: #25695c;
 }
 
 .hamburger:focus,
 .hamburger:active {
   outline: none;
   box-shadow: none;
-    color:  #25695c;
-
+  color: #25695c;
 }
 
 .hamburger:hover {
