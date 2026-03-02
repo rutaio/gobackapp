@@ -19,6 +19,7 @@ export const ThreadTab = ({
     >
       <button type="button" onClick={() => onSelectThread(thread.id)}>
         <span data-testid="thread-name">{thread.name}</span>
+        {thread.isSeed && <span className="thread-badge">Sample</span>}
       </button>
     </li>
   );

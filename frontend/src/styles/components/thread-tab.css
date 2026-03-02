@@ -9,6 +9,15 @@
   text-decoration: none;
 }
 
+.thread-badge {
+  font-size: 0.7rem;
+  margin-left: 6px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  color: rgba(0, 0, 0, 0.45);
+}
+
 /* label text (single-line + ellipsis, all screen sizes) */
 .thread-tab [data-testid='thread-name'] {
   display: inline-block;

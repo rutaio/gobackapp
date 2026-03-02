@@ -15,10 +15,17 @@ export const Header = ({ heroDismissed = false, onShowIntro }: HeaderProps) => {
 
   return (
     <header>
-      <Link to="/" className="logo">
-        <strong>GoBack</strong>
-        <small>Return · Remember · Continue</small>
-      </Link>
+      {isHome ? (
+        <div className="logo logo--static">
+          <strong>GoBack</strong>
+          <small>Return · Remember · Continue</small>
+        </div>
+      ) : (
+        <Link to="/" className="logo">
+          <strong>GoBack</strong>
+          <small>Return · Remember · Continue</small>
+        </Link>
+      )}
 
       <button
         className="hamburger"

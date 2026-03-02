@@ -16,8 +16,7 @@ header {
 
 /* LOGO should behave like normal text, not a link */
 .logo,
-.logo:link,
-.logo:visited {
+.logo:link {
   color: #00796b;
   text-decoration: none;
 }
@@ -31,9 +30,22 @@ header {
   color: inherit;
 }
 
-.logo:hover {
+a.logo:hover {
   color: inherit;
   text-decoration: none;
+}
+
+.logo--static {
+  cursor: default;
+  color: var(--pico-color);
+}
+
+.logo--static strong {
+  color: var(--pico-color);
+}
+
+.logo--static small {
+  color: rgba(0, 0, 0, 0.6);
 }
 
 .header-nav {
@@ -86,15 +98,14 @@ header {
   font-size: 1.6rem;
   cursor: pointer;
   padding: 0.25rem 0.5rem;
-  color:  #25695c;
+  color: #25695c;
 }
 
 .hamburger:focus,
 .hamburger:active {
   outline: none;
   box-shadow: none;
-    color:  #25695c;
-
+  color: #25695c;
 }
 
 .hamburger:hover {

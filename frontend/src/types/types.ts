@@ -2,6 +2,7 @@ export type Thread = {
   id: string;
   name: string;
   isArchived?: boolean;
+  isSeed?: boolean;
 };
 
 export type Checkin = {

@@ -19,13 +19,17 @@ export const CheckinForm = ({
     <div className="checkin-card">
       <form onSubmit={onSubmit} className="form">
         <div className="checkin-fields">
+          <label htmlFor="checkin-title" className="checkin-label">
+            What small step will keep this alive?
+          </label>
+
           <input
             data-testid="checkin-title-input"
             className="checkin-title-input"
             id="checkin-title"
             value={checkinTitle}
+            placeholder="Step title"
             required
-            placeholder="What small step will keep this alive?"
             onChange={(e) => onCheckinTitleChange(e.target.value)}
           />
 
