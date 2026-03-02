@@ -279,3 +279,13 @@
   padding: 2px 6px;
   border-radius: 999px;
 }
+
+.checkin-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: rgba(0, 0, 0, 0.496);
+  font-style: italic;
+  padding: 6px;
+}
