@@ -58,7 +58,7 @@ type CheckinsHistoryProps = {
 export const CheckinsHistory = ({ checkins }: CheckinsHistoryProps) => {
   return (
     <div className="checkins-history" data-testid="checkins-history">
-      <p className="checkins-label">Recent steps:</p>
+      <p className="checkins-label">Activity log:</p>
 
       {checkins.length === 0 ? (
         <p className="empty-state">No steps yet. Start by adding one.</p>

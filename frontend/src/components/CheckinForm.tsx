@@ -20,7 +20,7 @@ export const CheckinForm = ({
       <form onSubmit={onSubmit} className="form">
         <div className="checkin-fields">
           <label htmlFor="checkin-title" className="checkin-label">
-            What small step will keep this alive?
+            Log small action you just completed:
           </label>
 
           <input
@@ -28,7 +28,7 @@ export const CheckinForm = ({
             className="checkin-title-input"
             id="checkin-title"
             value={checkinTitle}
-            placeholder="Step title"
+            placeholder="What action did you take?"
             required
             onChange={(e) => onCheckinTitleChange(e.target.value)}
           />
@@ -44,7 +44,7 @@ export const CheckinForm = ({
           />
         </div>
 
-        <button data-testid="save-checkin-button">Save and continue</button>
+        <button data-testid="save-checkin-button">Save</button>
       </form>
     </div>
   );
