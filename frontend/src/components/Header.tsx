@@ -60,6 +60,7 @@ export const Header = ({ heroDismissed = false, onShowIntro }: HeaderProps) => {
           </button>
         )}
       </nav>
+
       <AuthButton />
     </header>
   );

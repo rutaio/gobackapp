@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '../../lib/supabaseClient';
+import '../styles/components/auth-button.css';
 
 export const LogoutButton = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -15,7 +16,12 @@ export const LogoutButton = () => {
   };
 
   return (
-    <button type="button" onClick={handleLogout} disabled={isLoading}>
+    <button
+      className="auth-button"
+      type="button"
+      onClick={handleLogout}
+      disabled={isLoading}
+    >
       {isLoading ? 'Signing out...' : 'Logout'}
     </button>
   );
