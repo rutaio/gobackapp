@@ -14,11 +14,11 @@ export function useDefaultSelectedThread(
   useEffect(() => {
     if (!hasLoadedCheckins || !hasLoadedThreads) return;
 
+    const activeThreads = threadsState.filter((thread) => !thread.isArchived);
     const availableThreadIds = new Set(
-      threadsState
-        .filter((thread) => !thread.isArchived)
-        .map((thread) => thread.id),
+      activeThreads.map((thread) => thread.id),
     );
+    const firstActiveThreadId = activeThreads[0]?.id ?? null;
 
     // if current selected thread still exists, keep it
     if (selectedThreadId && availableThreadIds.has(selectedThreadId)) return;
@@ -42,7 +42,7 @@ export function useDefaultSelectedThread(
       lastThreadId,
 
       // if this is a brand-new user, just show the first available thread
-      threadsState.find((thread) => !thread.isArchived)?.id ?? null,
+      firstActiveThreadId,
     ];
 
     // only select ids that still exist in the current thread list
