@@ -1,5 +1,7 @@
 //	If a function mutates global/shared state → it belongs in HomePage
 
+import { useAuthUser } from '../hooks/useAuthUser';
+import { getThreadsForUser } from '../../lib/getThreadsForUser';
 import '../styles/pages/home.css';
 import { threads } from '../data/threads';
 import { useState, useRef, useEffect } from 'react';
@@ -21,6 +23,7 @@ const LAST_THREAD_STORAGE_KEY = 'goback_last_thread_v1';
 const HERO_DISMISSED_KEY = 'goback_hero_dismissed_v1';
 
 export const HomePage = () => {
+  const { user } = useAuthUser();
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null);
   const [editingThreadId, setEditingThreadId] = useState<string | null>(null);
   // split state: title + optional note
@@ -34,6 +37,32 @@ export const HomePage = () => {
     THREADS_STORAGE_KEY,
     threads,
   );
+
+  useEffect(() => {
+    if (!user) return;
+
+    const loadThreads = async () => {
+      try {
+        const supabaseThreads = await getThreadsForUser(user.id);
+
+        console.log('Logged in user id:', user.id);
+        console.log('Threads from Supabase:', supabaseThreads);
+
+        if (supabaseThreads) {
+          const mappedThreads = supabaseThreads.map((thread) => ({
+            id: thread.id,
+            name: thread.name,
+            isArchived: thread.is_archived,
+          }));
+          setThreadsState(mappedThreads);
+        }
+      } catch (error) {
+        console.error('Failed to load threads from Supabase', error);
+      }
+    };
+
+    loadThreads();
+  }, [user, setThreadsState]);
 
   const { checkinsHistory, setCheckinsHistory, hasLoadedCheckins } =
     useCheckinsStorage(CHECKINS_STORAGE_KEY);
