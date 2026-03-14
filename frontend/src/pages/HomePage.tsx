@@ -1,8 +1,6 @@
 //	If a function mutates global/shared state → it belongs in HomePage
 
 import { useAuthUser } from '../hooks/useAuthUser';
-import { getThreadsForUser } from '../../lib/getThreadsForUser';
-import { createThreadForUser } from '../../lib/createThreadForUser';
 import '../styles/pages/home.css';
 import { threads } from '../data/threads';
 import { useState, useRef, useEffect } from 'react';
@@ -12,8 +10,11 @@ import type { Checkin } from '../types/types';
 import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
 import { Hero } from '../components/Hero';
+import { getThreadsForUser } from '../../lib/getThreadsForUser';
+import { createThreadForUser } from '../../lib/createThreadForUser';
 import { shouldSyncGuestData } from '../../lib/shouldSyncGuestData';
 import { importGuestThreadsForUser } from '../../lib/importGuestThreadsForUser';
+import { importGuestCheckinsForUser } from '../../lib/importGuestCheckinsForUser';
 
 import { useCheckinsStorage } from '../hooks/useCheckinsStorage';
 import { useThreadsStorage } from '../hooks/useThreadsStorage';
@@ -93,6 +94,18 @@ export const HomePage = () => {
             console.log('Imported guest threads');
             console.log('Thread id map:', threadIdMap);
 
+            const guestCheckins = JSON.parse(
+              localStorage.getItem(CHECKINS_STORAGE_KEY) ?? '[]',
+            );
+
+            await importGuestCheckinsForUser(
+              user.id,
+              guestCheckins,
+              threadIdMap,
+            );
+            
+            console.log('Imported guest checkins');
+
             localStorage.setItem(SYNCED_USER_KEY, user.id);
           }
         }
@@ -109,7 +122,6 @@ export const HomePage = () => {
 
         // reset selection because guest ids no longer exist after sync
         setSelectedThreadId(mappedThreads[0]?.id ?? null);
-        
       } catch (error) {
         console.error('Failed to bootstrap authenticated workspace', error);
         hasBootstrappedAuthRef.current = null;
