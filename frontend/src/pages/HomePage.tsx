@@ -12,6 +12,7 @@ import type { Checkin } from '../types/types';
 import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
 import { Hero } from '../components/Hero';
+import { shouldSyncGuestData } from '../../lib/shouldSyncGuestData';
 
 import { useCheckinsStorage } from '../hooks/useCheckinsStorage';
 import { useThreadsStorage } from '../hooks/useThreadsStorage';
@@ -22,6 +23,7 @@ const CHECKINS_STORAGE_KEY = 'goback_checkins_v1';
 const THREADS_STORAGE_KEY = 'goback_threads_v1';
 const LAST_THREAD_STORAGE_KEY = 'goback_last_thread_v1';
 const HERO_DISMISSED_KEY = 'goback_hero_dismissed_v1';
+const SYNCED_USER_KEY = 'goback_synced_user_id';
 
 export const HomePage = () => {
   const { user, isCheckingAuth } = useAuthUser();
@@ -42,6 +44,15 @@ export const HomePage = () => {
 
   useEffect(() => {
     if (!user) return;
+
+    const needsGuestSync = shouldSyncGuestData(
+      user.id,
+      THREADS_STORAGE_KEY,
+      CHECKINS_STORAGE_KEY,
+      SYNCED_USER_KEY,
+    );
+
+    console.log('Needs guest sync:', needsGuestSync);
 
     const loadThreads = async () => {
       try {
