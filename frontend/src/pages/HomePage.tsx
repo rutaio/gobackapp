@@ -13,6 +13,7 @@ import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
 import { Hero } from '../components/Hero';
 import { shouldSyncGuestData } from '../../lib/shouldSyncGuestData';
+import { importGuestThreadsForUser } from '../../lib/importGuestThreadsForUser';
 
 import { useCheckinsStorage } from '../hooks/useCheckinsStorage';
 import { useThreadsStorage } from '../hooks/useThreadsStorage';
@@ -27,6 +28,7 @@ const SYNCED_USER_KEY = 'goback_synced_user_id';
 
 export const HomePage = () => {
   const { user, isCheckingAuth } = useAuthUser();
+
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null);
   const [editingThreadId, setEditingThreadId] = useState<string | null>(null);
   // split state: title + optional note
@@ -42,24 +44,60 @@ export const HomePage = () => {
     !user, // only enable localStorage for guest users
   );
 
+  const threadsStateRef = useRef(threadsState);
+  const hasBootstrappedAuthRef = useRef<string | null>(null);
+
   useEffect(() => {
-    if (!user) return;
+    threadsStateRef.current = threadsState;
+  }, [threadsState]);
 
-    const needsGuestSync = shouldSyncGuestData(
-      user.id,
-      THREADS_STORAGE_KEY,
-      CHECKINS_STORAGE_KEY,
-      SYNCED_USER_KEY,
-    );
+  useEffect(() => {
+    if (!user) {
+      hasBootstrappedAuthRef.current = null;
+      return;
+    }
 
-    console.log('Needs guest sync:', needsGuestSync);
+    if (hasBootstrappedAuthRef.current === user.id) return;
+    hasBootstrappedAuthRef.current = user.id;
 
-    const loadThreads = async () => {
+    const bootstrapAuthenticatedWorkspace = async () => {
       try {
-        const supabaseThreads = await getThreadsForUser(user.id);
+        const needsGuestSync = shouldSyncGuestData(
+          user.id,
+          THREADS_STORAGE_KEY,
+          CHECKINS_STORAGE_KEY,
+          SYNCED_USER_KEY,
+        );
 
-        console.log('Logged in user id:', user.id);
-        console.log('Threads from Supabase:', supabaseThreads);
+        console.log('Needs guest sync:', needsGuestSync);
+
+        if (needsGuestSync) {
+          const guestThreads = threadsStateRef.current.filter(
+            (thread) => !thread.isArchived,
+          );
+
+          const hasUserCreatedThreads = guestThreads.some(
+            (thread) => !thread.isSeed,
+          );
+
+          const threadsToSync = hasUserCreatedThreads
+            ? guestThreads.filter((thread) => !thread.isSeed)
+            : guestThreads;
+
+          if (threadsToSync.length > 0) {
+            const threadIdMap = await importGuestThreadsForUser(
+              user.id,
+              threadsToSync,
+            );
+
+            console.log('Imported guest threads');
+            console.log('Thread id map:', threadIdMap);
+
+            localStorage.setItem(SYNCED_USER_KEY, user.id);
+          }
+        }
+
+        const supabaseThreads = await getThreadsForUser(user.id);
 
         const mappedThreads = supabaseThreads.map((thread) => ({
           id: thread.id,
@@ -68,12 +106,17 @@ export const HomePage = () => {
         }));
 
         setThreadsState(mappedThreads);
+
+        // reset selection because guest ids no longer exist after sync
+        setSelectedThreadId(mappedThreads[0]?.id ?? null);
+        
       } catch (error) {
-        console.error('Failed to load threads from Supabase', error);
+        console.error('Failed to bootstrap authenticated workspace', error);
+        hasBootstrappedAuthRef.current = null;
       }
     };
 
-    loadThreads();
+    bootstrapAuthenticatedWorkspace();
   }, [user, setThreadsState]);
 
   const { checkinsHistory, setCheckinsHistory, hasLoadedCheckins } =
@@ -224,8 +267,16 @@ export const HomePage = () => {
   };
 
   // UI DATA
+  console.log('selectedThreadId:', selectedThreadId);
+  console.log(
+    'threadsState ids:',
+    threadsState.map((thread) => thread.id),
+  );
+
   const selectedThreadData =
     threadsState.find((thread) => thread.id === selectedThreadId) ?? null;
+
+  console.log('selectedThreadData:', selectedThreadData);
 
   const selectedThreadCheckins = checkinsHistory
     .filter((checkin) => checkin.threadId === selectedThreadId)

@@ -13,7 +13,15 @@ export function useDefaultSelectedThread(
   // set default selected thread
   useEffect(() => {
     if (!hasLoadedCheckins || !hasLoadedThreads) return;
-    if (selectedThreadId) return;
+
+    const availableThreadIds = new Set(
+      threadsState
+        .filter((thread) => !thread.isArchived)
+        .map((thread) => thread.id),
+    );
+
+    // if current selected thread still exists, keep it
+    if (selectedThreadId && availableThreadIds.has(selectedThreadId)) return;
 
     const lastThreadId = localStorage.getItem(lastThreadStorageKey);
 
@@ -26,16 +34,25 @@ export function useDefaultSelectedThread(
       null,
     );
 
-    const defaultThreadId =
-      // 	if the user has checkins,	take the thread of the most recent checkin
-      mostRecentCheckin?.threadId ??
-      // 	if no check-ins exist yet, fall back to the last thread the user clicked
-      lastThreadId ??
-      // 	if this is a brand-new user, just show the first thread
-      threadsState[0]?.id ??
-      null;
+    const candidateIds = [
+      // if the user has checkins, take the thread of the most recent checkin
+      mostRecentCheckin?.threadId ?? null,
 
-    setSelectedThreadId(defaultThreadId);
+      // if no checkins exist yet, fall back to the last thread the user clicked
+      lastThreadId,
+
+      // if this is a brand-new user, just show the first available thread
+      threadsState.find((thread) => !thread.isArchived)?.id ?? null,
+    ];
+
+    // only select ids that still exist in the current thread list
+    const firstValidThreadId =
+      candidateIds.find(
+        (threadId): threadId is string =>
+          !!threadId && availableThreadIds.has(threadId),
+      ) ?? null;
+
+    setSelectedThreadId(firstValidThreadId);
   }, [
     hasLoadedCheckins,
     hasLoadedThreads,
