@@ -24,7 +24,7 @@ const LAST_THREAD_STORAGE_KEY = 'goback_last_thread_v1';
 const HERO_DISMISSED_KEY = 'goback_hero_dismissed_v1';
 
 export const HomePage = () => {
-  const { user } = useAuthUser();
+  const { user, isCheckingAuth } = useAuthUser();
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null);
   const [editingThreadId, setEditingThreadId] = useState<string | null>(null);
   // split state: title + optional note
@@ -37,6 +37,7 @@ export const HomePage = () => {
   const { threadsState, setThreadsState, hasLoadedThreads } = useThreadsStorage(
     THREADS_STORAGE_KEY,
     threads,
+    !user, // only enable localStorage for guest users
   );
 
   useEffect(() => {
@@ -49,14 +50,13 @@ export const HomePage = () => {
         console.log('Logged in user id:', user.id);
         console.log('Threads from Supabase:', supabaseThreads);
 
-        if (supabaseThreads) {
-          const mappedThreads = supabaseThreads.map((thread) => ({
-            id: thread.id,
-            name: thread.name,
-            isArchived: thread.is_archived,
-          }));
-          setThreadsState(mappedThreads);
-        }
+        const mappedThreads = supabaseThreads.map((thread) => ({
+          id: thread.id,
+          name: thread.name,
+          isArchived: thread.is_archived,
+        }));
+
+        setThreadsState(mappedThreads);
       } catch (error) {
         console.error('Failed to load threads from Supabase', error);
       }
@@ -274,6 +274,17 @@ export const HomePage = () => {
     });
   };
   // Feature "Hero" end
+
+  if (isCheckingAuth) {
+    return (
+      <>
+        <Header heroDismissed={false} />
+        <main className="page">
+          <p>Loading...</p>
+        </main>
+      </>
+    );
+  }
 
   return (
     <>
