@@ -2,6 +2,7 @@
 
 import { useAuthUser } from '../hooks/useAuthUser';
 import { getThreadsForUser } from '../../lib/getThreadsForUser';
+import { createThreadForUser } from '../../lib/createThreadForUser';
 import '../styles/pages/home.css';
 import { threads } from '../data/threads';
 import { useState, useRef, useEffect } from 'react';
@@ -115,9 +116,30 @@ export const HomePage = () => {
   };
 
   // add
-  const handleAddThread = (name: string) => {
-    const trimmedName = name.trim().slice(0, 40); // enforce max length
+  const handleAddThread = async (name: string) => {
+    const trimmedName = name.trim().slice(0, 40);
     if (!trimmedName) return;
+
+    if (user) {
+      try {
+        const createdThread = await createThreadForUser(user.id, trimmedName);
+
+        const mappedThread = {
+          id: createdThread.id,
+          name: createdThread.name,
+          isArchived: createdThread.is_archived,
+        };
+
+        setThreadsState((prev) => [...prev, mappedThread]);
+        setSelectedThreadId(mappedThread.id);
+        setEditingThreadId(null);
+        setThreadIdPendingArchive(null);
+        return;
+      } catch (error) {
+        console.error('Failed to create thread in Supabase', error);
+        return;
+      }
+    }
 
     const newThread = {
       id: crypto.randomUUID(),
@@ -125,7 +147,6 @@ export const HomePage = () => {
     };
 
     setThreadsState((prev) => [...prev, newThread]);
-    // Nice UX: automatically open the new thread
     setSelectedThreadId(newThread.id);
     setEditingThreadId(null);
     setThreadIdPendingArchive(null);
