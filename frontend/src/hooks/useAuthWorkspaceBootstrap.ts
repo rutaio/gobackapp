@@ -102,7 +102,12 @@ export function useAuthWorkspaceBootstrap({
               threadIdMap,
             );
 
+            // clear guest local data after successful first sync
             localStorage.setItem(syncedUserKey, user.id);
+            localStorage.removeItem(threadsStorageKey);
+            localStorage.removeItem(checkinsStorageKey);
+            localStorage.removeItem(lastThreadStorageKey);
+            console.log('Guest localStorage cleared after sync');
           }
         }
 
