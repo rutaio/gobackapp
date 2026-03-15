@@ -6,6 +6,7 @@ import { CheckinsHistory } from './CheckinsHistory';
 
 interface GoBackCardProps {
   selectedThread: Thread | null;
+  isLoadingSelection?: boolean;
 
   checkinTitle: string;
   checkinNote: string;
@@ -31,6 +32,7 @@ interface GoBackCardProps {
 
 export const GoBackCard = ({
   selectedThread,
+  isLoadingSelection = false,
   checkinTitle,
   onCheckinTitleChange,
   checkinNote,
@@ -52,7 +54,9 @@ export const GoBackCard = ({
 }: GoBackCardProps) => {
   return (
     <div className="card" data-testid="go-back-card">
-      {selectedThread ? (
+      {isLoadingSelection ? (
+        <p>Loading activity...</p>
+      ) : selectedThread ? (
         <>
           <SelectedThreadHeader
             selectedThread={selectedThread}

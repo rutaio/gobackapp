@@ -1,6 +1,7 @@
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import '../styles/components/header.css';
 import { useState } from 'react';
+import { AuthButton } from './AuthButton';
 
 type HeaderProps = {
   heroDismissed?: boolean;
@@ -59,6 +60,8 @@ export const Header = ({ heroDismissed = false, onShowIntro }: HeaderProps) => {
           </button>
         )}
       </nav>
+
+      <AuthButton />
     </header>
   );
 };
