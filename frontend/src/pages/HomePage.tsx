@@ -249,10 +249,17 @@ export const HomePage = () => {
     : 0;
 
   useEffect(() => {
+    if (user) return; // authenticated users use real data, so seed checkins are guest-only
     if (!hasLoadedCheckins || !hasLoadedThreads) return;
 
-    // already have steps → don't seed
-    if (checkinsHistory.length > 0) return;
+    const currentThreadIds = new Set(threadsState.map((thread) => thread.id));
+
+    const hasCheckinsForCurrentThreads = checkinsHistory.some((checkin) =>
+      currentThreadIds.has(checkin.threadId),
+    );
+
+    // if current guest threads already have checkins, don't seed again
+    if (hasCheckinsForCurrentThreads) return;
 
     const seedCheckins = createSeedCheckins(threadsState);
     if (seedCheckins.length === 0) return;
