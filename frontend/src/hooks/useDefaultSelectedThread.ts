@@ -35,11 +35,11 @@ export function useDefaultSelectedThread(
     );
 
     const candidateIds = [
-      // if the user has checkins, take the thread of the most recent checkin
-      mostRecentCheckin?.threadId ?? null,
-
-      // if no checkins exist yet, fall back to the last thread the user clicked
+      // if the user already had a last active thread, keep that continuity first
       lastThreadId,
+
+      // otherwise use the thread of the most recent checkin
+      mostRecentCheckin?.threadId ?? null,
 
       // if this is a brand-new user, just show the first available thread
       firstActiveThreadId,
