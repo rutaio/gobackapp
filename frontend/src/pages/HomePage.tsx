@@ -78,6 +78,7 @@ export const HomePage = () => {
     checkinsHistory,
     threadsState,
     LAST_THREAD_STORAGE_KEY,
+    !!user && isBootstrappingAuthWorkspace,
   );
 
   // HELPERS
@@ -85,10 +86,21 @@ export const HomePage = () => {
   const getCheckinsCount = (threadId: string) =>
     checkinsHistoryRef.current.filter((c) => c.threadId === threadId).length;
 
+  const selectThread = (threadId: string | null) => {
+    setSelectedThreadId(threadId);
+
+    if (threadId) {
+      localStorage.setItem(LAST_THREAD_STORAGE_KEY, threadId);
+    } else {
+      localStorage.removeItem(LAST_THREAD_STORAGE_KEY);
+    }
+  };
+
   // HANDLERS
   // thread selection
   const handleThreadClick = (threadId: string) => {
-    setSelectedThreadId(threadId);
+    selectThread(threadId);
+    localStorage.setItem(LAST_THREAD_STORAGE_KEY, threadId);
     setThreadIdPendingArchive(null); // close any pending archive confirm UI
     setEditingThreadId(null); // NEW: prevents rename UI sticking
   };
@@ -125,7 +137,7 @@ export const HomePage = () => {
         };
 
         setThreadsState((prev) => [...prev, mappedThread]);
-        setSelectedThreadId(mappedThread.id);
+        selectThread(mappedThread.id);
         setEditingThreadId(null);
         setThreadIdPendingArchive(null);
         return;
@@ -141,7 +153,7 @@ export const HomePage = () => {
     };
 
     setThreadsState((prev) => [...prev, newThread]);
-    setSelectedThreadId(newThread.id);
+    selectThread(newThread.id);
     setEditingThreadId(null);
     setThreadIdPendingArchive(null);
   };
@@ -157,7 +169,7 @@ export const HomePage = () => {
       if (selectedThreadId === threadId) {
         const nextThread = updated.find((t) => !t.isArchived);
 
-        setSelectedThreadId(nextThread?.id ?? null);
+        selectThread(nextThread?.id ?? null);
       }
 
       return updated;
@@ -207,10 +219,18 @@ export const HomePage = () => {
   };
 
   // UI DATA
+  console.log(
+    'LAST_THREAD_STORAGE_KEY:',
+    localStorage.getItem(LAST_THREAD_STORAGE_KEY),
+  );
   console.log('selectedThreadId:', selectedThreadId);
   console.log(
     'threadsState ids:',
     threadsState.map((thread) => thread.id),
+  );
+  console.log(
+    'checkin thread ids:',
+    checkinsHistory.map((checkin) => checkin.threadId),
   );
 
   const selectedThreadData =

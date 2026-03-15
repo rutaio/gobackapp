@@ -83,10 +83,13 @@ export function useAuthWorkspaceBootstrap({
             const guestLastThreadId =
               localStorage.getItem(lastThreadStorageKey);
 
+            console.log('GUEST SYNC THREAD MAP', {
+              guestLastThreadId,
+              threadIdMap,
+            });
+
             const syncedLastThreadId =
-              (selectedThreadId && threadIdMap[selectedThreadId]) ||
-              (guestLastThreadId && threadIdMap[guestLastThreadId]) ||
-              null;
+              (guestLastThreadId && threadIdMap[guestLastThreadId]) || null;
 
             if (syncedLastThreadId) {
               setSelectedThreadId(syncedLastThreadId);
@@ -120,6 +123,52 @@ export function useAuthWorkspaceBootstrap({
           createdAt: new Date(checkin.created_at).getTime(),
         }));
         setCheckinsHistory(mappedCheckins);
+        const activeThreads = mappedThreads.filter(
+          (thread) => !thread.isArchived,
+        );
+        const availableThreadIds = new Set(
+          activeThreads.map((thread) => thread.id),
+        );
+        const firstActiveThreadId = activeThreads[0]?.id ?? null;
+
+        const persistedLastThreadId =
+          localStorage.getItem(lastThreadStorageKey);
+
+        const mostRecentCheckin = mappedCheckins.reduce<Checkin | null>(
+          (latestCheckin, currentCheckin) =>
+            !latestCheckin || currentCheckin.createdAt > latestCheckin.createdAt
+              ? currentCheckin
+              : latestCheckin,
+          null,
+        );
+
+        const candidateIds = [
+          persistedLastThreadId,
+          mostRecentCheckin?.threadId ?? null,
+          firstActiveThreadId,
+        ];
+
+        const finalSelectedThreadId =
+          candidateIds.find(
+            (threadId): threadId is string =>
+              !!threadId && availableThreadIds.has(threadId),
+          ) ?? null;
+
+        console.log('AUTH FINAL SELECTION', {
+          persistedLastThreadId,
+          mostRecentCheckinThreadId: mostRecentCheckin?.threadId ?? null,
+          firstActiveThreadId,
+          availableThreadIds: Array.from(availableThreadIds),
+          finalSelectedThreadId,
+        });
+
+        setSelectedThreadId(finalSelectedThreadId);
+
+        if (finalSelectedThreadId) {
+          localStorage.setItem(lastThreadStorageKey, finalSelectedThreadId);
+        } else {
+          localStorage.removeItem(lastThreadStorageKey);
+        }
       } catch (error) {
         console.error('Failed to bootstrap authenticated workspace', error);
         hasBootstrappedAuthRef.current = null;
