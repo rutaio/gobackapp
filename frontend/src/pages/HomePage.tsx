@@ -10,17 +10,13 @@ import type { Checkin } from '../types/types';
 import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
 import { Hero } from '../components/Hero';
-import { getThreadsForUser } from '../../lib/getThreadsForUser';
 import { createThreadForUser } from '../../lib/createThreadForUser';
-import { shouldSyncGuestData } from '../../lib/shouldSyncGuestData';
-import { importGuestThreadsForUser } from '../../lib/importGuestThreadsForUser';
-import { importGuestCheckinsForUser } from '../../lib/importGuestCheckinsForUser';
-import { getCheckinsForUser } from '../../lib/getCheckinsForUser';
 
 import { useCheckinsStorage } from '../hooks/useCheckinsStorage';
 import { useThreadsStorage } from '../hooks/useThreadsStorage';
 import { useDefaultSelectedThread } from '../hooks/useDefaultSelectedThread';
 import { createSeedCheckins } from '../data/seed';
+import { useAuthWorkspaceBootstrap } from '../hooks/useAuthWorkspaceBootstrap';
 
 const CHECKINS_STORAGE_KEY = 'goback_checkins_v1';
 const THREADS_STORAGE_KEY = 'goback_threads_v1';
@@ -39,8 +35,6 @@ export const HomePage = () => {
   const [threadIdPendingArchive, setThreadIdPendingArchive] = useState<
     string | null
   >(null);
-  const [isBootstrappingAuthWorkspace, setIsBootstrappingAuthWorkspace] =
-    useState(false);
 
   const { threadsState, setThreadsState, hasLoadedThreads } = useThreadsStorage(
     THREADS_STORAGE_KEY,
@@ -53,7 +47,6 @@ export const HomePage = () => {
 
   const threadsStateRef = useRef(threadsState);
   const checkinsHistoryRef = useRef<Checkin[]>([]);
-  const hasBootstrappedAuthRef = useRef<string | null>(null);
 
   useEffect(() => {
     threadsStateRef.current = threadsState;
@@ -63,99 +56,20 @@ export const HomePage = () => {
     checkinsHistoryRef.current = checkinsHistory;
   }, [checkinsHistory]);
 
-  useEffect(() => {
-    if (!user) {
-      hasBootstrappedAuthRef.current = null;
-      setIsBootstrappingAuthWorkspace(false);
-      return;
-    }
+  const { isBootstrappingAuthWorkspace } = useAuthWorkspaceBootstrap({
+    user,
+    selectedThreadId,
+    setSelectedThreadId,
+    setThreadsState,
+    setCheckinsHistory,
+    threadsStateRef,
+    checkinsHistoryRef,
+    threadsStorageKey: THREADS_STORAGE_KEY,
+    checkinsStorageKey: CHECKINS_STORAGE_KEY,
+    lastThreadStorageKey: LAST_THREAD_STORAGE_KEY,
+    syncedUserKey: SYNCED_USER_KEY,
+  });
 
-    if (hasBootstrappedAuthRef.current === user.id) return;
-    hasBootstrappedAuthRef.current = user.id;
-
-    const bootstrapAuthenticatedWorkspace = async () => {
-      setIsBootstrappingAuthWorkspace(true);
-
-      try {
-        const needsGuestSync = shouldSyncGuestData(
-          user.id,
-          THREADS_STORAGE_KEY,
-          CHECKINS_STORAGE_KEY,
-          SYNCED_USER_KEY,
-        );
-
-        if (needsGuestSync) {
-          const guestThreads = threadsStateRef.current.filter(
-            (thread) => !thread.isArchived,
-          );
-
-          const guestCheckins = checkinsHistoryRef.current;
-
-          const threadIdsWithCheckins = new Set(
-            guestCheckins.map((checkin) => checkin.threadId),
-          );
-
-          const threadsToSync = guestThreads.filter(
-            (thread) => !thread.isSeed || threadIdsWithCheckins.has(thread.id),
-          );
-
-          if (threadsToSync.length > 0) {
-            const threadIdMap = await importGuestThreadsForUser(
-              user.id,
-              threadsToSync,
-            );
-
-            const guestLastThreadId = localStorage.getItem(
-              LAST_THREAD_STORAGE_KEY,
-            );
-
-            const syncedLastThreadId =
-              (selectedThreadId && threadIdMap[selectedThreadId]) ||
-              (guestLastThreadId && threadIdMap[guestLastThreadId]) ||
-              null;
-
-            if (syncedLastThreadId) {
-              setSelectedThreadId(syncedLastThreadId);
-              localStorage.setItem(LAST_THREAD_STORAGE_KEY, syncedLastThreadId);
-            }
-
-            await importGuestCheckinsForUser(
-              user.id,
-              guestCheckins,
-              threadIdMap,
-            );
-
-            localStorage.setItem(SYNCED_USER_KEY, user.id);
-          }
-        }
-
-        const supabaseThreads = await getThreadsForUser(user.id);
-        const mappedThreads = supabaseThreads.map((thread) => ({
-          id: thread.id,
-          name: thread.name,
-          isArchived: thread.is_archived,
-        }));
-        setThreadsState(mappedThreads);
-
-        const supabaseCheckins = await getCheckinsForUser(user.id);
-        const mappedCheckins = supabaseCheckins.map((checkin) => ({
-          id: checkin.id,
-          threadId: checkin.thread_id,
-          text: checkin.text,
-          note: checkin.note ?? undefined,
-          createdAt: new Date(checkin.created_at).getTime(),
-        }));
-        setCheckinsHistory(mappedCheckins);
-      } catch (error) {
-        console.error('Failed to bootstrap authenticated workspace', error);
-        hasBootstrappedAuthRef.current = null;
-      } finally {
-        setIsBootstrappingAuthWorkspace(false);
-      }
-    };
-
-    bootstrapAuthenticatedWorkspace();
-  }, [user, selectedThreadId, setThreadsState, setCheckinsHistory]);
   useDefaultSelectedThread(
     hasLoadedCheckins,
     hasLoadedThreads,
