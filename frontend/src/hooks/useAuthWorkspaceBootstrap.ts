@@ -66,13 +66,7 @@ export function useAuthWorkspaceBootstrap({
 
           const guestCheckins = checkinsHistoryRef.current;
 
-          const threadIdsWithCheckins = new Set(
-            guestCheckins.map((checkin) => checkin.threadId),
-          );
-
-          const threadsToSync = guestThreads.filter(
-            (thread) => !thread.isSeed || threadIdsWithCheckins.has(thread.id),
-          );
+          const threadsToSync = guestThreads;
 
           if (threadsToSync.length > 0) {
             const threadIdMap = await importGuestThreadsForUser(
