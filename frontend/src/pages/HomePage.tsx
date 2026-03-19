@@ -11,6 +11,7 @@ import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
 import { Hero } from '../components/Hero';
 import { createThreadForUser } from '../../lib/createThreadForUser';
+import { updateThreadNameForUser } from '../../lib/updateThreadNameForUser';
 
 import { useCheckinsStorage } from '../hooks/useCheckinsStorage';
 import { useThreadsStorage } from '../hooks/useThreadsStorage';
@@ -106,11 +107,21 @@ export const HomePage = () => {
   };
 
   // rename
-  const handleRenameConfirm = (threadId: string, newName: string) => {
+  const handleRenameConfirm = async (threadId: string, newName: string) => {
     const cleanedName = newName.trim();
+
     if (cleanedName === '') {
       setEditingThreadId(null);
       return;
+    }
+
+    if (user) {
+      try {
+        await updateThreadNameForUser(threadId, cleanedName);
+      } catch (error) {
+        console.error('Failed to rename thread in Supabase', error);
+        return;
+      }
     }
 
     setThreadsState((prev) =>
@@ -118,6 +129,7 @@ export const HomePage = () => {
         thread.id === threadId ? { ...thread, name: cleanedName } : thread,
       ),
     );
+
     setEditingThreadId(null);
   };
 
