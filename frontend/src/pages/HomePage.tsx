@@ -346,7 +346,7 @@ export const HomePage = () => {
   };
   // Feature "Hero" end
 
-  if (isCheckingAuth) {
+  if (isCheckingAuth || (user && isBootstrappingAuthWorkspace)) {
     return (
       <>
         <Header heroDismissed={false} />
