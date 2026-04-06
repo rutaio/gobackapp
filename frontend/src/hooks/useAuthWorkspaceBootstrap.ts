@@ -8,7 +8,6 @@ import type { Checkin, Thread } from '../types/types';
 
 type UseAuthWorkspaceBootstrapParams = {
   user: { id: string } | null;
-  selectedThreadId: string | null;
   setSelectedThreadId: (id: string | null) => void;
   setThreadsState: React.Dispatch<React.SetStateAction<Thread[]>>;
   setCheckinsHistory: React.Dispatch<React.SetStateAction<Checkin[]>>;
@@ -20,9 +19,66 @@ type UseAuthWorkspaceBootstrapParams = {
   syncedUserKey: string;
 };
 
+type SyncGuestIfNeededParams = {
+  userId: string;
+  threadsStateRef: React.RefObject<Thread[]>;
+  checkinsHistoryRef: React.RefObject<Checkin[]>;
+  threadsStorageKey: string;
+  checkinsStorageKey: string;
+  lastThreadStorageKey: string;
+  syncedUserKey: string;
+  setSelectedThreadId: (id: string | null) => void;
+};
+
+async function syncGuestIfNeeded({
+  userId,
+  threadsStateRef,
+  checkinsHistoryRef,
+  threadsStorageKey,
+  checkinsStorageKey,
+  lastThreadStorageKey,
+  syncedUserKey,
+  setSelectedThreadId,
+}: SyncGuestIfNeededParams): Promise<void> {
+  const needsGuestSync = shouldSyncGuestData(
+    userId,
+    threadsStorageKey,
+    checkinsStorageKey,
+    syncedUserKey,
+  );
+
+  if (!needsGuestSync) return;
+
+  const guestThreads = threadsStateRef.current.filter(
+    (thread) => !thread.isArchived,
+  );
+
+  const guestCheckins = checkinsHistoryRef.current;
+  const threadsToSync = guestThreads;
+
+  if (threadsToSync.length === 0) return;
+
+  const threadIdMap = await importGuestThreadsForUser(userId, threadsToSync);
+
+  const guestLastThreadId = localStorage.getItem(lastThreadStorageKey);
+
+  const syncedSelectedThreadId =
+    (guestLastThreadId && threadIdMap[guestLastThreadId]) || null;
+
+  if (syncedSelectedThreadId) {
+    setSelectedThreadId(syncedSelectedThreadId);
+  }
+
+  await importGuestCheckinsForUser(userId, guestCheckins, threadIdMap);
+
+  // clear guest local data after successful first sync
+  localStorage.setItem(syncedUserKey, userId);
+  localStorage.removeItem(threadsStorageKey);
+  localStorage.removeItem(checkinsStorageKey);
+}
+
 export function useAuthWorkspaceBootstrap({
   user,
-  selectedThreadId,
   setSelectedThreadId,
   setThreadsState,
   setCheckinsHistory,
@@ -51,53 +107,17 @@ export function useAuthWorkspaceBootstrap({
     const bootstrapAuthenticatedWorkspace = async () => {
       setIsBootstrappingAuthWorkspace(true);
 
-      let syncedSelectedThreadId: string | null = null;
-
       try {
-        const needsGuestSync = shouldSyncGuestData(
-          user.id,
+        await syncGuestIfNeeded({
+          userId: user.id,
+          threadsStateRef,
+          checkinsHistoryRef,
           threadsStorageKey,
           checkinsStorageKey,
+          lastThreadStorageKey,
           syncedUserKey,
-        );
-
-        if (needsGuestSync) {
-          const guestThreads = threadsStateRef.current.filter(
-            (thread) => !thread.isArchived,
-          );
-
-          const guestCheckins = checkinsHistoryRef.current;
-
-          const threadsToSync = guestThreads;
-
-          if (threadsToSync.length > 0) {
-            const threadIdMap = await importGuestThreadsForUser(
-              user.id,
-              threadsToSync,
-            );
-
-            const guestLastThreadId =
-              localStorage.getItem(lastThreadStorageKey);
-
-            syncedSelectedThreadId =
-              (guestLastThreadId && threadIdMap[guestLastThreadId]) || null;
-
-            if (syncedSelectedThreadId) {
-              setSelectedThreadId(syncedSelectedThreadId);
-            }
-
-            await importGuestCheckinsForUser(
-              user.id,
-              guestCheckins,
-              threadIdMap,
-            );
-
-            // clear guest local data after successful first sync
-            localStorage.setItem(syncedUserKey, user.id);
-            localStorage.removeItem(threadsStorageKey);
-            localStorage.removeItem(checkinsStorageKey);
-          }
-        }
+          setSelectedThreadId,
+        });
 
         const supabaseThreads = await getThreadsForUser(user.id);
         const mappedThreads = supabaseThreads.map((thread) => ({
@@ -155,7 +175,6 @@ export function useAuthWorkspaceBootstrap({
     bootstrapAuthenticatedWorkspace();
   }, [
     user,
-    selectedThreadId,
     setSelectedThreadId,
     setThreadsState,
     setCheckinsHistory,
