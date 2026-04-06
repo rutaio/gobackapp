@@ -13,6 +13,7 @@ import { Hero } from '../components/Hero';
 import { createThreadForUser } from '../../lib/createThreadForUser';
 import { updateThreadNameForUser } from '../../lib/updateThreadNameForUser';
 import { updateThreadArchiveForUser } from '../../lib/updateThreadArchiveForUser';
+import { createCheckinForUser } from '../../lib/createCheckinForUser';
 
 import { useCheckinsStorage } from '../hooks/useCheckinsStorage';
 import { useThreadsStorage } from '../hooks/useThreadsStorage';
@@ -215,7 +216,7 @@ export const HomePage = () => {
   };
 
   // checkin submit
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
     const cleanedTitle = checkinTitle.trim();
@@ -223,21 +224,51 @@ export const HomePage = () => {
 
     if (!selectedThreadId || !cleanedTitle) return;
 
-    const newCheckin: Checkin = {
-      id: crypto.randomUUID(),
-      threadId: selectedThreadId,
-      text: cleanedTitle,
-      note: cleanedNote || undefined,
-      createdAt: Date.now(),
-    };
+    if (user) {
+      try {
+        // save to database
+        const createdCheckin = await createCheckinForUser(
+          user.id,
+          selectedThreadId,
+          cleanedTitle,
+          cleanedNote || undefined,
+        );
+
+        const mappedCheckin: Checkin = {
+          id: createdCheckin.id,
+          threadId: createdCheckin.thread_id,
+          text: createdCheckin.text,
+          note: createdCheckin.note ?? undefined,
+          createdAt: new Date(createdCheckin.created_at).getTime(),
+        };
+
+        setCheckinsHistory((prev) => {
+          const next = [...prev, mappedCheckin];
+          checkinsHistoryRef.current = next;
+          return next;
+        });
+      } catch (error) {
+        console.error('Failed to create checkin in Supabase', error);
+        // stop everything, if saving fails
+        return;
+      }
+    } else {
+      const newCheckin: Checkin = {
+        id: crypto.randomUUID(),
+        threadId: selectedThreadId,
+        text: cleanedTitle,
+        note: cleanedNote || undefined,
+        createdAt: Date.now(),
+      };
+
+      setCheckinsHistory((prev) => {
+        const next = [...prev, newCheckin];
+        checkinsHistoryRef.current = next;
+        return next;
+      });
+    }
 
     localStorage.setItem(LAST_THREAD_STORAGE_KEY, selectedThreadId);
-
-    setCheckinsHistory((prev) => {
-      const next = [...prev, newCheckin];
-      checkinsHistoryRef.current = next;
-      return next;
-    });
 
     setCheckinTitle('');
     setCheckinNote('');
