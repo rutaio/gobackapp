@@ -16,14 +16,24 @@ export function useDefaultSelectedThread(
     if (!hasLoadedCheckins || !hasLoadedThreads) return;
     if (isSelectionBlocked) return;
 
-    // NEW: do not override existing selection, this is a single source of truth:
-    if (selectedThreadId) return;
-
     const activeThreads = threadsState.filter((thread) => !thread.isArchived);
 
     const availableThreadIds = new Set(
       activeThreads.map((thread) => thread.id),
     );
+
+    console.log('DEFAULT SELECTION CHECK', {
+      selectedThreadId,
+      availableThreadIds: Array.from(availableThreadIds),
+      isValid: selectedThreadId
+        ? availableThreadIds.has(selectedThreadId)
+        : null,
+    });
+
+    // single source of truth: keep selection only if it exists in current threads
+    // otherwise allow default selection to pick a valid thread
+    if (selectedThreadId && availableThreadIds.has(selectedThreadId)) return;
+
     const firstActiveThreadId = activeThreads[0]?.id ?? null;
 
     const lastThreadId = localStorage.getItem(lastThreadStorageKey);
