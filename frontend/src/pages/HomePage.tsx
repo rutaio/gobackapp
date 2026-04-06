@@ -71,6 +71,9 @@ export const HomePage = () => {
     syncedUserKey: SYNCED_USER_KEY,
   });
 
+  const isSelectionBlocked =
+    isCheckingAuth || (!!user && isBootstrappingAuthWorkspace);
+
   useDefaultSelectedThread(
     hasLoadedCheckins,
     hasLoadedThreads,
@@ -79,7 +82,7 @@ export const HomePage = () => {
     checkinsHistory,
     threadsState,
     LAST_THREAD_STORAGE_KEY,
-    !!user && isBootstrappingAuthWorkspace,
+    isSelectionBlocked,
   );
 
   // HELPERS
@@ -101,6 +104,7 @@ export const HomePage = () => {
   // thread selection
   const handleThreadClick = (threadId: string) => {
     selectThread(threadId);
+
     localStorage.setItem(LAST_THREAD_STORAGE_KEY, threadId);
     setThreadIdPendingArchive(null); // close any pending archive confirm UI
     setEditingThreadId(null); // NEW: prevents rename UI sticking
@@ -231,24 +235,8 @@ export const HomePage = () => {
   };
 
   // UI DATA
-  console.log(
-    'LAST_THREAD_STORAGE_KEY:',
-    localStorage.getItem(LAST_THREAD_STORAGE_KEY),
-  );
-  console.log('selectedThreadId:', selectedThreadId);
-  console.log(
-    'threadsState ids:',
-    threadsState.map((thread) => thread.id),
-  );
-  console.log(
-    'checkin thread ids:',
-    checkinsHistory.map((checkin) => checkin.threadId),
-  );
-
   const selectedThreadData =
     threadsState.find((thread) => thread.id === selectedThreadId) ?? null;
-
-  console.log('selectedThreadData:', selectedThreadData);
 
   const selectedThreadCheckins = checkinsHistory
     .filter((checkin) => checkin.threadId === selectedThreadId)

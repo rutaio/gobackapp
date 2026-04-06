@@ -16,7 +16,17 @@ export function useDefaultSelectedThread(
     if (!hasLoadedCheckins || !hasLoadedThreads) return;
     if (isSelectionBlocked) return;
 
+    // if current selected thread is stale and not present in current threads yet,
+    // wait instead of forcing an early fallback selection
+    if (
+      selectedThreadId &&
+      !threadsState.some((thread) => thread.id === selectedThreadId)
+    ) {
+      return;
+    }
+
     const activeThreads = threadsState.filter((thread) => !thread.isArchived);
+
     const availableThreadIds = new Set(
       activeThreads.map((thread) => thread.id),
     );
@@ -54,16 +64,6 @@ export function useDefaultSelectedThread(
         (threadId): threadId is string =>
           !!threadId && availableThreadIds.has(threadId),
       ) ?? null;
-
-    console.log('default selection candidates', {
-      selectedThreadId,
-      lastThreadId,
-      mostRecentCheckinThreadId: mostRecentCheckin?.threadId ?? null,
-      firstActiveThreadId,
-      availableThreadIds: Array.from(availableThreadIds),
-      firstValidThreadId,
-      isSelectionBlocked,
-    });
 
     setSelectedThreadId(firstValidThreadId);
 

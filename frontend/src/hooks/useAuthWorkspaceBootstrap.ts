@@ -51,6 +51,8 @@ export function useAuthWorkspaceBootstrap({
     const bootstrapAuthenticatedWorkspace = async () => {
       setIsBootstrappingAuthWorkspace(true);
 
+      let syncedSelectedThreadId: string | null = null;
+
       try {
         const needsGuestSync = shouldSyncGuestData(
           user.id,
@@ -77,17 +79,16 @@ export function useAuthWorkspaceBootstrap({
             const guestLastThreadId =
               localStorage.getItem(lastThreadStorageKey);
 
-            console.log('GUEST SYNC THREAD MAP', {
-              guestLastThreadId,
-              threadIdMap,
-            });
-
-            const syncedLastThreadId =
+            syncedSelectedThreadId =
               (guestLastThreadId && threadIdMap[guestLastThreadId]) || null;
 
-            if (syncedLastThreadId) {
-              setSelectedThreadId(syncedLastThreadId);
-              localStorage.setItem(lastThreadStorageKey, syncedLastThreadId);
+            if (syncedSelectedThreadId) {
+              setSelectedThreadId(syncedSelectedThreadId);
+
+              localStorage.setItem(
+                lastThreadStorageKey,
+                syncedSelectedThreadId,
+              );
             }
 
             await importGuestCheckinsForUser(
@@ -100,8 +101,6 @@ export function useAuthWorkspaceBootstrap({
             localStorage.setItem(syncedUserKey, user.id);
             localStorage.removeItem(threadsStorageKey);
             localStorage.removeItem(checkinsStorageKey);
-            localStorage.removeItem(lastThreadStorageKey);
-            console.log('Guest localStorage cleared after sync');
           }
         }
 
@@ -142,6 +141,7 @@ export function useAuthWorkspaceBootstrap({
         );
 
         const candidateIds = [
+          syncedSelectedThreadId,
           persistedLastThreadId,
           mostRecentCheckin?.threadId ?? null,
           firstActiveThreadId,
@@ -152,14 +152,6 @@ export function useAuthWorkspaceBootstrap({
             (threadId): threadId is string =>
               !!threadId && availableThreadIds.has(threadId),
           ) ?? null;
-
-        console.log('AUTH FINAL SELECTION', {
-          persistedLastThreadId,
-          mostRecentCheckinThreadId: mostRecentCheckin?.threadId ?? null,
-          firstActiveThreadId,
-          availableThreadIds: Array.from(availableThreadIds),
-          finalSelectedThreadId,
-        });
 
         setSelectedThreadId(finalSelectedThreadId);
 
