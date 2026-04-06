@@ -133,7 +133,6 @@ export function useAuthWorkspaceBootstrap({
         );
 
         const candidateIds = [
-          syncedSelectedThreadId,
           mostRecentCheckin?.threadId ?? null,
           firstActiveThreadId,
         ];
