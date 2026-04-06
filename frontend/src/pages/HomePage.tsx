@@ -95,10 +95,12 @@ export const HomePage = () => {
   const selectThread = (threadId: string | null) => {
     setSelectedThreadId(threadId);
 
-    if (threadId) {
-      localStorage.setItem(LAST_THREAD_STORAGE_KEY, threadId);
-    } else {
-      localStorage.removeItem(LAST_THREAD_STORAGE_KEY);
+    if (!user) {
+      if (threadId) {
+        localStorage.setItem(LAST_THREAD_STORAGE_KEY, threadId);
+      } else {
+        localStorage.removeItem(LAST_THREAD_STORAGE_KEY);
+      }
     }
   };
 

@@ -84,11 +84,6 @@ export function useAuthWorkspaceBootstrap({
 
             if (syncedSelectedThreadId) {
               setSelectedThreadId(syncedSelectedThreadId);
-
-              localStorage.setItem(
-                lastThreadStorageKey,
-                syncedSelectedThreadId,
-              );
             }
 
             await importGuestCheckinsForUser(
@@ -129,9 +124,6 @@ export function useAuthWorkspaceBootstrap({
         );
         const firstActiveThreadId = activeThreads[0]?.id ?? null;
 
-        const persistedLastThreadId =
-          localStorage.getItem(lastThreadStorageKey);
-
         const mostRecentCheckin = mappedCheckins.reduce<Checkin | null>(
           (latestCheckin, currentCheckin) =>
             !latestCheckin || currentCheckin.createdAt > latestCheckin.createdAt
@@ -142,7 +134,6 @@ export function useAuthWorkspaceBootstrap({
 
         const candidateIds = [
           syncedSelectedThreadId,
-          persistedLastThreadId,
           mostRecentCheckin?.threadId ?? null,
           firstActiveThreadId,
         ];
@@ -154,12 +145,6 @@ export function useAuthWorkspaceBootstrap({
           ) ?? null;
 
         setSelectedThreadId(finalSelectedThreadId);
-
-        if (finalSelectedThreadId) {
-          localStorage.setItem(lastThreadStorageKey, finalSelectedThreadId);
-        } else {
-          localStorage.removeItem(lastThreadStorageKey);
-        }
       } catch (error) {
         console.error('Failed to bootstrap authenticated workspace', error);
         hasBootstrappedAuthRef.current = null;
