@@ -12,6 +12,7 @@ import { Header } from '../components/Header';
 import { Hero } from '../components/Hero';
 import { createThreadForUser } from '../../lib/createThreadForUser';
 import { updateThreadNameForUser } from '../../lib/updateThreadNameForUser';
+import { updateThreadArchiveForUser } from '../../lib/updateThreadArchiveForUser';
 
 import { useCheckinsStorage } from '../hooks/useCheckinsStorage';
 import { useThreadsStorage } from '../hooks/useThreadsStorage';
@@ -175,7 +176,15 @@ export const HomePage = () => {
   };
 
   // archive
-  const handleArchiveThread = (threadId: string) => {
+  const handleArchiveThread = async (threadId: string) => {
+    if (user) {
+      try {
+        await updateThreadArchiveForUser(threadId, true);
+      } catch (error) {
+        console.error('Failed to archive thread in Supabase', error);
+        return;
+      }
+    }
     setThreadsState((prev) => {
       const updated = prev.map((thread) =>
         thread.id === threadId ? { ...thread, isArchived: true } : thread,
