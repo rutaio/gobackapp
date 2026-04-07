@@ -61,7 +61,6 @@ export const HomePage = () => {
 
   const { isBootstrappingAuthWorkspace } = useAuthWorkspaceBootstrap({
     user,
-    selectedThreadId,
     setSelectedThreadId,
     setThreadsState,
     setCheckinsHistory,
