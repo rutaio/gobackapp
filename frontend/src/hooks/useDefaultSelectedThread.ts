@@ -30,8 +30,8 @@ export function useDefaultSelectedThread(
         : null,
     });
 
-    // single source of truth: keep selection only if it exists in current threads
-    // otherwise allow default selection to pick a valid thread
+    // keep current selection only if it is still valid in current threads
+    // ensures selection stays consistent when switching between auth and guest data
     if (selectedThreadId && availableThreadIds.has(selectedThreadId)) return;
 
     const firstActiveThreadId = activeThreads[0]?.id ?? null;
