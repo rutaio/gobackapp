@@ -49,6 +49,13 @@ async function syncGuestIfNeeded({
 
   if (!needsGuestSync) return;
 
+  const existingThreads = await getThreadsForUser(userId);
+
+  if (existingThreads.length > 0) {
+    localStorage.setItem(syncedUserKey, userId);
+    return;
+  }
+
   const guestThreads = threadsStateRef.current.filter(
     (thread) => !thread.isArchived,
   );
