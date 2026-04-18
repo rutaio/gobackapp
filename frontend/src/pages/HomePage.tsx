@@ -10,6 +10,8 @@ import type { Checkin } from '../types/types';
 import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
 import { Hero } from '../components/Hero';
+import { LoginPrompt } from '../components/LoginPrompt';
+
 import { createThreadForUser } from '../../lib/createThreadForUser';
 import { updateThreadNameForUser } from '../../lib/updateThreadNameForUser';
 import { updateThreadArchiveForUser } from '../../lib/updateThreadArchiveForUser';
@@ -75,6 +77,9 @@ export const HomePage = () => {
   const isSelectionBlocked =
     isCheckingAuth || (!!user && isBootstrappingAuthWorkspace);
 
+  const showLoginPrompt =
+    !user && localStorage.getItem(SYNCED_USER_KEY) !== null;
+
   useDefaultSelectedThread(
     hasLoadedCheckins,
     hasLoadedThreads,
@@ -107,8 +112,6 @@ export const HomePage = () => {
   // thread selection
   const handleThreadClick = (threadId: string) => {
     selectThread(threadId);
-
-    localStorage.setItem(LAST_THREAD_STORAGE_KEY, threadId);
     setThreadIdPendingArchive(null); // close any pending archive confirm UI
     setEditingThreadId(null); // NEW: prevents rename UI sticking
   };
@@ -361,38 +364,44 @@ export const HomePage = () => {
       <Header heroDismissed={heroDismissed} onShowIntro={handleShowIntro} />
 
       <main className="page">
-        {showHero && (
+        {showHero && !showLoginPrompt && (
           <Hero onCtaClick={handleHeroCta} onDismiss={handleHeroDismiss} />
         )}
 
-        <ThreadsTabs
-          threads={threadsState}
-          selectedThreadId={selectedThreadId}
-          onSelectThread={handleThreadClick}
-          onAddThread={handleAddThread}
-        />
+        {showLoginPrompt ? (
+          <LoginPrompt />
+        ) : (
+          <>
+            <ThreadsTabs
+              threads={threadsState}
+              selectedThreadId={selectedThreadId}
+              onSelectThread={handleThreadClick}
+              onAddThread={handleAddThread}
+            />
 
-        <article className="panel goback-panel" ref={gobackSectionRef}>
-          <GoBackCard
-            isLoadingSelection={isBootstrappingAuthWorkspace}
-            checkinsForSelectedThread={selectedThreadCheckins}
-            selectedThread={selectedThreadData}
-            checkinTitle={checkinTitle}
-            checkinNote={checkinNote}
-            onCheckinTitleChange={setCheckinTitle}
-            onCheckinNoteChange={setCheckinNote}
-            onSubmit={handleSubmit}
-            editingThreadId={editingThreadId}
-            onStartEditing={setEditingThreadId}
-            onCancelEditing={() => setEditingThreadId(null)}
-            onRenameConfirm={handleRenameConfirm}
-            threadIdPendingArchive={threadIdPendingArchive}
-            onRequestArchiveThread={requestArchiveThread}
-            onConfirmArchiveThread={handleArchiveThread}
-            onCancelArchiveThread={() => setThreadIdPendingArchive(null)}
-            checkinsCountForSelectedThread={checkinsCountForSelectedThread}
-          />
-        </article>
+            <article className="panel goback-panel" ref={gobackSectionRef}>
+              <GoBackCard
+                isLoadingSelection={isBootstrappingAuthWorkspace}
+                checkinsForSelectedThread={selectedThreadCheckins}
+                selectedThread={selectedThreadData}
+                checkinTitle={checkinTitle}
+                checkinNote={checkinNote}
+                onCheckinTitleChange={setCheckinTitle}
+                onCheckinNoteChange={setCheckinNote}
+                onSubmit={handleSubmit}
+                editingThreadId={editingThreadId}
+                onStartEditing={setEditingThreadId}
+                onCancelEditing={() => setEditingThreadId(null)}
+                onRenameConfirm={handleRenameConfirm}
+                threadIdPendingArchive={threadIdPendingArchive}
+                onRequestArchiveThread={requestArchiveThread}
+                onConfirmArchiveThread={handleArchiveThread}
+                onCancelArchiveThread={() => setThreadIdPendingArchive(null)}
+                checkinsCountForSelectedThread={checkinsCountForSelectedThread}
+              />
+            </article>
+          </>
+        )}
 
         <div className="page-spacer" />
 
