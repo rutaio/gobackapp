@@ -46,7 +46,7 @@ export const HomePage = () => {
   );
 
   const { checkinsHistory, setCheckinsHistory, hasLoadedCheckins } =
-    useCheckinsStorage(CHECKINS_STORAGE_KEY);
+    useCheckinsStorage(CHECKINS_STORAGE_KEY, !user);
 
   const threadsStateRef = useRef(threadsState);
   const checkinsHistoryRef = useRef<Checkin[]>([]);
