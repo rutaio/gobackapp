@@ -1,5 +1,5 @@
 import { supabase } from './supabaseClient';
-import type { Thread } from '../src/types/types';
+import type { Thread } from '../types/types';
 
 type ThreadIdMap = Record<string, string>;
 

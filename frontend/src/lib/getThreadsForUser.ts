@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabaseClient';
+import { supabase } from './supabaseClient';
 
 export async function getThreadsForUser(userId: string) {
   const { data, error } = await supabase

@@ -14,7 +14,7 @@ test('save authenticated session', async ({ page }) => {
 
   await page.evaluate(
     async ({ email, password }) => {
-      const { supabase } = await import('../lib/supabaseClient.ts');
+      const { supabase } = await import('../src/lib/supabaseClient.ts');
 
       const { error } = await supabase.auth.signInWithPassword({
         email,

@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import { getThreadsForUser } from '../../lib/getThreadsForUser';
-import { shouldSyncGuestData } from '../../lib/shouldSyncGuestData';
-import { importGuestThreadsForUser } from '../../lib/importGuestThreadsForUser';
-import { importGuestCheckinsForUser } from '../../lib/importGuestCheckinsForUser';
-import { getCheckinsForUser } from '../../lib/getCheckinsForUser';
+import { getThreadsForUser } from '../lib/getThreadsForUser';
+import { shouldSyncGuestData } from '../lib/shouldSyncGuestData';
+import { importGuestThreadsForUser } from '../lib/importGuestThreadsForUser';
+import { importGuestCheckinsForUser } from '../lib/importGuestCheckinsForUser';
+import { getCheckinsForUser } from '../lib/getCheckinsForUser';
 import type { Checkin, Thread } from '../types/types';
 
 type UseAuthWorkspaceBootstrapParams = {

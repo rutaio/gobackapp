@@ -1,5 +1,5 @@
 import { supabase } from './supabaseClient';
-import type { Checkin } from '../src/types/types';
+import type { Checkin } from '../types/types';
 
 export async function importGuestCheckinsForUser(
   userId: string,

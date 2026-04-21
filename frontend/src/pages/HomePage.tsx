@@ -12,10 +12,10 @@ import { Header } from '../components/Header';
 import { Hero } from '../components/Hero';
 import { LoginPrompt } from '../components/LoginPrompt';
 
-import { createThreadForUser } from '../../lib/createThreadForUser';
-import { updateThreadNameForUser } from '../../lib/updateThreadNameForUser';
-import { updateThreadArchiveForUser } from '../../lib/updateThreadArchiveForUser';
-import { createCheckinForUser } from '../../lib/createCheckinForUser';
+import { createThreadForUser } from '../lib/createThreadForUser';
+import { updateThreadNameForUser } from '../lib/updateThreadNameForUser';
+import { updateThreadArchiveForUser } from '../lib/updateThreadArchiveForUser';
+import { createCheckinForUser } from '../lib/createCheckinForUser';
 
 import { useCheckinsStorage } from '../hooks/useCheckinsStorage';
 import { useThreadsStorage } from '../hooks/useThreadsStorage';
