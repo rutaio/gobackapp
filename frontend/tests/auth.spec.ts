@@ -231,3 +231,99 @@ test('logged-in user does not see guest-only onboarding or login state', async (
 
   await expect(page.getByText('Guest mode is local only.')).toHaveCount(0);
 });
+
+// Case 7: to be added in future
+
+// Case 8:
+test.describe('guest to auth migration', () => {
+  test.use({ storageState: { cookies: [], origins: [] } });
+
+  test('guest sample/local data is correctly imported when user authenticates', async ({
+    page,
+  }) => {
+    const migrationEmail = process.env.E2E_MIGRATION_EMAIL;
+    const migrationPassword = process.env.E2E_MIGRATION_PASSWORD;
+
+    if (!migrationEmail || !migrationPassword) {
+      throw new Error('Missing E2E_MIGRATION_EMAIL or E2E_MIGRATION_PASSWORD');
+    }
+
+    await page.goto('/');
+
+    const guestThreadName = `Guest import ${Date.now()}`;
+    const guestCheckinTitle = `Guest checkin ${Date.now()}`;
+
+    // Step 1: create guest thread
+    const addThreadButton = page.getByTestId('add-thread-button');
+    await expect(addThreadButton).toBeVisible();
+    await addThreadButton.click();
+
+    const newThreadInput = page.getByTestId('new-thread-input');
+    await expect(newThreadInput).toBeVisible();
+    await newThreadInput.fill(guestThreadName);
+
+    const confirmAddButton = page.getByTestId('confirm-add-thread');
+    await expect(confirmAddButton).toBeEnabled();
+    await confirmAddButton.click();
+
+    await expect(
+      page.getByTestId('thread-item').filter({ hasText: guestThreadName }),
+    ).toBeVisible();
+
+    // Step 2: add guest checkin into that guest thread
+    const checkinTitleInput = page.getByTestId('checkin-title-input');
+    await expect(checkinTitleInput).toBeVisible();
+    await checkinTitleInput.fill(guestCheckinTitle);
+
+    const saveCheckinButton = page.getByTestId('save-checkin-button');
+    await expect(saveCheckinButton).toBeEnabled();
+    await saveCheckinButton.click();
+
+    await expect(page.getByTestId('checkins-history')).toContainText(
+      guestCheckinTitle,
+    );
+
+    // Step 3: authenticate with fresh migration user
+    await page.evaluate(
+      async ({ email, password }) => {
+        const { supabase } = await import('/src/lib/supabaseClient.ts');
+
+        const { error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+
+        if (error) {
+          throw new Error(error.message);
+        }
+      },
+      { email: migrationEmail, password: migrationPassword },
+    );
+
+    // Reload so authenticated workspace bootstraps cleanly
+    await page.reload();
+
+    // Step 4: confirm guest-created thread now appears in authenticated workspace
+    await expect(page.getByTestId('go-back-card')).toBeVisible();
+
+    await expect(
+      page.getByTestId('thread-item').filter({ hasText: guestThreadName }),
+    ).toBeVisible();
+
+    // Step 5: confirm imported checkin appears too
+    await expect(page.getByTestId('checkins-history')).toContainText(
+      guestCheckinTitle,
+    );
+
+    // Step 6: refresh and confirm imported data still persists
+    await page.reload();
+
+    await expect(
+      page.getByTestId('thread-item').filter({ hasText: guestThreadName }),
+    ).toBeVisible();
+
+    await expect(page.getByTestId('checkins-history')).toContainText(
+      guestCheckinTitle,
+    );
+  });
+});
