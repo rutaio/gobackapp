@@ -184,3 +184,27 @@ test('authenticated user can archive a thread and it stays archived after refres
     page.getByTestId('thread-item').filter({ hasText: threadName }),
   ).toHaveCount(0);
 });
+
+// Case 5
+test('already logged-in user lands in the correct place after app load', async ({
+  page,
+}) => {
+  await page.goto('/');
+
+  // Authenticated workspace loads
+  await expect(page.getByTestId('go-back-card')).toBeVisible();
+
+  // At least one thread exists
+  await expect(page.getByTestId('thread-item').first()).toBeVisible();
+
+  // A selected thread is active
+  await expect(page.getByTestId('selected-thread-name')).toBeVisible();
+
+  // Checkin form is available
+  await expect(page.getByTestId('checkin-title-input')).toBeVisible();
+
+  // Optional: guest login CTA should not be visible
+  await expect(
+    page.getByRole('button', { name: /sign in with google/i }),
+  ).toHaveCount(0);
+});
