@@ -208,3 +208,26 @@ test('already logged-in user lands in the correct place after app load', async (
     page.getByRole('button', { name: /sign in with google/i }),
   ).toHaveCount(0);
 });
+
+// Case 6
+test('logged-in user does not see guest-only onboarding or login state', async ({
+  page,
+}) => {
+  await page.goto('/');
+
+  // Authenticated workspace is visible
+  await expect(page.getByTestId('go-back-card')).toBeVisible();
+  await expect(page.getByTestId('selected-thread-name')).toBeVisible();
+
+  // Guest/login CTA is not shown
+  await expect(
+    page.getByRole('button', { name: /continue with google/i }),
+  ).toHaveCount(0);
+
+  // Returning-user login prompt text is not shown
+  await expect(
+    page.getByText('You already have an account. Log in to continue.'),
+  ).toHaveCount(0);
+
+  await expect(page.getByText('Guest mode is local only.')).toHaveCount(0);
+});
