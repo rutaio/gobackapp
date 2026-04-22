@@ -140,3 +140,47 @@ test('authenticated user can edit a thread name and it survives refresh', async 
     page.getByTestId('thread-item').filter({ hasText: originalThreadName }),
   ).toHaveCount(0);
 });
+
+// Case 4
+test('authenticated user can archive a thread and it stays archived after refresh', async ({
+  page,
+}) => {
+  await page.goto('/');
+
+  const threadName = `PW archive ${Date.now()}`;
+
+  // Create a safe empty thread first
+  const addThreadButton = page.getByTestId('add-thread-button');
+  await expect(addThreadButton).toBeVisible();
+  await addThreadButton.click();
+
+  const newThreadInput = page.getByTestId('new-thread-input');
+  await expect(newThreadInput).toBeVisible();
+  await newThreadInput.fill(threadName);
+
+  const confirmAddButton = page.getByTestId('confirm-add-thread');
+  await expect(confirmAddButton).toBeEnabled();
+  await confirmAddButton.click();
+
+  const createdThread = page
+    .getByTestId('thread-item')
+    .filter({ hasText: threadName });
+  await expect(createdThread).toBeVisible();
+
+  // Archive selected thread
+  const archiveButton = page.getByTestId('thread-archive-button');
+  await expect(archiveButton).toBeVisible();
+  await archiveButton.click();
+
+  // Empty thread should archive immediately without confirmation
+  await expect(
+    page.getByTestId('thread-item').filter({ hasText: threadName }),
+  ).toHaveCount(0);
+
+  // Refresh and confirm thread is still hidden
+  await page.reload();
+
+  await expect(
+    page.getByTestId('thread-item').filter({ hasText: threadName }),
+  ).toHaveCount(0);
+});
