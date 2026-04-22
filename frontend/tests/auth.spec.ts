@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test.use({ storageState: 'playwright/.auth/user.json' });
 
+// Case 1
 test('authenticated user can create checkin and it survives refresh', async ({
   page,
 }) => {
@@ -39,4 +40,38 @@ test('authenticated user can create checkin and it survives refresh', async ({
   await expect(page.getByTestId('checkins-history')).toContainText(
     checkinTitle,
   );
+});
+
+// Case 2
+test('authenticated user can create a new thread and it survives refresh', async ({
+  page,
+}) => {
+  await page.goto('/');
+
+  const threadName = `PW thread ${Date.now()}`;
+
+  const addThreadButton = page.getByTestId('add-thread-button');
+  await expect(addThreadButton).toBeVisible();
+  await addThreadButton.click();
+
+  const addForm = page.getByTestId('threads-add-form');
+  await expect(addForm).toBeVisible();
+
+  const newThreadInput = page.getByTestId('new-thread-input');
+  await expect(newThreadInput).toBeVisible();
+  await newThreadInput.fill(threadName);
+
+  const confirmAddButton = page.getByTestId('confirm-add-thread');
+  await expect(confirmAddButton).toBeEnabled();
+  await confirmAddButton.click();
+
+  await expect(
+    page.getByTestId('thread-item').filter({ hasText: threadName }),
+  ).toBeVisible();
+
+  await page.reload();
+
+  await expect(
+    page.getByTestId('thread-item').filter({ hasText: threadName }),
+  ).toBeVisible();
 });
