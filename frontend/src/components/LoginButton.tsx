@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { supabase } from '../../lib/supabaseClient';
+import { supabase } from '../lib/supabaseClient';
 import '../styles/components/auth-button.css';
 
 export const LoginButton = () => {
@@ -12,6 +12,7 @@ export const LoginButton = () => {
       await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
+          redirectTo: window.location.origin,
           queryParams: {
             prompt: 'select_account',
           },

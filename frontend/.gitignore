@@ -25,6 +25,8 @@ dist-ssr
 
 test-results/
 playwright-report/
+playwright/.auth/
 
 .env
 .env.local
+.env.test

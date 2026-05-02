@@ -10,7 +10,12 @@ import type { Checkin } from '../types/types';
 import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
 import { Hero } from '../components/Hero';
-import { createThreadForUser } from '../../lib/createThreadForUser';
+import { LoginPrompt } from '../components/LoginPrompt';
+
+import { createThreadForUser } from '../lib/createThreadForUser';
+import { updateThreadNameForUser } from '../lib/updateThreadNameForUser';
+import { updateThreadArchiveForUser } from '../lib/updateThreadArchiveForUser';
+import { createCheckinForUser } from '../lib/createCheckinForUser';
 
 import { useCheckinsStorage } from '../hooks/useCheckinsStorage';
 import { useThreadsStorage } from '../hooks/useThreadsStorage';
@@ -43,7 +48,7 @@ export const HomePage = () => {
   );
 
   const { checkinsHistory, setCheckinsHistory, hasLoadedCheckins } =
-    useCheckinsStorage(CHECKINS_STORAGE_KEY);
+    useCheckinsStorage(CHECKINS_STORAGE_KEY, !user);
 
   const threadsStateRef = useRef(threadsState);
   const checkinsHistoryRef = useRef<Checkin[]>([]);
@@ -58,7 +63,6 @@ export const HomePage = () => {
 
   const { isBootstrappingAuthWorkspace } = useAuthWorkspaceBootstrap({
     user,
-    selectedThreadId,
     setSelectedThreadId,
     setThreadsState,
     setCheckinsHistory,
@@ -70,6 +74,12 @@ export const HomePage = () => {
     syncedUserKey: SYNCED_USER_KEY,
   });
 
+  const isSelectionBlocked =
+    isCheckingAuth || (!!user && isBootstrappingAuthWorkspace);
+
+  const showLoginPrompt =
+    !user && localStorage.getItem(SYNCED_USER_KEY) !== null;
+
   useDefaultSelectedThread(
     hasLoadedCheckins,
     hasLoadedThreads,
@@ -78,7 +88,7 @@ export const HomePage = () => {
     checkinsHistory,
     threadsState,
     LAST_THREAD_STORAGE_KEY,
-    !!user && isBootstrappingAuthWorkspace,
+    isSelectionBlocked,
   );
 
   // HELPERS
@@ -89,10 +99,12 @@ export const HomePage = () => {
   const selectThread = (threadId: string | null) => {
     setSelectedThreadId(threadId);
 
-    if (threadId) {
-      localStorage.setItem(LAST_THREAD_STORAGE_KEY, threadId);
-    } else {
-      localStorage.removeItem(LAST_THREAD_STORAGE_KEY);
+    if (!user) {
+      if (threadId) {
+        localStorage.setItem(LAST_THREAD_STORAGE_KEY, threadId);
+      } else {
+        localStorage.removeItem(LAST_THREAD_STORAGE_KEY);
+      }
     }
   };
 
@@ -100,17 +112,26 @@ export const HomePage = () => {
   // thread selection
   const handleThreadClick = (threadId: string) => {
     selectThread(threadId);
-    localStorage.setItem(LAST_THREAD_STORAGE_KEY, threadId);
     setThreadIdPendingArchive(null); // close any pending archive confirm UI
     setEditingThreadId(null); // NEW: prevents rename UI sticking
   };
 
   // rename
-  const handleRenameConfirm = (threadId: string, newName: string) => {
+  const handleRenameConfirm = async (threadId: string, newName: string) => {
     const cleanedName = newName.trim();
+
     if (cleanedName === '') {
       setEditingThreadId(null);
       return;
+    }
+
+    if (user) {
+      try {
+        await updateThreadNameForUser(threadId, cleanedName);
+      } catch (error) {
+        console.error('Failed to rename thread in Supabase', error);
+        return;
+      }
     }
 
     setThreadsState((prev) =>
@@ -118,6 +139,7 @@ export const HomePage = () => {
         thread.id === threadId ? { ...thread, name: cleanedName } : thread,
       ),
     );
+
     setEditingThreadId(null);
   };
 
@@ -159,7 +181,15 @@ export const HomePage = () => {
   };
 
   // archive
-  const handleArchiveThread = (threadId: string) => {
+  const handleArchiveThread = async (threadId: string) => {
+    if (user) {
+      try {
+        await updateThreadArchiveForUser(threadId, true);
+      } catch (error) {
+        console.error('Failed to archive thread in Supabase', error);
+        return;
+      }
+    }
     setThreadsState((prev) => {
       const updated = prev.map((thread) =>
         thread.id === threadId ? { ...thread, isArchived: true } : thread,
@@ -190,7 +220,7 @@ export const HomePage = () => {
   };
 
   // checkin submit
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
     const cleanedTitle = checkinTitle.trim();
@@ -198,21 +228,51 @@ export const HomePage = () => {
 
     if (!selectedThreadId || !cleanedTitle) return;
 
-    const newCheckin: Checkin = {
-      id: crypto.randomUUID(),
-      threadId: selectedThreadId,
-      text: cleanedTitle,
-      note: cleanedNote || undefined,
-      createdAt: Date.now(),
-    };
+    if (user) {
+      try {
+        // save to database
+        const createdCheckin = await createCheckinForUser(
+          user.id,
+          selectedThreadId,
+          cleanedTitle,
+          cleanedNote || undefined,
+        );
+
+        const mappedCheckin: Checkin = {
+          id: createdCheckin.id,
+          threadId: createdCheckin.thread_id,
+          text: createdCheckin.text,
+          note: createdCheckin.note ?? undefined,
+          createdAt: new Date(createdCheckin.created_at).getTime(),
+        };
+
+        setCheckinsHistory((prev) => {
+          const next = [...prev, mappedCheckin];
+          checkinsHistoryRef.current = next;
+          return next;
+        });
+      } catch (error) {
+        console.error('Failed to create checkin in Supabase', error);
+        // stop everything, if saving fails
+        return;
+      }
+    } else {
+      const newCheckin: Checkin = {
+        id: crypto.randomUUID(),
+        threadId: selectedThreadId,
+        text: cleanedTitle,
+        note: cleanedNote || undefined,
+        createdAt: Date.now(),
+      };
+
+      setCheckinsHistory((prev) => {
+        const next = [...prev, newCheckin];
+        checkinsHistoryRef.current = next;
+        return next;
+      });
+    }
 
     localStorage.setItem(LAST_THREAD_STORAGE_KEY, selectedThreadId);
-
-    setCheckinsHistory((prev) => {
-      const next = [...prev, newCheckin];
-      checkinsHistoryRef.current = next;
-      return next;
-    });
 
     setCheckinTitle('');
     setCheckinNote('');
@@ -304,7 +364,7 @@ export const HomePage = () => {
   };
   // Feature "Hero" end
 
-  if (isCheckingAuth) {
+  if (isCheckingAuth || (user && isBootstrappingAuthWorkspace)) {
     return (
       <>
         <Header heroDismissed={false} />
@@ -320,38 +380,44 @@ export const HomePage = () => {
       <Header heroDismissed={heroDismissed} onShowIntro={handleShowIntro} />
 
       <main className="page">
-        {showHero && (
+        {showHero && !showLoginPrompt && (
           <Hero onCtaClick={handleHeroCta} onDismiss={handleHeroDismiss} />
         )}
 
-        <ThreadsTabs
-          threads={threadsState}
-          selectedThreadId={selectedThreadId}
-          onSelectThread={handleThreadClick}
-          onAddThread={handleAddThread}
-        />
+        {showLoginPrompt ? (
+          <LoginPrompt />
+        ) : (
+          <>
+            <ThreadsTabs
+              threads={threadsState}
+              selectedThreadId={selectedThreadId}
+              onSelectThread={handleThreadClick}
+              onAddThread={handleAddThread}
+            />
 
-        <article className="panel goback-panel" ref={gobackSectionRef}>
-          <GoBackCard
-            isLoadingSelection={isBootstrappingAuthWorkspace}
-            checkinsForSelectedThread={selectedThreadCheckins}
-            selectedThread={selectedThreadData}
-            checkinTitle={checkinTitle}
-            checkinNote={checkinNote}
-            onCheckinTitleChange={setCheckinTitle}
-            onCheckinNoteChange={setCheckinNote}
-            onSubmit={handleSubmit}
-            editingThreadId={editingThreadId}
-            onStartEditing={setEditingThreadId}
-            onCancelEditing={() => setEditingThreadId(null)}
-            onRenameConfirm={handleRenameConfirm}
-            threadIdPendingArchive={threadIdPendingArchive}
-            onRequestArchiveThread={requestArchiveThread}
-            onConfirmArchiveThread={handleArchiveThread}
-            onCancelArchiveThread={() => setThreadIdPendingArchive(null)}
-            checkinsCountForSelectedThread={checkinsCountForSelectedThread}
-          />
-        </article>
+            <article className="panel goback-panel" ref={gobackSectionRef}>
+              <GoBackCard
+                isLoadingSelection={isBootstrappingAuthWorkspace}
+                checkinsForSelectedThread={selectedThreadCheckins}
+                selectedThread={selectedThreadData}
+                checkinTitle={checkinTitle}
+                checkinNote={checkinNote}
+                onCheckinTitleChange={setCheckinTitle}
+                onCheckinNoteChange={setCheckinNote}
+                onSubmit={handleSubmit}
+                editingThreadId={editingThreadId}
+                onStartEditing={setEditingThreadId}
+                onCancelEditing={() => setEditingThreadId(null)}
+                onRenameConfirm={handleRenameConfirm}
+                threadIdPendingArchive={threadIdPendingArchive}
+                onRequestArchiveThread={requestArchiveThread}
+                onConfirmArchiveThread={handleArchiveThread}
+                onCancelArchiveThread={() => setThreadIdPendingArchive(null)}
+                checkinsCountForSelectedThread={checkinsCountForSelectedThread}
+              />
+            </article>
+          </>
+        )}
 
         <div className="page-spacer" />
 

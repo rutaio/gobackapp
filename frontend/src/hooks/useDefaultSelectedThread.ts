@@ -20,10 +20,20 @@ export function useDefaultSelectedThread(
     const availableThreadIds = new Set(
       activeThreads.map((thread) => thread.id),
     );
-    const firstActiveThreadId = activeThreads[0]?.id ?? null;
 
-    // if current selected thread still exists, keep it
+    console.log('DEFAULT SELECTION CHECK', {
+      selectedThreadId,
+      availableThreadIds: Array.from(availableThreadIds),
+      isValid: selectedThreadId
+        ? availableThreadIds.has(selectedThreadId)
+        : null,
+    });
+
+    // keep current selection only if it is still valid in current threads
+    // ensures selection stays consistent when switching between auth and guest data
     if (selectedThreadId && availableThreadIds.has(selectedThreadId)) return;
+
+    const firstActiveThreadId = activeThreads[0]?.id ?? null;
 
     const lastThreadId = localStorage.getItem(lastThreadStorageKey);
 
@@ -54,16 +64,6 @@ export function useDefaultSelectedThread(
         (threadId): threadId is string =>
           !!threadId && availableThreadIds.has(threadId),
       ) ?? null;
-
-    console.log('default selection candidates', {
-      selectedThreadId,
-      lastThreadId,
-      mostRecentCheckinThreadId: mostRecentCheckin?.threadId ?? null,
-      firstActiveThreadId,
-      availableThreadIds: Array.from(availableThreadIds),
-      firstValidThreadId,
-      isSelectionBlocked,
-    });
 
     setSelectedThreadId(firstValidThreadId);
 
