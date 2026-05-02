@@ -279,8 +279,24 @@ export const HomePage = () => {
   };
 
   // UI DATA
+  console.log(
+    'LAST_THREAD_STORAGE_KEY:',
+    localStorage.getItem(LAST_THREAD_STORAGE_KEY),
+  );
+  console.log('selectedThreadId:', selectedThreadId);
+  console.log(
+    'threadsState ids:',
+    threadsState.map((thread) => thread.id),
+  );
+  console.log(
+    'checkin thread ids:',
+    checkinsHistory.map((checkin) => checkin.threadId),
+  );
+
   const selectedThreadData =
     threadsState.find((thread) => thread.id === selectedThreadId) ?? null;
+
+  console.log('selectedThreadData:', selectedThreadData);
 
   const selectedThreadCheckins = checkinsHistory
     .filter((checkin) => checkin.threadId === selectedThreadId)

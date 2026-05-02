@@ -17,7 +17,6 @@ export function useDefaultSelectedThread(
     if (isSelectionBlocked) return;
 
     const activeThreads = threadsState.filter((thread) => !thread.isArchived);
-
     const availableThreadIds = new Set(
       activeThreads.map((thread) => thread.id),
     );
