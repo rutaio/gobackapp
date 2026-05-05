@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import '../styles/components/footer.css';
 
 export const Footer = () => {
@@ -8,7 +9,7 @@ export const Footer = () => {
           <small>
             Made by <a href="https://ruta.io">RUTA.io</a> ·{' '}
             <a href="mailto:hi@ruta.io">Give Feedback</a> ·{' '}
-            <a href="/privacy">Privacy</a>
+            <Link to="/privacy">Privacy</Link>
           </small>
         </div>
 
