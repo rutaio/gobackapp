@@ -180,6 +180,11 @@ test.describe('guest to auth dedupe', () => {
     // Step 6: log out
     await page.getByRole('button', { name: /logout/i }).click();
 
+    // Wait until logged-out state is visible before logging in again
+    await expect(
+      page.getByRole('button', { name: /continue with google/i }).first(),
+    ).toBeVisible();
+
     // Step 7: log in again with same user
     await page.evaluate(
       async ({ email, password }) => {
@@ -198,6 +203,7 @@ test.describe('guest to auth dedupe', () => {
     await page.reload();
 
     // Step 8: wait again for authenticated workspace after relogin
+    await expect(page.getByRole('button', { name: /logout/i })).toBeVisible();
     await expect(page.getByTestId('go-back-card')).toBeVisible();
     await expect(page.getByTestId('thread-item').first()).toBeVisible();
 
