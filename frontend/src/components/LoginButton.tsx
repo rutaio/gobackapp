@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import '../styles/components/auth-button.css';
-import { Link } from 'react-router-dom';
 
 export const LoginButton = () => {
   const [isLoading, setIsLoading] = useState(false);
