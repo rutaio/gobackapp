@@ -2,9 +2,9 @@
 
 A solo strategy tool for creators who operate in uncertainty, juggle multiple projects and struggle with too many parallel ideas.
 
-You create Threads (your work areas),
-log small checkins,
-and when you return, you see context before you act.
+Name your work areas (Threads),
+Log small progress steps (Checkins),
+After a break, resume your work easily by seeing context on where you left off.
 
 Return → Remember → Continue.
 
@@ -12,20 +12,58 @@ Return → Remember → Continue.
 
 - Frontend: React + TypeScript + Pico CSS
 - Testing: Playwright (basic MVP flow coverage)
-- Backend: Supabase (planned for Phase 2)
+- Backend: Supabase
+- Authentication via Google OAuth
 - Hosting: Vercel
 
-## MVP (Phase 1)
+## Architecture Overview
 
-Core flow:
+```mermaid
+flowchart LR
+  user[User]
 
-- Threads render
-- Selecting a thread shows its checkins
-- Adding a checkin persists to localStorage
-- Last touched thread is restored on refresh
+  subgraph device[User Device]
+    browser[Web Browser]
+    app[GoBack Frontend<br/>React + TypeScript]
+    local[(localStorage<br/>guest data)]
+  end
 
-## Up Next (Phase 2)
+  subgraph vercel[Vercel]
+    hosting[Static frontend hosting]
+  end
 
-- Clearer onboarding and framing
-- Thread ownership (create / archive)
-- Supabase persistence
+  subgraph supabase[Supabase]
+    auth[Supabase Auth<br/>login + session]
+    db[(Postgres DB<br/>threads + checkins)]
+  end
+
+  google[Google OAuth Provider]
+
+  user --> browser
+
+  browser -->|requests app| hosting
+  hosting -->|serves frontend assets| browser
+  browser -->|runs| app
+
+  app -->|guest mode| local
+  app -->|login / session| auth
+  app -->|threads + checkins data| db
+
+  auth -->|redirects to Google| google
+  google -->|redirects back with session| browser
+  ```
+
+## Next Phases
+
+### Product & UX
+- Improve onboarding experience (first-time user clarity)
+- Strengthen continuity UX (help users easily return to context)
+- Develop brand identity for the app
+
+### Privacy & Security
+- Introduce application-level encryption for user data
+
+### Monetization & Product Model
+- Integrate Stripe for payments
+- Explore feature gating (free vs paid tiers)
+- Move toward an open-core model (public + private features)

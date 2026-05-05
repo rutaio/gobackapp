@@ -1,6 +1,7 @@
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import '../styles/components/header.css';
 import { useState } from 'react';
+import { AuthButton } from './AuthButton';
 
 type HeaderProps = {
   heroDismissed?: boolean;
@@ -36,16 +37,6 @@ export const Header = ({ heroDismissed = false, onShowIntro }: HeaderProps) => {
       </button>
 
       <nav className={`header-nav ${isMenuOpen ? 'open' : ''}`}>
-        <NavLink
-          to="/about"
-          className={({ isActive }) =>
-            `header-nav__link ${isActive ? 'is-active' : ''}`
-          }
-          onClick={() => setIsMenuOpen(false)}
-        >
-          How it works
-        </NavLink>
-
         {shouldShowIntro && (
           <button
             type="button"
@@ -55,10 +46,32 @@ export const Header = ({ heroDismissed = false, onShowIntro }: HeaderProps) => {
               setIsMenuOpen(false);
             }}
           >
-            Show intro
+            Show Intro
           </button>
         )}
+
+        <NavLink
+          to="/about"
+          className={({ isActive }) =>
+            `header-nav__link ${isActive ? 'is-active' : ''}`
+          }
+          onClick={() => setIsMenuOpen(false)}
+        >
+          About
+        </NavLink>
+
+        <NavLink
+          to="/privacy"
+          className={({ isActive }) =>
+            `header-nav__link ${isActive ? 'is-active' : ''}`
+          }
+          onClick={() => setIsMenuOpen(false)}
+        >
+          Privacy
+        </NavLink>
       </nav>
+
+      <AuthButton />
     </header>
   );
 };

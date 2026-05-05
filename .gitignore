@@ -1,6 +1,7 @@
 /backend/node_modules
 /frontend/node_modules
 .env
+.env.local
 
 # macOS files
 .DS_Store
