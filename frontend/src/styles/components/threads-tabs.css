@@ -5,8 +5,9 @@
 /* ROW: label + scrollable list */
 .threads-tabs__row {
   display: flex;
-  align-items: center;
-  gap: 18px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 1rem;
 }
 
 /* LABEL */
@@ -23,20 +24,18 @@
   padding: 0;
 }
 
-/* LIST CONTAINER: takes remaining space and enables horizontal scroll */
 .threads-tabs__list {
   flex: 1 1 auto;
-  min-width: 0; /* IMPORTANT for overflow-x inside flex */
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+  min-width: 0;
+  overflow-x: visible;
   padding-bottom: 0;
 }
 
-/* UL: horizontal, no markers */
 .threads-tabs__ul {
   display: flex;
-  align-items: center;
-  gap: 1.75rem;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.75rem;
   padding: 0;
   margin: 0;
   list-style: none;
@@ -57,8 +56,7 @@
 
 /* TAB BUTTONS (ThreadTab likely renders button inside li) */
 .threads-tabs .thread-item > button,
-.threads-tabs .thread-item > div,
-.threads-tabs__ul > li > button {
+.threads-tabs .thread-item > div {
   appearance: none;
   background: transparent;
   border: none;
@@ -68,6 +66,22 @@
   line-height: 1;
   color: var(--pico-muted-color);
   cursor: pointer;
+}
+
+.threads-tabs__ul > li > button {
+  width: 100%;
+  text-align: left;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--pico-muted-border-color);
+  border-radius: 12px;
+  background: #fff;
+  line-height: 1.3;
+}
+
+.threads-tabs__ul > li.is-selected > button {
+  border-color: #00796b;
+  background: rgba(0, 121, 107, 0.06);
+  color: #00796b;
 }
 
 .threads-tabs .thread-item > button:hover,
