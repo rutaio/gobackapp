@@ -1,8 +1,6 @@
 import '../styles/components/go-back-card.css';
 import type { Thread, Checkin } from '../types/types';
-import { CheckinForm } from './CheckinForm';
-import { SelectedThreadHeader } from './SelectedThreadHeader';
-import { CheckinsHistory } from './CheckinsHistory';
+import { ThreadExpandedContent } from './ThreadExpandedContent';
 
 interface GoBackCardProps {
   selectedThread: Thread | null;
@@ -58,8 +56,14 @@ export const GoBackCard = ({
         <p>Loading activity...</p>
       ) : selectedThread ? (
         <>
-          <SelectedThreadHeader
+          <ThreadExpandedContent
             selectedThread={selectedThread}
+            checkinTitle={checkinTitle}
+            checkinNote={checkinNote}
+            onCheckinTitleChange={onCheckinTitleChange}
+            onCheckinNoteChange={onCheckinNoteChange}
+            onSubmit={onSubmit}
+            checkinsForSelectedThread={checkinsForSelectedThread}
             editingThreadId={editingThreadId}
             onStartEditing={onStartEditing}
             onCancelEditing={onCancelEditing}
@@ -69,16 +73,6 @@ export const GoBackCard = ({
             onConfirmArchiveThread={onConfirmArchiveThread}
             onCancelArchiveThread={onCancelArchiveThread}
             checkinsCountForSelectedThread={checkinsCountForSelectedThread}
-          />
-
-          <CheckinsHistory checkins={checkinsForSelectedThread} />
-
-          <CheckinForm
-            checkinTitle={checkinTitle}
-            checkinNote={checkinNote}
-            onCheckinTitleChange={onCheckinTitleChange}
-            onCheckinNoteChange={onCheckinNoteChange}
-            onSubmit={onSubmit}
           />
         </>
       ) : (

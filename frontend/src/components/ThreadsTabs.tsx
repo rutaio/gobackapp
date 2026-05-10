@@ -2,9 +2,7 @@ import '../styles/components/threads-tabs.css';
 import { ThreadTab } from './ThreadTab';
 import { useState } from 'react';
 import type { Thread, Checkin } from '../types/types';
-import { CheckinForm } from './CheckinForm';
-import { SelectedThreadHeader } from './SelectedThreadHeader';
-import { CheckinsHistory } from './CheckinsHistory';
+import { ThreadExpandedContent } from './ThreadExpandedContent';
 
 interface ThreadsTabsProps {
   threads: Thread[];
@@ -106,8 +104,14 @@ export const ThreadsTabs = ({
 
                   {isSelected && selectedThread && (
                     <div className="thread-tab__expanded">
-                      <SelectedThreadHeader
+                      <ThreadExpandedContent
                         selectedThread={selectedThread}
+                        checkinTitle={checkinTitle}
+                        checkinNote={checkinNote}
+                        onCheckinTitleChange={onCheckinTitleChange}
+                        onCheckinNoteChange={onCheckinNoteChange}
+                        onSubmit={onSubmit}
+                        checkinsForSelectedThread={checkinsForSelectedThread}
                         editingThreadId={editingThreadId}
                         onStartEditing={onStartEditing}
                         onCancelEditing={onCancelEditing}
@@ -119,16 +123,6 @@ export const ThreadsTabs = ({
                         checkinsCountForSelectedThread={
                           checkinsCountForSelectedThread
                         }
-                      />
-
-                      <CheckinsHistory checkins={checkinsForSelectedThread} />
-
-                      <CheckinForm
-                        checkinTitle={checkinTitle}
-                        checkinNote={checkinNote}
-                        onCheckinTitleChange={onCheckinTitleChange}
-                        onCheckinNoteChange={onCheckinNoteChange}
-                        onSubmit={onSubmit}
                       />
                     </div>
                   )}
