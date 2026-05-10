@@ -2,6 +2,15 @@
   margin: 1.25rem 0 1.5rem;
 }
 
+/* new */
+.thread-tab__expanded {
+  margin-top: 0.75rem;
+  padding: 1rem;
+  border: 1px solid var(--pico-muted-border-color);
+  border-radius: 12px;
+  background: #fff;
+}
+
 /* ROW: label + scrollable list */
 .threads-tabs__row {
   display: flex;

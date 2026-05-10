@@ -9,6 +9,11 @@
   text-decoration: none;
 }
 
+.thread-tab__button {
+  width: 100%;
+  text-align: left;
+}
+
 .thread-badge {
   font-size: 0.7rem;
   margin-left: 6px;

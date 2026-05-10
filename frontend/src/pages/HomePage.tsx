@@ -5,7 +5,6 @@ import '../styles/pages/home.css';
 import { threads } from '../data/threads';
 import { useState, useRef, useEffect } from 'react';
 import { ThreadsTabs } from '../components/ThreadsTabs';
-import { GoBackCard } from '../components/GoBackCard';
 import type { Checkin } from '../types/types';
 import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
@@ -388,18 +387,14 @@ export const HomePage = () => {
           <LoginPrompt />
         ) : (
           <>
-            <ThreadsTabs
-              threads={threadsState}
-              selectedThreadId={selectedThreadId}
-              onSelectThread={handleThreadClick}
-              onAddThread={handleAddThread}
-            />
-
             <article className="panel goback-panel" ref={gobackSectionRef}>
-              <GoBackCard
-                isLoadingSelection={isBootstrappingAuthWorkspace}
-                checkinsForSelectedThread={selectedThreadCheckins}
+              <ThreadsTabs
+                threads={threadsState}
+                selectedThreadId={selectedThreadId}
+                onSelectThread={handleThreadClick}
+                onAddThread={handleAddThread}
                 selectedThread={selectedThreadData}
+                checkinsForSelectedThread={selectedThreadCheckins}
                 checkinTitle={checkinTitle}
                 checkinNote={checkinNote}
                 onCheckinTitleChange={setCheckinTitle}

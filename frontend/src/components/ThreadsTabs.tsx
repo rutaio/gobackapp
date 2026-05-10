@@ -1,13 +1,36 @@
 import '../styles/components/threads-tabs.css';
-import type { Thread } from '../types/types';
 import { ThreadTab } from './ThreadTab';
 import { useState } from 'react';
+import type { Thread, Checkin } from '../types/types';
+import { CheckinForm } from './CheckinForm';
+import { SelectedThreadHeader } from './SelectedThreadHeader';
+import { CheckinsHistory } from './CheckinsHistory';
 
 interface ThreadsTabsProps {
   threads: Thread[];
   selectedThreadId: string | null;
   onSelectThread: (threadId: string) => void;
   onAddThread: (newThreadName: string) => void;
+
+  selectedThread: Thread | null;
+  checkinTitle: string;
+  checkinNote: string;
+  onCheckinTitleChange: (value: string) => void;
+  onCheckinNoteChange: (value: string) => void;
+  onSubmit: (event: React.FormEvent) => void;
+  checkinsForSelectedThread: Checkin[];
+
+  editingThreadId: string | null;
+  onStartEditing: (threadId: string) => void;
+  onCancelEditing: () => void;
+  onRenameConfirm: (threadId: string, newName: string) => void;
+
+  threadIdPendingArchive: string | null;
+  onRequestArchiveThread: (threadId: string) => void;
+  onConfirmArchiveThread: (threadId: string) => void;
+  onCancelArchiveThread: () => void;
+
+  checkinsCountForSelectedThread: number;
 }
 
 export const ThreadsTabs = ({
@@ -15,6 +38,26 @@ export const ThreadsTabs = ({
   selectedThreadId,
   onSelectThread,
   onAddThread,
+
+  selectedThread,
+  checkinTitle,
+  checkinNote,
+  onCheckinTitleChange,
+  onCheckinNoteChange,
+  onSubmit,
+  checkinsForSelectedThread,
+
+  editingThreadId,
+  onStartEditing,
+  onCancelEditing,
+  onRenameConfirm,
+
+  threadIdPendingArchive,
+  onRequestArchiveThread,
+  onConfirmArchiveThread,
+  onCancelArchiveThread,
+
+  checkinsCountForSelectedThread,
 }: ThreadsTabsProps) => {
   const [isAdding, setIsAdding] = useState(false);
   const [newThreadName, setNewThreadName] = useState('');
@@ -46,14 +89,52 @@ export const ThreadsTabs = ({
           aria-label="Activities list"
         >
           <ul className="threads-tabs__ul">
-            {visibleThreads.map((thread) => (
-              <ThreadTab
-                key={thread.id}
-                thread={thread}
-                isSelected={thread.id === selectedThreadId}
-                onSelectThread={onSelectThread}
-              />
-            ))}
+            {visibleThreads.map((thread) => {
+              const isSelected = thread.id === selectedThreadId;
+
+              return (
+                <li
+                  key={thread.id}
+                  className={`thread-tab ${isSelected ? 'is-selected' : ''}`}
+                  data-testid="thread-item"
+                >
+                  <ThreadTab
+                    thread={thread}
+                    isSelected={isSelected}
+                    onSelectThread={onSelectThread}
+                  />
+
+                  {isSelected && selectedThread && (
+                    <div className="thread-tab__expanded">
+                      <SelectedThreadHeader
+                        selectedThread={selectedThread}
+                        editingThreadId={editingThreadId}
+                        onStartEditing={onStartEditing}
+                        onCancelEditing={onCancelEditing}
+                        onRenameConfirm={onRenameConfirm}
+                        threadIdPendingArchive={threadIdPendingArchive}
+                        onRequestArchiveThread={onRequestArchiveThread}
+                        onConfirmArchiveThread={onConfirmArchiveThread}
+                        onCancelArchiveThread={onCancelArchiveThread}
+                        checkinsCountForSelectedThread={
+                          checkinsCountForSelectedThread
+                        }
+                      />
+
+                      <CheckinsHistory checkins={checkinsForSelectedThread} />
+
+                      <CheckinForm
+                        checkinTitle={checkinTitle}
+                        checkinNote={checkinNote}
+                        onCheckinTitleChange={onCheckinTitleChange}
+                        onCheckinNoteChange={onCheckinNoteChange}
+                        onSubmit={onSubmit}
+                      />
+                    </div>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         </div>
 

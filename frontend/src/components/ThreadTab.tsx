@@ -7,20 +7,11 @@ interface ThreadTabProps {
   onSelectThread: (threadId: string) => void;
 }
 
-export const ThreadTab = ({
-  thread,
-  isSelected,
-  onSelectThread,
-}: ThreadTabProps) => {
+export const ThreadTab = ({ thread, onSelectThread }: ThreadTabProps) => {
   return (
-    <li
-      className={`thread-tab ${isSelected ? 'is-selected' : ''}`}
-      data-testid="thread-item"
-    >
-      <button type="button" onClick={() => onSelectThread(thread.id)}>
-        <span data-testid="thread-name">{thread.name}</span>
-        {thread.isSeed && <span className="thread-badge">Sample</span>}
-      </button>
-    </li>
+    <button type="button" onClick={() => onSelectThread(thread.id)}>
+      <span data-testid="thread-name">{thread.name}</span>
+      {thread.isSeed && <span className="thread-badge">Sample</span>}
+    </button>
   );
 };
