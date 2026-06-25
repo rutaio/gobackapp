@@ -301,7 +301,7 @@ export const HomePage = () => {
   const selectedThreadCheckins = checkinsHistory
     .filter((checkin) => checkin.threadId === selectedThreadId)
     .sort((a, b) => b.createdAt - a.createdAt) // newest first;
-    .slice(0, 6) // show only last 6;
+    .slice(0, 10) // show only last 12 checkins;
     .reverse();
 
   const checkinsCountForSelectedThread = selectedThreadId
